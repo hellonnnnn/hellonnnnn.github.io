@@ -18,7 +18,7 @@
     
     
     
-    <title>404 | Ivan&#39;s Tech Blog</title>
+    <title>文件系统 | Ivan&#39;s Tech Blog</title>
     <link href="https://hellonnnnn.github.io" rel="prefetch" />
 
     
@@ -158,10 +158,122 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-8 gal-right" id="mainstay">
-                    <!-- 搜索页面(尽可能接近ZanBlog搜索功能) -->
+                    
+<article class="article well article-body" id="article">
+    <div class="breadcrumb">
+        <i class="fa fa-home"></i>
+        <a href="https://hellonnnnn.github.io">Ivan&#39;s Tech Blog</a>
+        >
+        <span>文件系统</span>
+    </div>
+    <!-- 大型设备详细文章 -->
+    <div class="hidden-xs">
+        <div class="title-article">
+            <h1>
+                <a href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a>
+            </h1>
+        </div>
+        <div class="tag-article">
+            
+            <span class="label label-gal">
+                <i class="fa fa-calendar"></i> 2025-12-21
+            </span>
+            
+        </div>
+    </div>
+    <!-- 小型设备详细文章 -->
+    <div class="visible-xs">
+        <center>
+            <div class="title-article">
+                <h4>
+                    <a href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a>
+                </h4>
+            </div>
+            <p>
+                <i class="fa fa-calendar"></i> 2025-12-21
+            </p>
+            <p>
+                
+                
+            </p>
+        </center>
+    </div>
+    <div class="content-article">
+        <p>你想要我为你详细解释这段关于Xv6文件系统的核心概念和设计细节，包括文件、目录、inode、系统调用以及相关工具程序的设计逻辑，尤其是<code>cd</code>内置在shell的原因。</p>
+<p>我会从核心概念入手，由浅入深地为你拆解这些内容：</p>
+<h3 id="一、Xv6文件系统的核心结构与概念"><a href="#一、Xv6文件系统的核心结构与概念" class="headerlink" title="一、Xv6文件系统的核心结构与概念"></a>一、Xv6文件系统的核心结构与概念</h3><h4 id="1-目录与路径的逻辑"><a href="#1-目录与路径的逻辑" class="headerlink" title="1. 目录与路径的逻辑"></a>1. 目录与路径的逻辑</h4><p>Xv6的文件系统是<strong>树形结构</strong>，核心特点如下：</p>
+<ul>
+<li><strong>根目录</strong>：整个文件系统的起点（<code>/</code>），所有文件和目录都依附于这个根节点。</li>
+<li><strong>绝对路径</strong>：以<code>/</code>开头（如<code>/a/b/c</code>），从根目录开始逐层查找。</li>
+<li><strong>相对路径</strong>：不以<code>/</code>开头（如<code>b/c</code>），从进程的<strong>当前工作目录</strong>开始查找。</li>
+<li><strong>当前工作目录</strong>：进程的一个属性，可通过<code>chdir</code>系统调用修改，这也是为什么代码中先<code>chdir(&quot;/a&quot;)</code>再<code>chdir(&quot;b&quot;)</code>后，<code>open(&quot;c&quot;)</code>能找到<code>/a/b/c</code>的原因。</li>
+</ul>
+<h4 id="2-三种核心文件类型与创建方式"><a href="#2-三种核心文件类型与创建方式" class="headerlink" title="2. 三种核心文件类型与创建方式"></a>2. 三种核心文件类型与创建方式</h4><p>Xv6将文件分为三类，各自有对应的创建系统调用：</p>
+<table>
+<thead>
+<tr>
+<th>文件类型</th>
+<th>作用</th>
+<th>创建方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据文件</td>
+<td>存储字节数组（无格式的原始数据）</td>
+<td><code>open</code> + <code>O_CREATE</code>标志</td>
+</tr>
+<tr>
+<td>目录</td>
+<td>存储文件名与inode的映射关系</td>
+<td><code>mkdir</code>系统调用</td>
+</tr>
+<tr>
+<td>设备文件</td>
+<td>关联内核设备（而非磁盘数据）</td>
+<td><code>mknod</code>系统调用（需主&#x2F;次设备号）</td>
+</tr>
+</tbody></table>
+<p>其中<strong>设备文件</strong>是特殊的：它不存储实际数据，而是通过主、次设备号关联内核中的设备驱动，当读写设备文件时，内核会调用对应的设备驱动的<code>read/write</code>函数，而非操作磁盘。</p>
+<h4 id="3-inode（索引结点）与链接（link）：文件的本质与命名"><a href="#3-inode（索引结点）与链接（link）：文件的本质与命名" class="headerlink" title="3. inode（索引结点）与链接（link）：文件的本质与命名"></a>3. inode（索引结点）与链接（link）：文件的本质与命名</h4><p>这是Unix&#x2F;Linux（包括Xv6）文件系统的核心设计，需要重点理解：</p>
+<ul>
+<li><strong>文件名≠文件本身</strong>：文件名只是目录中一个<strong>指向inode的引用</strong>（链接），而<strong>inode才是文件的本质</strong>。</li>
+<li><strong>inode的作用</strong>：存储文件的元数据，包括：<ul>
+<li>文件类型（目录&#x2F;数据&#x2F;设备）、链接数（<code>nlink</code>）、大小、数据在磁盘的位置、inode编号（唯一标识）。</li>
+</ul>
+</li>
+<li><strong>硬链接（link）</strong>：<code>link</code>系统调用会为同一个inode创建新的文件名，此时：<ul>
+<li>两个文件名的<code>fstat</code>结果中，<strong>inode编号（ino）相同</strong>，<code>nlink</code>（链接数）会加1。</li>
+<li>读写任意一个文件名，操作的都是同一个inode对应的内容。</li>
+</ul>
+</li>
+<li><strong>解除链接（unlink）</strong>：<code>unlink</code>会删除一个文件名（链接），此时<code>nlink</code>减1。<strong>只有当<code>nlink=0</code>且没有文件描述符引用该inode时，inode和磁盘空间才会被释放</strong>。</li>
+</ul>
+<p>举个例子：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建文件a，对应一个inode（nlink=1）</span></span><br><span class="line">open(<span class="string">&quot;a&quot;</span>, O_CREATE | O_WRONLY);</span><br><span class="line"><span class="comment">// 为该inode创建新链接b（nlink=2）</span></span><br><span class="line">link(<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>);</span><br><span class="line"><span class="comment">// 删除链接a（nlink=1），此时inode仍存在，可通过b访问</span></span><br><span class="line">unlink(<span class="string">&quot;a&quot;</span>);</span><br></pre></td></tr></table></figure>
 
-<!-- 404 自定义页面 -->
-<!-- 有其他想自定义的page在这里添加判断条件, 并且写好对应的模板渲染文件 -->
+<p>而临时文件的惯用写法：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建文件并得到文件描述符fd</span></span><br><span class="line">fd = open(<span class="string">&quot;/tmp/xyz&quot;</span>, O_CREATE | O_RDWR);</span><br><span class="line"><span class="comment">// 删除文件名，此时inode仍被fd引用，不会释放</span></span><br><span class="line">unlink(<span class="string">&quot;/tmp/xyz&quot;</span>);</span><br><span class="line"><span class="comment">// 进程关闭fd或退出时，fd引用消失，inode被释放</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="二、文件工具程序的设计：用户级程序-vs-shell内置"><a href="#二、文件工具程序的设计：用户级程序-vs-shell内置" class="headerlink" title="二、文件工具程序的设计：用户级程序 vs shell内置"></a>二、文件工具程序的设计：用户级程序 vs shell内置</h3><p>Xv6（和Unix）的设计哲学是：<strong>将文件操作的工具（如mkdir、ln、rm）实现为用户级程序</strong>，而非内置在shell或内核中。这样做的好处是：</p>
+<ol>
+<li><strong>扩展性强</strong>：任何人都可以编写新的用户级程序来扩展命令行功能，无需修改shell或内核。</li>
+<li><strong>简化设计</strong>：shell只需要负责解析命令、创建子进程执行用户级程序即可，无需内置大量命令逻辑。</li>
+</ol>
+<h4 id="例外：cd为什么是shell内置命令？"><a href="#例外：cd为什么是shell内置命令？" class="headerlink" title="例外：cd为什么是shell内置命令？"></a>例外：<code>cd</code>为什么是shell内置命令？</h4><p>这是一个关键的设计细节，原因如下：</p>
+<ul>
+<li>进程的<strong>当前工作目录</strong>是进程的私有属性，子进程无法修改父进程的属性。</li>
+<li>如果<code>cd</code>是普通用户级程序：shell会创建一个子进程来执行<code>cd</code>，子进程执行<code>chdir</code>后，只会修改自己的当前工作目录，而父进程（shell）的当前工作目录完全不变，这会导致<code>cd</code>命令失去作用。</li>
+<li>因此，<code>cd</code>必须作为shell的<strong>内置命令</strong>：执行<code>cd</code>时，不会创建子进程，而是直接在shell进程中调用<code>chdir</code>系统调用，修改shell自身的当前工作目录，这样才能达到预期效果。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ol>
+<li>Xv6文件系统是树形结构，通过<strong>绝对路径&#x2F;相对路径</strong>定位文件，进程的当前工作目录可通过<code>chdir</code>修改。</li>
+<li><strong>inode是文件的核心</strong>，文件名只是指向inode的链接；<code>link</code>创建硬链接（增加nlink），<code>unlink</code>删除链接（减少nlink），只有nlink&#x3D;0且无文件描述符引用时，inode才会被释放。</li>
+<li>大部分文件工具是用户级程序，而<code>cd</code>必须内置在shell中，因为子进程无法修改父进程（shell）的当前工作目录。</li>
+</ol>
+
+    </div>
+</article>
+
 
                 </div>
                 <aside class="col-md-4 gal-left" id="sidebar">
@@ -365,17 +477,17 @@
 
                 
                 <li>
-                    <a href="/404/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
+                    <a href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
                 </li>
                 
                 
                 <li>
-                    <a href="/404/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
+                    <a href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
                 </li>
                 
                 
                 <li>
-                    <a href="/404/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
+                    <a href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
                 </li>
                 
             </ul>

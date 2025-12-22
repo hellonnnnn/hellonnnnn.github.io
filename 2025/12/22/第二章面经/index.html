@@ -18,7 +18,7 @@
     
     
     
-    <title>git使用 | Ivan&#39;s Tech Blog</title>
+    <title>第二章面经 | Ivan&#39;s Tech Blog</title>
     <link href="https://hellonnnnn.github.io" rel="prefetch" />
 
     
@@ -164,19 +164,19 @@
         <i class="fa fa-home"></i>
         <a href="https://hellonnnnn.github.io">Ivan&#39;s Tech Blog</a>
         >
-        <span>git使用</span>
+        <span>第二章面经</span>
     </div>
     <!-- 大型设备详细文章 -->
     <div class="hidden-xs">
         <div class="title-article">
             <h1>
-                <a href="/2025/12/20/git%E4%BD%BF%E7%94%A8/">git使用</a>
+                <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a>
             </h1>
         </div>
         <div class="tag-article">
             
             <span class="label label-gal">
-                <i class="fa fa-calendar"></i> 2025-12-20
+                <i class="fa fa-calendar"></i> 2025-12-22
             </span>
             
         </div>
@@ -186,11 +186,11 @@
         <center>
             <div class="title-article">
                 <h4>
-                    <a href="/2025/12/20/git%E4%BD%BF%E7%94%A8/">git使用</a>
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a>
                 </h4>
             </div>
             <p>
-                <i class="fa fa-calendar"></i> 2025-12-20
+                <i class="fa fa-calendar"></i> 2025-12-22
             </p>
             <p>
                 
@@ -199,7 +199,19 @@
         </center>
     </div>
     <div class="content-article">
-        
+        <h3 id="内容总结"><a href="#内容总结" class="headerlink" title="内容总结"></a>内容总结</h3><p>这段聊天围绕“系统调用的匹配机制”展开：</p>
+<ul>
+<li>用户iris分享了腾讯一面的问题：系统调用如何确定对应关系、是否仅依赖系统调用号；</li>
+<li>用户“焕、心”回应：内核通过维护系统调用号表实现匹配，并给出系统调用的核心流程（用户态调用库函数→切换至内核态（保存用户态状态）→通过系统调用号查表调用对应函数→返回用户态），同时邀请加入操作系统内核答疑群。</li>
+</ul>
+<h3 id="面试问题的深层细节解析"><a href="#面试问题的深层细节解析" class="headerlink" title="面试问题的深层细节解析"></a>面试问题的深层细节解析</h3><p>该面试问题的核心是“系统调用的匹配并非仅依赖系统调用号，而是‘号+映射表+特权链路+合法性校验’的组合机制”，以xv6（你之前讨论的系统）为例：</p>
+<ol>
+<li><strong>核心标识：系统调用号</strong><br>系统调用号是唯一标识（如xv6中<code>SYS_trace</code>对应编号22），是匹配的基础。</li>
+<li><strong>映射载体：系统调用号表</strong><br>内核维护“系统调用号-函数指针”映射表（如xv6的<code>syscalls</code>数组），号作为数组下标直接映射到对应处理函数（如<code>SYS_trace</code>对应<code>sys_trace</code>函数）。</li>
+<li><strong>特权链路保障匹配有效性</strong><br>用户态无法直接访问内核函数，需通过汇编存根（如xv6的<code>usys.S</code>）触发<code>ecall</code>指令切换至内核态；内核的trap处理程序会读取寄存器（如RISC-V的<code>a7</code>）中的系统调用号，再通过号表查表匹配。</li>
+<li><strong>合法性校验避免错误</strong><br>内核会校验系统调用号的合法性（如xv6中检查<code>num &lt; NELEM(syscalls)</code>），防止非法编号导致的内存越界或错误调用。</li>
+</ol>
+
     </div>
 </article>
 
@@ -261,19 +273,61 @@
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/20/git%E4%BD%BF%E7%94%A8/">git使用</a>
+                    <a href="/2025/12/22/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/20/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a>
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/18/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a>
+                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/22/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/">xv6内核架构</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/22/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/">添加系统调用的过程</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/21/%E7%AC%AC%E4%BA%8C%E7%AB%A0/">第二章</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">git使用</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a>
                 </span>
             </li>
             
@@ -295,19 +349,61 @@
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/18/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a>
+                    <a href="/2025/12/22/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/">添加系统调用的过程</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/20/git%E4%BD%BF%E7%94%A8/">git使用</a>
+                    <a href="/2025/12/22/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/">xv6内核架构</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/20/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a>
+                    <a href="/2025/12/22/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/21/%E7%AC%AC%E4%BA%8C%E7%AB%A0/">第二章</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">git使用</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a>
                 </span>
             </li>
             
@@ -322,17 +418,17 @@
 
                 
                 <li>
-                    <a href="/2025/12/20/git%E4%BD%BF%E7%94%A8/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
                 </li>
                 
                 
                 <li>
-                    <a href="/2025/12/20/git%E4%BD%BF%E7%94%A8/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
                 </li>
                 
                 
                 <li>
-                    <a href="/2025/12/20/git%E4%BD%BF%E7%94%A8/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
                 </li>
                 
             </ul>
