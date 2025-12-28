@@ -18,7 +18,7 @@
     
     
     
-    <title>shell的运行过程 | Ivan&#39;s Tech Blog</title>
+    <title>前两章总结 | Ivan&#39;s Tech Blog</title>
     <link href="https://hellonnnnn.github.io" rel="prefetch" />
 
     
@@ -164,13 +164,13 @@
         <i class="fa fa-home"></i>
         <a href="https://hellonnnnn.github.io">Ivan&#39;s Tech Blog</a>
         >
-        <span>shell的运行过程</span>
+        <span>前两章总结</span>
     </div>
     <!-- 大型设备详细文章 -->
     <div class="hidden-xs">
         <div class="title-article">
             <h1>
-                <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a>
+                <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a>
             </h1>
         </div>
         <div class="tag-article">
@@ -186,7 +186,7 @@
         <center>
             <div class="title-article">
                 <h4>
-                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a>
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a>
                 </h4>
             </div>
             <p>
@@ -199,52 +199,89 @@
         </center>
     </div>
     <div class="content-article">
-        <p>在xv6中，<strong>Shell是一个运行在用户态的程序</strong>（对应<code>user/sh.c</code>），它的核心逻辑是“<strong>命令解析→进程管理→等待执行结果</strong>”的循环，依赖<code>fork</code>、<code>exec</code>、<code>wait</code>等系统调用与内核交互。以下是它的完整运行流程：</p>
-<h3 id="一、Shell的启动：内核初始化后的第一个用户程序"><a href="#一、Shell的启动：内核初始化后的第一个用户程序" class="headerlink" title="一、Shell的启动：内核初始化后的第一个用户程序"></a>一、Shell的启动：内核初始化后的第一个用户程序</h3><p>xv6启动时，内核完成初始化（内存、进程、文件系统）后，会通过<code>exec</code>系统调用启动<strong>第一个用户程序——Shell</strong>（对应<code>user/sh.c</code>编译后的可执行文件）。此时Shell成为xv6系统中第一个运行的用户进程。</p>
-<h3 id="二、Shell的核心循环：“读命令→解析→执行→等待”"><a href="#二、Shell的核心循环：“读命令→解析→执行→等待”" class="headerlink" title="二、Shell的核心循环：“读命令→解析→执行→等待”"></a>二、Shell的核心循环：“读命令→解析→执行→等待”</h3><p>Shell启动后，会进入一个<strong>无限循环</strong>，持续处理用户输入的命令，直到系统关闭。核心流程分为4步：</p>
-<h4 id="1-读取用户输入（读命令行）"><a href="#1-读取用户输入（读命令行）" class="headerlink" title="1. 读取用户输入（读命令行）"></a>1. 读取用户输入（读命令行）</h4><p>Shell通过<code>read</code>系统调用，从“标准输入”（默认是终端<code>/dev/console</code>）读取用户输入的一行命令（比如<code>ls</code>、<code>trace 32 grep hello README</code>）。</p>
-<p>xv6的Shell中，这一步由<code>readline</code>函数实现（封装了<code>read</code>系统调用），会等待用户输入并处理换行符，最终得到一个字符串形式的命令行。</p>
-<h4 id="2-解析命令行（拆分命令与参数）"><a href="#2-解析命令行（拆分命令与参数）" class="headerlink" title="2. 解析命令行（拆分命令与参数）"></a>2. 解析命令行（拆分命令与参数）</h4><p>Shell将读取到的命令行字符串拆分为<strong>命令名</strong>和<strong>参数列表</strong>：</p>
-<ul>
-<li>比如输入<code>trace 32 grep hello README</code>，会被拆分为：<ul>
-<li>命令名：<code>trace</code></li>
-<li>参数列表：<code>[&quot;trace&quot;, &quot;32&quot;, &quot;grep&quot;, &quot;hello&quot;, &quot;README&quot;]</code></li>
+        <h3 id="一、核心工具与环境：实验的基础保障"><a href="#一、核心工具与环境：实验的基础保障" class="headerlink" title="一、核心工具与环境：实验的基础保障"></a>一、核心工具与环境：实验的基础保障</h3><p>这部分是实验的“前置技能”，也是工程化开发的基础，你提到的<code>git</code>和<code>xv6架构</code>都属于这一类：</p>
+<ol>
+<li><strong>Git的使用（版本控制核心）</strong><ul>
+<li>核心操作：<code>clone</code>（克隆xv6源码）、<code>commit</code>（保存实验修改）、<code>branch</code>（创建分支隔离实验）、<code>reset</code>（回滚错误修改）、<code>diff</code>（查看代码变更）。</li>
+<li>实验意义：避免代码改乱后无法恢复，便于跟踪实验的修改记录（比如新增系统调用时的代码变更）。</li>
+</ul>
+</li>
+<li><strong>xv6的系统架构（理解实验的底层逻辑）</strong><ul>
+<li>核心分层：<strong>用户态（user&#x2F;）</strong>（用户程序、Shell、系统调用封装）和<strong>内核态（kernel&#x2F;）</strong>（进程、内存、文件系统、系统调用核心逻辑），两者通过<strong>特权级切换</strong>（<code>ecall</code>&#x2F;<code>sret</code>）交互。</li>
+<li>核心模块：进程管理（proc.c）、内存管理（kalloc.c）、系统调用（syscall.c）、陷阱处理（trap.c）是实验中最常用的模块，其他模块（如磁盘、串口驱动）可暂时忽略。</li>
+</ul>
+</li>
+</ol>
+<h3 id="二、操作系统核心概念：实验的理论支撑"><a href="#二、操作系统核心概念：实验的理论支撑" class="headerlink" title="二、操作系统核心概念：实验的理论支撑"></a>二、操作系统核心概念：实验的理论支撑</h3><p>这部分是实验的“灵魂”，你提到的<strong>系统调用是什么流程</strong>、<strong>操作系统的本质</strong>都属于这一类，需要结合实验场景深化：</p>
+<ol>
+<li><strong>系统调用的本质与完整流程</strong><ul>
+<li>本质：<strong>内核暴露给用户态的“安全服务接口”</strong>——用户态程序无法直接访问硬件&#x2F;内核资源，必须通过系统调用请求内核代为处理（这是OS“隔离与封装”的核心体现）。</li>
+<li>完整流程（RISC-V架构xv6）：<br>① 用户态调用系统调用封装函数（如<code>trace()</code>）→ ② 汇编存根将<strong>系统调用号</strong>存入<code>a7</code>、参数存入<code>a0~a5</code>→ ③ 执行<code>ecall</code>陷入内核态 → ④ 内核<code>trap</code>处理程序保存用户态寄存器到<code>trapframe</code> → ⑤ <code>syscall()</code>函数通过系统调用号查<code>syscalls</code>数组，执行对应内核函数（如<code>sys_trace()</code>）→ ⑥ 内核函数处理逻辑后，将返回值存入<code>trapframe-&gt;a0</code> → ⑦ 执行<code>sret</code>返回用户态。</li>
+<li>关键细节：系统调用号是内核识别不同系统调用的<strong>唯一标识</strong>，<code>trapframe</code>是用户态&#x2F;内核态的“上下文桥梁”。</li>
+</ul>
+</li>
+<li><strong>操作系统的本质（实验中的具体体现）</strong><ul>
+<li>核心：<strong>管理硬件资源，并为用户程序提供抽象、安全、高效的服务</strong>。</li>
+<li>实验中的体现：<ul>
+<li>资源管理：<code>sysinfo</code>实验中统计空闲内存（内存资源）、遍历进程（进程资源），体现OS的资源管理能力；</li>
+<li>抽象服务：系统调用将“硬件操作”（如终端输出、内存分配）抽象为简单的函数接口（如<code>write</code>、<code>sbrk</code>），用户程序无需关心硬件细节；</li>
+<li>安全隔离：内核通过<code>copyout</code>&#x2F;<code>copyin</code>验证用户态地址合法性，禁止用户态直接访问内核内存，体现OS的安全保护。</li>
 </ul>
 </li>
 </ul>
-<p>xv6的Shell中，这一步由<code>parsecmd</code>函数实现（字符串分割逻辑），最终生成一个命令结构（包含命令类型、参数等）。</p>
-<h4 id="3-执行命令：区分“内置命令”和“外部命令”"><a href="#3-执行命令：区分“内置命令”和“外部命令”" class="headerlink" title="3. 执行命令：区分“内置命令”和“外部命令”"></a>3. 执行命令：区分“内置命令”和“外部命令”</h4><p>Shell会根据命令类型，选择不同的执行方式：</p>
-<h5 id="（1）内置命令：直接在Shell进程中执行（不创建子进程）"><a href="#（1）内置命令：直接在Shell进程中执行（不创建子进程）" class="headerlink" title="（1）内置命令：直接在Shell进程中执行（不创建子进程）"></a>（1）内置命令：直接在Shell进程中执行（不创建子进程）</h5><p>内置命令是<strong>Shell自身实现的功能</strong>，无法通过“启动外部程序”完成，因此必须在Shell进程中直接执行（依赖对应的系统调用）。</p>
-<p>xv6中典型的内置命令是<code>cd</code>（切换工作目录）：</p>
-<ul>
-<li>原因：如果<code>cd</code>在子进程中执行，子进程的工作目录会改变，但<strong>父进程（Shell）的工作目录不会受影响</strong>（进程的工作目录是独立的），所以必须由Shell自己调用<code>chdir</code>系统调用完成切换。</li>
-</ul>
-<p>执行逻辑：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 以cd为例</span></span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">strcmp</span>(cmd, <span class="string">&quot;cd&quot;</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (argc &lt; <span class="number">2</span>) &#123; <span class="comment">/* 处理参数不足 */</span> &#125;</span><br><span class="line">  <span class="comment">// 直接在Shell进程中调用chdir系统调用</span></span><br><span class="line">  <span class="keyword">if</span> (chdir(argv[<span class="number">1</span>]) &lt; <span class="number">0</span>) &#123; <span class="comment">/* 处理错误 */</span> &#125;</span><br><span class="line">  <span class="keyword">return</span>; <span class="comment">// 执行完后回到Shell循环</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h5 id="（2）外部命令：创建子进程执行（依赖fork-exec）"><a href="#（2）外部命令：创建子进程执行（依赖fork-exec）" class="headerlink" title="（2）外部命令：创建子进程执行（依赖fork+exec）"></a>（2）外部命令：创建子进程执行（依赖fork+exec）</h5><p>外部命令是<strong>独立的用户程序</strong>（如<code>ls</code>、<code>grep</code>、<code>sysinfotest</code>），需要通过“创建子进程+替换程序镜像”的方式执行：</p>
-<p>执行逻辑分为3步：</p>
+</li>
+</ol>
+<h3 id="三、Shell与指令：实验的用户态交互层"><a href="#三、Shell与指令：实验的用户态交互层" class="headerlink" title="三、Shell与指令：实验的用户态交互层"></a>三、Shell与指令：实验的用户态交互层</h3><p>你提到的<strong>shell是怎么运行的</strong>、<strong>如何增添指令</strong>属于这一类，需要结合实验中的<code>trace</code>&#x2F;<code>sysinfotest</code>指令补充实操细节：</p>
 <ol>
-<li><strong><code>fork</code>创建子进程</strong>：Shell调用<code>fork</code>系统调用，创建一个与自己完全相同的子进程（复制内存、上下文）；</li>
-<li><strong>子进程中<code>exec</code>替换程序</strong>：子进程调用<code>exec</code>系统调用，将自己的程序镜像替换为目标命令对应的可执行文件（比如<code>exec(&quot;ls&quot;, argv)</code>会加载<code>/bin/ls</code>并执行）；</li>
-<li><strong>父进程<code>wait</code>等待子进程结束</strong>：Shell（父进程）调用<code>wait</code>系统调用，阻塞等待子进程执行完毕，然后继续下一轮循环。</li>
+<li><strong>Shell的运行逻辑（核心是“进程管理+命令解析”）</strong><ul>
+<li>启动：内核初始化完成后，第一个用户进程就是Shell（<code>sh</code>），是用户与系统的交互入口。</li>
+<li>核心循环：<strong>读取命令行 → 解析命令与参数 → 执行命令（内置&#x2F;外部） → 等待结束</strong>。</li>
+<li>关键区别：<ul>
+<li>内置命令（如<code>cd</code>、<code>exit</code>）：直接在Shell进程中执行（依赖<code>chdir</code>等系统调用），因为涉及Shell自身状态修改；</li>
+<li>外部命令（如<code>trace</code>、<code>sysinfotest</code>）：通过<code>fork+exec+wait</code>创建子进程执行，不影响Shell进程。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>如何新增Shell指令（实验实操步骤）</strong><ul>
+<li>步骤1：编写指令的C代码（如<code>trace.c</code>、<code>sysinfotest.c</code>），处理参数并调用系统调用；</li>
+<li>步骤2：修改根目录<code>Makefile</code>，将指令添加到<code>UPROGS</code>列表中（如<code>_trace</code>、<code>_sysinfotest</code>）；</li>
+<li>步骤3：编译xv6后，在Shell中直接输入指令名即可执行。</li>
+<li>关键细节：指令的参数处理遵循<code>argc/argv</code>约定（<code>argv[0]</code>是指令名，<code>argv[1...]</code>是参数）。</li>
+</ul>
+</li>
 </ol>
-<h4 id="4-等待子进程结束，回到循环"><a href="#4-等待子进程结束，回到循环" class="headerlink" title="4. 等待子进程结束，回到循环"></a>4. 等待子进程结束，回到循环</h4><p>外部命令执行时，Shell会阻塞在<code>wait</code>调用中，直到子进程执行完毕（无论是正常退出还是出错）。子进程结束后，Shell会清理子进程的资源，然后回到循环的第一步，等待下一个用户命令。</p>
-<h3 id="三、xv6-Shell的执行示例（以trace-32-grep-hello-README为例）"><a href="#三、xv6-Shell的执行示例（以trace-32-grep-hello-README为例）" class="headerlink" title="三、xv6 Shell的执行示例（以trace 32 grep hello README为例）"></a>三、xv6 Shell的执行示例（以<code>trace 32 grep hello README</code>为例）</h3><ol>
-<li>用户在终端输入<code>trace 32 grep hello README</code>，Shell通过<code>read</code>读取该命令行；</li>
-<li><code>parsecmd</code>将其拆分为命令名<code>trace</code>和参数列表<code>[&quot;trace&quot;, &quot;32&quot;, &quot;grep&quot;, &quot;hello&quot;, &quot;README&quot;]</code>；</li>
-<li>Shell判断<code>trace</code>是外部命令，调用<code>fork</code>创建子进程；</li>
-<li>子进程调用<code>exec(&quot;trace&quot;, argv)</code>，加载并执行<code>trace</code>程序（<code>trace</code>内部会调用<code>trace</code>系统调用设置掩码，再<code>exec</code>执行<code>grep</code>）；</li>
-<li>Shell（父进程）调用<code>wait</code>，等待<code>trace</code>进程执行完毕；</li>
-<li><code>trace</code>执行完成后，Shell回到循环，等待下一个命令。</li>
+<h3 id="四、系统调用实验核心实操：新增系统调用-实验专属知识点"><a href="#四、系统调用实验核心实操：新增系统调用-实验专属知识点" class="headerlink" title="四、系统调用实验核心实操：新增系统调用+实验专属知识点"></a>四、系统调用实验核心实操：新增系统调用+实验专属知识点</h3><p>这部分是实验的“核心实操”，你提到的<strong>如何增加系统调用</strong>需要补充关键步骤和坑点，同时加入<code>trace</code>&#x2F;<code>sysinfo</code>实验的专属知识点（这是面试高频考点）：</p>
+<ol>
+<li><strong>如何新增系统调用（xv6的固定流程，机械性但关键）</strong><ul>
+<li>步骤1：在<code>kernel/syscall.h</code>中定义系统调用号（如<code>SYS_trace</code>、<code>SYS_sysinfo</code>）；</li>
+<li>步骤2：在<code>kernel/syscall.c</code>中声明内核函数、添加到<code>syscalls</code>映射数组；</li>
+<li>步骤3：编写内核函数（如<code>sys_trace()</code>、<code>sys_sysinfo()</code>），处理逻辑并返回结果；</li>
+<li>步骤4：修改<code>user/usys.pl</code>，添加汇编存根（如<code>entry(&quot;trace&quot;)</code>），生成<code>usys.S</code>；</li>
+<li>步骤5：在<code>user/user.h</code>中声明用户态函数接口（如<code>int trace(int)</code>）；</li>
+<li>步骤6：修改<code>kernel/Makefile</code>，添加内核函数的编译项（如<code>sys_trace.o</code>）。</li>
+<li>核心坑点：新增系统调用时，<strong>系统调用号必须全局唯一且所有位置保持一致</strong>（否则内核无法识别）。</li>
+</ul>
+</li>
+<li><strong><code>trace</code>实验专属知识点（系统调用跟踪的核心逻辑）</strong><ul>
+<li>核心需求：跟踪指定进程的指定系统调用，输出调用信息。</li>
+<li>关键实现：<br>① 给进程结构体<code>struct proc</code>添加掩码字段（如<code>trace_mask</code>），存储需要跟踪的系统调用号；<br>② <code>sys_trace()</code>函数将用户态传入的掩码存入当前进程的<code>trace_mask</code>；<br>③ 在<code>syscall()</code>函数中，执行系统调用后，判断进程的<code>trace_mask</code>是否包含该系统调用号，若是则打印信息；</li>
+<li>关键概念：进程的<strong>私有数据</strong>（掩码字段）是实现进程专属跟踪的基础。</li>
+</ul>
+</li>
+<li><strong><code>sysinfo</code>实验专属知识点（内核与用户态数据交互+资源统计）</strong><ul>
+<li>核心需求：统计空闲内存和非UNUSED进程数，写入用户态的<code>struct sysinfo</code>结构体。</li>
+<li>关键实现：<br>① 统计空闲内存：遍历内核的<code>freelist</code>空闲页链表，乘以<code>PGSIZE</code>得到字节数（需加锁防止并发问题）；<br>② 统计进程数：遍历<code>proc</code>数组，统计<code>state != UNUSED</code>的进程数（需加锁）；<br>③ 内核向用户态传数据：必须使用<code>copyout</code>函数（不能直接赋值），验证用户态地址合法性；</li>
+<li>关键概念：<strong>用户态&#x2F;内核态地址隔离</strong>（<code>copyout</code>是安全屏障）、<strong>共享资源的并发保护</strong>（加锁<code>kalloc_lock</code>&#x2F;<code>pid_lock</code>）。</li>
+</ul>
+</li>
 </ol>
-<h3 id="四、Shell的核心特点"><a href="#四、Shell的核心特点" class="headerlink" title="四、Shell的核心特点"></a>四、Shell的核心特点</h3><ol>
-<li><strong>Shell是用户程序</strong>：它本身不具备内核权限，所有功能（如创建进程、切换目录）都依赖系统调用；</li>
-<li><strong>内置命令的必要性</strong>：部分操作（如<code>cd</code>、<code>exit</code>）必须在Shell进程中执行，否则无法影响Shell自身的状态；</li>
-<li><strong>依赖进程管理系统调用</strong>：<code>fork</code>、<code>exec</code>、<code>wait</code>是Shell实现“多命令执行”的核心基础。</li>
+<h3 id="关键点回顾（核心记忆点）"><a href="#关键点回顾（核心记忆点）" class="headerlink" title="关键点回顾（核心记忆点）"></a>关键点回顾（核心记忆点）</h3><ol>
+<li>系统调用的核心是<strong>特权级切换+系统调用号查表</strong>，<code>trapframe</code>是上下文桥梁，<code>copyout</code>是用户态&#x2F;内核态数据交互的安全函数。</li>
+<li>新增系统调用有<strong>固定6步流程</strong>，系统调用号的一致性是关键；新增Shell指令只需编写代码+修改Makefile。</li>
+<li>Shell的核心是<strong>fork+exec+wait</strong>处理外部命令，内置命令需在Shell进程中执行（如<code>cd</code>）。</li>
+<li><code>trace</code>实验的核心是<strong>进程掩码字段</strong>，<code>sysinfo</code>实验的核心是<strong>资源统计+加锁+copyout传数据</strong>。</li>
 </ol>
-<p>总结来说，xv6的Shell是一个“<strong>命令解释器+进程管理器</strong>”，通过“读取-解析-执行-等待”的循环，借助内核的进程管理能力，实现用户命令的执行。</p>
 
     </div>
 </article>
@@ -383,13 +420,19 @@
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a>
+                    <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a>
+                    <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">git使用</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a>
                 </span>
             </li>
             
@@ -401,31 +444,25 @@
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E5%86%85%E6%A0%B8%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 内核地址空间总结</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
                     <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/satp/">satp</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E9%87%8A%E6%94%BE%E6%9C%BA%E5%88%B6%E6%80%BB%E7%BB%93/">xv6 物理内存分配与释放机制总结</a>
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 进程地址空间总结</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
                     <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/">xv6内核架构</a>
                 </span>
             </li>
             
@@ -452,17 +489,17 @@
 
                 
                 <li>
-                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
                 </li>
                 
                 
                 <li>
-                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
                 </li>
                 
                 
                 <li>
-                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
                 </li>
                 
             </ul>

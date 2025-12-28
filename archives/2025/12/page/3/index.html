@@ -18,7 +18,7 @@
     
     
     
-    <title>shell的运行过程 | Ivan&#39;s Tech Blog</title>
+    <title>archive_a | Ivan&#39;s Tech Blog</title>
     <link href="https://hellonnnnn.github.io" rel="prefetch" />
 
     
@@ -115,7 +115,7 @@
                 
                 
                 
-                <li class="">
+                <li class="current">
                     <a href="/archives">
                         <i class="fa fa-archive"></i>归档
                     </a>
@@ -158,27 +158,19 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-8 gal-right" id="mainstay">
-                    
-<article class="article well article-body" id="article">
+                    <article class="article well article-body" id="article-archive">
     <div class="breadcrumb">
         <i class="fa fa-home"></i>
         <a href="https://hellonnnnn.github.io">Ivan&#39;s Tech Blog</a>
         >
-        <span>shell的运行过程</span>
+        <span>归档</span>
     </div>
     <!-- 大型设备详细文章 -->
     <div class="hidden-xs">
         <div class="title-article">
             <h1>
-                <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a>
+                <a href="/archives">归档</a>
             </h1>
-        </div>
-        <div class="tag-article">
-            
-            <span class="label label-gal">
-                <i class="fa fa-calendar"></i> 2025-12-22
-            </span>
-            
         </div>
     </div>
     <!-- 小型设备详细文章 -->
@@ -186,70 +178,107 @@
         <center>
             <div class="title-article">
                 <h4>
-                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a>
+                    <a href="/archives">归档</a>
                 </h4>
             </div>
-            <p>
-                <i class="fa fa-calendar"></i> 2025-12-22
-            </p>
-            <p>
-                
-                
-            </p>
         </center>
     </div>
-    <div class="content-article">
-        <p>在xv6中，<strong>Shell是一个运行在用户态的程序</strong>（对应<code>user/sh.c</code>），它的核心逻辑是“<strong>命令解析→进程管理→等待执行结果</strong>”的循环，依赖<code>fork</code>、<code>exec</code>、<code>wait</code>等系统调用与内核交互。以下是它的完整运行流程：</p>
-<h3 id="一、Shell的启动：内核初始化后的第一个用户程序"><a href="#一、Shell的启动：内核初始化后的第一个用户程序" class="headerlink" title="一、Shell的启动：内核初始化后的第一个用户程序"></a>一、Shell的启动：内核初始化后的第一个用户程序</h3><p>xv6启动时，内核完成初始化（内存、进程、文件系统）后，会通过<code>exec</code>系统调用启动<strong>第一个用户程序——Shell</strong>（对应<code>user/sh.c</code>编译后的可执行文件）。此时Shell成为xv6系统中第一个运行的用户进程。</p>
-<h3 id="二、Shell的核心循环：“读命令→解析→执行→等待”"><a href="#二、Shell的核心循环：“读命令→解析→执行→等待”" class="headerlink" title="二、Shell的核心循环：“读命令→解析→执行→等待”"></a>二、Shell的核心循环：“读命令→解析→执行→等待”</h3><p>Shell启动后，会进入一个<strong>无限循环</strong>，持续处理用户输入的命令，直到系统关闭。核心流程分为4步：</p>
-<h4 id="1-读取用户输入（读命令行）"><a href="#1-读取用户输入（读命令行）" class="headerlink" title="1. 读取用户输入（读命令行）"></a>1. 读取用户输入（读命令行）</h4><p>Shell通过<code>read</code>系统调用，从“标准输入”（默认是终端<code>/dev/console</code>）读取用户输入的一行命令（比如<code>ls</code>、<code>trace 32 grep hello README</code>）。</p>
-<p>xv6的Shell中，这一步由<code>readline</code>函数实现（封装了<code>read</code>系统调用），会等待用户输入并处理换行符，最终得到一个字符串形式的命令行。</p>
-<h4 id="2-解析命令行（拆分命令与参数）"><a href="#2-解析命令行（拆分命令与参数）" class="headerlink" title="2. 解析命令行（拆分命令与参数）"></a>2. 解析命令行（拆分命令与参数）</h4><p>Shell将读取到的命令行字符串拆分为<strong>命令名</strong>和<strong>参数列表</strong>：</p>
-<ul>
-<li>比如输入<code>trace 32 grep hello README</code>，会被拆分为：<ul>
-<li>命令名：<code>trace</code></li>
-<li>参数列表：<code>[&quot;trace&quot;, &quot;32&quot;, &quot;grep&quot;, &quot;hello&quot;, &quot;README&quot;]</code></li>
-</ul>
-</li>
-</ul>
-<p>xv6的Shell中，这一步由<code>parsecmd</code>函数实现（字符串分割逻辑），最终生成一个命令结构（包含命令类型、参数等）。</p>
-<h4 id="3-执行命令：区分“内置命令”和“外部命令”"><a href="#3-执行命令：区分“内置命令”和“外部命令”" class="headerlink" title="3. 执行命令：区分“内置命令”和“外部命令”"></a>3. 执行命令：区分“内置命令”和“外部命令”</h4><p>Shell会根据命令类型，选择不同的执行方式：</p>
-<h5 id="（1）内置命令：直接在Shell进程中执行（不创建子进程）"><a href="#（1）内置命令：直接在Shell进程中执行（不创建子进程）" class="headerlink" title="（1）内置命令：直接在Shell进程中执行（不创建子进程）"></a>（1）内置命令：直接在Shell进程中执行（不创建子进程）</h5><p>内置命令是<strong>Shell自身实现的功能</strong>，无法通过“启动外部程序”完成，因此必须在Shell进程中直接执行（依赖对应的系统调用）。</p>
-<p>xv6中典型的内置命令是<code>cd</code>（切换工作目录）：</p>
-<ul>
-<li>原因：如果<code>cd</code>在子进程中执行，子进程的工作目录会改变，但<strong>父进程（Shell）的工作目录不会受影响</strong>（进程的工作目录是独立的），所以必须由Shell自己调用<code>chdir</code>系统调用完成切换。</li>
-</ul>
-<p>执行逻辑：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 以cd为例</span></span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">strcmp</span>(cmd, <span class="string">&quot;cd&quot;</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (argc &lt; <span class="number">2</span>) &#123; <span class="comment">/* 处理参数不足 */</span> &#125;</span><br><span class="line">  <span class="comment">// 直接在Shell进程中调用chdir系统调用</span></span><br><span class="line">  <span class="keyword">if</span> (chdir(argv[<span class="number">1</span>]) &lt; <span class="number">0</span>) &#123; <span class="comment">/* 处理错误 */</span> &#125;</span><br><span class="line">  <span class="keyword">return</span>; <span class="comment">// 执行完后回到Shell循环</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h5 id="（2）外部命令：创建子进程执行（依赖fork-exec）"><a href="#（2）外部命令：创建子进程执行（依赖fork-exec）" class="headerlink" title="（2）外部命令：创建子进程执行（依赖fork+exec）"></a>（2）外部命令：创建子进程执行（依赖fork+exec）</h5><p>外部命令是<strong>独立的用户程序</strong>（如<code>ls</code>、<code>grep</code>、<code>sysinfotest</code>），需要通过“创建子进程+替换程序镜像”的方式执行：</p>
-<p>执行逻辑分为3步：</p>
-<ol>
-<li><strong><code>fork</code>创建子进程</strong>：Shell调用<code>fork</code>系统调用，创建一个与自己完全相同的子进程（复制内存、上下文）；</li>
-<li><strong>子进程中<code>exec</code>替换程序</strong>：子进程调用<code>exec</code>系统调用，将自己的程序镜像替换为目标命令对应的可执行文件（比如<code>exec(&quot;ls&quot;, argv)</code>会加载<code>/bin/ls</code>并执行）；</li>
-<li><strong>父进程<code>wait</code>等待子进程结束</strong>：Shell（父进程）调用<code>wait</code>系统调用，阻塞等待子进程执行完毕，然后继续下一轮循环。</li>
-</ol>
-<h4 id="4-等待子进程结束，回到循环"><a href="#4-等待子进程结束，回到循环" class="headerlink" title="4. 等待子进程结束，回到循环"></a>4. 等待子进程结束，回到循环</h4><p>外部命令执行时，Shell会阻塞在<code>wait</code>调用中，直到子进程执行完毕（无论是正常退出还是出错）。子进程结束后，Shell会清理子进程的资源，然后回到循环的第一步，等待下一个用户命令。</p>
-<h3 id="三、xv6-Shell的执行示例（以trace-32-grep-hello-README为例）"><a href="#三、xv6-Shell的执行示例（以trace-32-grep-hello-README为例）" class="headerlink" title="三、xv6 Shell的执行示例（以trace 32 grep hello README为例）"></a>三、xv6 Shell的执行示例（以<code>trace 32 grep hello README</code>为例）</h3><ol>
-<li>用户在终端输入<code>trace 32 grep hello README</code>，Shell通过<code>read</code>读取该命令行；</li>
-<li><code>parsecmd</code>将其拆分为命令名<code>trace</code>和参数列表<code>[&quot;trace&quot;, &quot;32&quot;, &quot;grep&quot;, &quot;hello&quot;, &quot;README&quot;]</code>；</li>
-<li>Shell判断<code>trace</code>是外部命令，调用<code>fork</code>创建子进程；</li>
-<li>子进程调用<code>exec(&quot;trace&quot;, argv)</code>，加载并执行<code>trace</code>程序（<code>trace</code>内部会调用<code>trace</code>系统调用设置掩码，再<code>exec</code>执行<code>grep</code>）；</li>
-<li>Shell（父进程）调用<code>wait</code>，等待<code>trace</code>进程执行完毕；</li>
-<li><code>trace</code>执行完成后，Shell回到循环，等待下一个命令。</li>
-</ol>
-<h3 id="四、Shell的核心特点"><a href="#四、Shell的核心特点" class="headerlink" title="四、Shell的核心特点"></a>四、Shell的核心特点</h3><ol>
-<li><strong>Shell是用户程序</strong>：它本身不具备内核权限，所有功能（如创建进程、切换目录）都依赖系统调用；</li>
-<li><strong>内置命令的必要性</strong>：部分操作（如<code>cd</code>、<code>exit</code>）必须在Shell进程中执行，否则无法影响Shell自身的状态；</li>
-<li><strong>依赖进程管理系统调用</strong>：<code>fork</code>、<code>exec</code>、<code>wait</code>是Shell实现“多命令执行”的核心基础。</li>
-</ol>
-<p>总结来说，xv6的Shell是一个“<strong>命令解释器+进程管理器</strong>”，通过“读取-解析-执行-等待”的循环，借助内核的进程管理能力，实现用户命令的执行。</p>
-
+    <div class="content-article" style="margin-top: 30px;">
+        
+        
+            <h1 style="font-size: 24px; margin-top: 40px;">2025年</h1>
+            
+        <div class="alert alert-info" style="font-size: 14px; line-height: 2; font-weight: bold;">
+            
+             
+             
+                        <a href="/2025/12/28/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a>
+                        <br>
+            
+             
+                        <a href="/2025/12/28/%E9%99%B7%E9%98%B1%E6%8C%87%E4%BB%A4%E5%92%8C%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8-%E6%A0%B8%E5%BF%83%E8%A7%A3%E6%9E%90/">陷阱指令和系统调用 核心解析</a>
+                        <br>
+            
+             
+                        <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 exec 系统调用核心逻辑总结</a>
+                        <br>
+            
+             
+                        <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-sbrk-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%88%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E6%89%A9%E7%BC%A9%E5%AE%B9%EF%BC%89%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 sbrk 系统调用（进程内存扩缩容）核心逻辑总结</a>
+                        <br>
+            
+             
+                        <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 进程地址空间总结</a>
+                        <br>
+            
+             
+                        <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E9%87%8A%E6%94%BE%E6%9C%BA%E5%88%B6%E6%80%BB%E7%BB%93/">xv6 物理内存分配与释放机制总结</a>
+                        <br>
+            
+             
+                        <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E5%86%85%E6%A0%B8%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 内核地址空间总结</a>
+                        <br>
+            
+             
+                        <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/satp/">satp</a>
+                        <br>
+            
+             
+                        <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a>
+                        <br>
+            
+             
+                        <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/copyin-copyout%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/">copyin/copyout详细介绍</a>
+                        <br>
+            
+             
+                        <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3/">系统调用正确理解</a>
+                        <br>
+            
+             
+                        <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a>
+                        <br>
+            
+             
+                        <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a>
+                        <br>
+            
+             
+                        <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a>
+                        <br>
+            
+             
+                        <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/">xv6内核架构</a>
+                        <br>
+            
+             
+                        <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/">添加系统调用的过程</a>
+                        <br>
+            
+             
+                        <a href="/2025/12/21/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0/">第二章</a>
+                        <br>
+            
+             
+                        <a href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a>
+                        <br>
+            
+             
+                        <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">git使用</a>
+                        <br>
+            
+             
+                        <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a>
+                        <br>
+            
+             
+                        <a href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a>
+                        <br>
+            
+                    </div>
+        
     </div>
 </article>
-
-
                 </div>
                 <aside class="col-md-4 gal-left" id="sidebar">
     <!-- 此为sidebar的搜索框, 非搜索结果页面 -->
@@ -383,19 +412,19 @@
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a>
+                    <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">git使用</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a>
+                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-sbrk-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%88%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E6%89%A9%E7%BC%A9%E5%AE%B9%EF%BC%89%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 sbrk 系统调用（进程内存扩缩容）核心逻辑总结</a>
+                    <a href="/2025/12/28/%E9%99%B7%E9%98%B1%E6%8C%87%E4%BB%A4%E5%92%8C%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8-%E6%A0%B8%E5%BF%83%E8%A7%A3%E6%9E%90/">陷阱指令和系统调用 核心解析</a>
                 </span>
             </li>
             
@@ -413,13 +442,7 @@
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E9%87%8A%E6%94%BE%E6%9C%BA%E5%88%B6%E6%80%BB%E7%BB%93/">xv6 物理内存分配与释放机制总结</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a>
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 进程地址空间总结</a>
                 </span>
             </li>
             
@@ -431,13 +454,19 @@
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/copyin-copyout%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/">copyin/copyout详细介绍</a>
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/">添加系统调用的过程</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
                     <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3/">系统调用正确理解</a>
                 </span>
             </li>
             
@@ -452,17 +481,17 @@
 
                 
                 <li>
-                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
+                    <a href="/archives/2025/12/page/3/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
                 </li>
                 
                 
                 <li>
-                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
+                    <a href="/archives/2025/12/page/3/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
                 </li>
                 
                 
                 <li>
-                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
+                    <a href="/archives/2025/12/page/3/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
                 </li>
                 
             </ul>

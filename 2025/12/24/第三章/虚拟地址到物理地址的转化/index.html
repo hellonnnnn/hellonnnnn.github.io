@@ -18,7 +18,7 @@
     
     
     
-    <title>shell的运行过程 | Ivan&#39;s Tech Blog</title>
+    <title>虚拟地址到物理地址的转化 | Ivan&#39;s Tech Blog</title>
     <link href="https://hellonnnnn.github.io" rel="prefetch" />
 
     
@@ -164,19 +164,19 @@
         <i class="fa fa-home"></i>
         <a href="https://hellonnnnn.github.io">Ivan&#39;s Tech Blog</a>
         >
-        <span>shell的运行过程</span>
+        <span>虚拟地址到物理地址的转化</span>
     </div>
     <!-- 大型设备详细文章 -->
     <div class="hidden-xs">
         <div class="title-article">
             <h1>
-                <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a>
+                <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a>
             </h1>
         </div>
         <div class="tag-article">
             
             <span class="label label-gal">
-                <i class="fa fa-calendar"></i> 2025-12-22
+                <i class="fa fa-calendar"></i> 2025-12-24
             </span>
             
         </div>
@@ -186,11 +186,11 @@
         <center>
             <div class="title-article">
                 <h4>
-                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a>
+                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a>
                 </h4>
             </div>
             <p>
-                <i class="fa fa-calendar"></i> 2025-12-22
+                <i class="fa fa-calendar"></i> 2025-12-24
             </p>
             <p>
                 
@@ -199,52 +199,132 @@
         </center>
     </div>
     <div class="content-article">
-        <p>在xv6中，<strong>Shell是一个运行在用户态的程序</strong>（对应<code>user/sh.c</code>），它的核心逻辑是“<strong>命令解析→进程管理→等待执行结果</strong>”的循环，依赖<code>fork</code>、<code>exec</code>、<code>wait</code>等系统调用与内核交互。以下是它的完整运行流程：</p>
-<h3 id="一、Shell的启动：内核初始化后的第一个用户程序"><a href="#一、Shell的启动：内核初始化后的第一个用户程序" class="headerlink" title="一、Shell的启动：内核初始化后的第一个用户程序"></a>一、Shell的启动：内核初始化后的第一个用户程序</h3><p>xv6启动时，内核完成初始化（内存、进程、文件系统）后，会通过<code>exec</code>系统调用启动<strong>第一个用户程序——Shell</strong>（对应<code>user/sh.c</code>编译后的可执行文件）。此时Shell成为xv6系统中第一个运行的用户进程。</p>
-<h3 id="二、Shell的核心循环：“读命令→解析→执行→等待”"><a href="#二、Shell的核心循环：“读命令→解析→执行→等待”" class="headerlink" title="二、Shell的核心循环：“读命令→解析→执行→等待”"></a>二、Shell的核心循环：“读命令→解析→执行→等待”</h3><p>Shell启动后，会进入一个<strong>无限循环</strong>，持续处理用户输入的命令，直到系统关闭。核心流程分为4步：</p>
-<h4 id="1-读取用户输入（读命令行）"><a href="#1-读取用户输入（读命令行）" class="headerlink" title="1. 读取用户输入（读命令行）"></a>1. 读取用户输入（读命令行）</h4><p>Shell通过<code>read</code>系统调用，从“标准输入”（默认是终端<code>/dev/console</code>）读取用户输入的一行命令（比如<code>ls</code>、<code>trace 32 grep hello README</code>）。</p>
-<p>xv6的Shell中，这一步由<code>readline</code>函数实现（封装了<code>read</code>系统调用），会等待用户输入并处理换行符，最终得到一个字符串形式的命令行。</p>
-<h4 id="2-解析命令行（拆分命令与参数）"><a href="#2-解析命令行（拆分命令与参数）" class="headerlink" title="2. 解析命令行（拆分命令与参数）"></a>2. 解析命令行（拆分命令与参数）</h4><p>Shell将读取到的命令行字符串拆分为<strong>命令名</strong>和<strong>参数列表</strong>：</p>
+        <h3 id="虚拟地址→物理地址（Sv39-xv6）完整转换流程（含核心疑问解答）"><a href="#虚拟地址→物理地址（Sv39-xv6）完整转换流程（含核心疑问解答）" class="headerlink" title="虚拟地址→物理地址（Sv39&#x2F;xv6）完整转换流程（含核心疑问解答）"></a>虚拟地址→物理地址（Sv39&#x2F;xv6）完整转换流程（含核心疑问解答）</h3><p>先明确你的核心疑问：<strong>二级&#x2F;三级页表的物理地址后12位全为0（不是虚拟地址的后12位）</strong> ——因为所有页表页本身是4KB（2¹²）对齐的，物理地址的后12位（页内偏移）必然为0；只有最终拼接物理地址时，才会用到虚拟地址的后12位作为页内偏移。</p>
+<p>以下是完整、带细节的转换流程总结：</p>
+<h4 id="前提：Sv39地址拆分（核心基础）"><a href="#前提：Sv39地址拆分（核心基础）" class="headerlink" title="前提：Sv39地址拆分（核心基础）"></a>前提：Sv39地址拆分（核心基础）</h4><p>64位虚拟地址仅<strong>低39位有效</strong>，高25位无意义，39位拆分为4部分：</p>
+<table>
+<thead>
+<tr>
+<th>一级页表索引（9位）</th>
+<th>二级页表索引（9位）</th>
+<th>三级页表索引（9位）</th>
+<th>页内偏移（12位）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>VA[38:30]</td>
+<td>VA[29:21]</td>
+<td>VA[20:12]</td>
+<td>VA[11:0]</td>
+</tr>
+</tbody></table>
 <ul>
-<li>比如输入<code>trace 32 grep hello README</code>，会被拆分为：<ul>
-<li>命令名：<code>trace</code></li>
-<li>参数列表：<code>[&quot;trace&quot;, &quot;32&quot;, &quot;grep&quot;, &quot;hello&quot;, &quot;README&quot;]</code></li>
+<li>页内偏移（VA[11:0]）：虚拟地址和物理地址的“页内位置”完全一致，无需转换；</li>
+<li>前27位（3×9位）：用于遍历三级页表，找到目标物理页的页码（PPN）。</li>
+</ul>
+<hr>
+<h4 id="步骤1：硬件读取根页表（一级页表）的物理地址"><a href="#步骤1：硬件读取根页表（一级页表）的物理地址" class="headerlink" title="步骤1：硬件读取根页表（一级页表）的物理地址"></a>步骤1：硬件读取根页表（一级页表）的物理地址</h4><p>CPU从当前核心的<code>satp</code>寄存器中读取<strong>根页表（一级页表）的物理页码（PPN）</strong>：</p>
+<ul>
+<li><code>satp</code>寄存器存储的是“根页表页的PPN”（而非完整物理地址）；</li>
+<li>根页表的完整物理地址 &#x3D; 根页表PPN &lt;&lt; 12（后12位补0）——因为页表页是4KB对齐的，后12位必然为0。</li>
+</ul>
+<hr>
+<h4 id="步骤2：遍历一级页表，找到二级页表的物理地址"><a href="#步骤2：遍历一级页表，找到二级页表的物理地址" class="headerlink" title="步骤2：遍历一级页表，找到二级页表的物理地址"></a>步骤2：遍历一级页表，找到二级页表的物理地址</h4><ol>
+<li>取虚拟地址的一级索引（VA[38:30]），计算一级页表中目标PTE的偏移：<code>偏移 = 一级索引 × 8</code>（每个PTE占8字节）；</li>
+<li>从“根页表物理地址 + 偏移”处读取<strong>一级PTE</strong>：<ul>
+<li>检查PTE的<code>PTE_V</code>位：未置位则触发页故障；</li>
+<li>该PTE的核心值是「二级页表的PPN」（44位）；</li>
 </ul>
 </li>
+<li>二级页表的完整物理地址 &#x3D; 二级页表PPN &lt;&lt; 12（后12位补0）——<strong>这里的后12位和虚拟地址无关，是硬件强制的4KB对齐补0</strong>（你的核心疑问答案）。</li>
+</ol>
+<hr>
+<h4 id="步骤3：遍历二级页表，找到三级页表的物理地址"><a href="#步骤3：遍历二级页表，找到三级页表的物理地址" class="headerlink" title="步骤3：遍历二级页表，找到三级页表的物理地址"></a>步骤3：遍历二级页表，找到三级页表的物理地址</h4><ol>
+<li>取虚拟地址的二级索引（VA[29:21]），计算二级页表中目标PTE的偏移：<code>偏移 = 二级索引 × 8</code>；</li>
+<li>从“二级页表物理地址 + 偏移”处读取<strong>二级PTE</strong>：<ul>
+<li>检查<code>PTE_V</code>位：未置位则触发页故障；</li>
+<li>该PTE的核心值是「三级页表的PPN」；</li>
 </ul>
-<p>xv6的Shell中，这一步由<code>parsecmd</code>函数实现（字符串分割逻辑），最终生成一个命令结构（包含命令类型、参数等）。</p>
-<h4 id="3-执行命令：区分“内置命令”和“外部命令”"><a href="#3-执行命令：区分“内置命令”和“外部命令”" class="headerlink" title="3. 执行命令：区分“内置命令”和“外部命令”"></a>3. 执行命令：区分“内置命令”和“外部命令”</h4><p>Shell会根据命令类型，选择不同的执行方式：</p>
-<h5 id="（1）内置命令：直接在Shell进程中执行（不创建子进程）"><a href="#（1）内置命令：直接在Shell进程中执行（不创建子进程）" class="headerlink" title="（1）内置命令：直接在Shell进程中执行（不创建子进程）"></a>（1）内置命令：直接在Shell进程中执行（不创建子进程）</h5><p>内置命令是<strong>Shell自身实现的功能</strong>，无法通过“启动外部程序”完成，因此必须在Shell进程中直接执行（依赖对应的系统调用）。</p>
-<p>xv6中典型的内置命令是<code>cd</code>（切换工作目录）：</p>
+</li>
+<li>三级页表的完整物理地址 &#x3D; 三级页表PPN &lt;&lt; 12（后12位仍补0，同理4KB对齐）。</li>
+</ol>
+<hr>
+<h4 id="步骤4：遍历三级页表，找到目标物理页的PPN"><a href="#步骤4：遍历三级页表，找到目标物理页的PPN" class="headerlink" title="步骤4：遍历三级页表，找到目标物理页的PPN"></a>步骤4：遍历三级页表，找到目标物理页的PPN</h4><ol>
+<li>取虚拟地址的三级索引（VA[20:12]），计算三级页表中目标PTE的偏移：<code>偏移 = 三级索引 × 8</code>；</li>
+<li>从“三级页表物理地址 + 偏移”处读取<strong>最终PTE</strong>：<ul>
+<li>检查<code>PTE_V</code>位：未置位→页故障；</li>
+<li>检查访问权限（如读操作查<code>PTE_R</code>、用户态访问查<code>PTE_U</code>）：权限不匹配→页故障；</li>
+<li>该PTE的核心值是「目标物理页的PPN」（44位）。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h4 id="步骤5：拼接最终物理地址"><a href="#步骤5：拼接最终物理地址" class="headerlink" title="步骤5：拼接最终物理地址"></a>步骤5：拼接最终物理地址</h4><p>目标物理地址 &#x3D; （最终PTE的PPN &lt;&lt; 12） + 虚拟地址的页内偏移（VA[11:0]）：</p>
 <ul>
-<li>原因：如果<code>cd</code>在子进程中执行，子进程的工作目录会改变，但<strong>父进程（Shell）的工作目录不会受影响</strong>（进程的工作目录是独立的），所以必须由Shell自己调用<code>chdir</code>系统调用完成切换。</li>
+<li><code>PPN &lt;&lt; 12</code>：将物理页码转换为物理页的起始地址（后12位补0）；</li>
+<li>加上虚拟地址的页内偏移：定位到物理页内的具体字节（这是唯一用到虚拟地址后12位的环节）。</li>
 </ul>
-<p>执行逻辑：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 以cd为例</span></span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">strcmp</span>(cmd, <span class="string">&quot;cd&quot;</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (argc &lt; <span class="number">2</span>) &#123; <span class="comment">/* 处理参数不足 */</span> &#125;</span><br><span class="line">  <span class="comment">// 直接在Shell进程中调用chdir系统调用</span></span><br><span class="line">  <span class="keyword">if</span> (chdir(argv[<span class="number">1</span>]) &lt; <span class="number">0</span>) &#123; <span class="comment">/* 处理错误 */</span> &#125;</span><br><span class="line">  <span class="keyword">return</span>; <span class="comment">// 执行完后回到Shell循环</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h5 id="（2）外部命令：创建子进程执行（依赖fork-exec）"><a href="#（2）外部命令：创建子进程执行（依赖fork-exec）" class="headerlink" title="（2）外部命令：创建子进程执行（依赖fork+exec）"></a>（2）外部命令：创建子进程执行（依赖fork+exec）</h5><p>外部命令是<strong>独立的用户程序</strong>（如<code>ls</code>、<code>grep</code>、<code>sysinfotest</code>），需要通过“创建子进程+替换程序镜像”的方式执行：</p>
-<p>执行逻辑分为3步：</p>
+<hr>
+<h3 id="关键补充（避免混淆）"><a href="#关键补充（避免混淆）" class="headerlink" title="关键补充（避免混淆）"></a>关键补充（避免混淆）</h3><ol>
+<li><p><strong>页表页的物理地址后12位为何是0？</strong><br>所有页表页（一级&#x2F;二级&#x2F;三级）都是4KB大小且按4KB对齐分配的（xv6的<code>kalloc()</code>函数保证分配的物理页4KB对齐），因此物理地址的低12位（页内偏移）必然为0，和虚拟地址无关。</p>
+</li>
+<li><p><strong>TLB的优化作用</strong><br>硬件会缓存最近转换的“虚拟地址→物理地址”映射到TLB中，后续相同虚拟地址转换时，直接从TLB读取结果，跳过三级页表遍历，大幅提升效率；修改页表后需刷新TLB（如xv6的<code>tlbflush()</code>），避免旧映射残留。</p>
+</li>
+<li><p><strong>页故障的触发场景</strong><br>任何一步的PTE_V未置位、权限不匹配（如用户态写无<code>PTE_W</code>的页）、地址越界等，都会触发页故障异常，由内核（trap处理逻辑）接管（如分配物理页、建立映射，或杀死非法进程）。</p>
+</li>
+</ol>
+<h3 id="极简总结"><a href="#极简总结" class="headerlink" title="极简总结"></a>极简总结</h3><p>虚拟地址→物理地址 &#x3D; 「三级页表遍历找目标PPN」 + 「PPN&lt;&lt;12 + 虚拟地址后12位偏移」；<br>二级&#x2F;三级页表的物理地址仅由PTE的PPN&lt;&lt;12得到（后12位0），只有最终物理地址才用到虚拟地址的后12位。</p>
+<hr>
+<p>你的这个理解是<strong>核心概念混淆</strong>——结论先明确：<br>xv6的页表<strong>绝对不是</strong> 512×512×512 个页（这是 Sv39 能映射的<strong>最大虚拟页数</strong>，而非页表本身的页数）；且哪怕是页表页数的理论上限，也远小于这个数，xv6实际使用的页表页数更是远低于理论值。</p>
+<h3 id="第一步：先厘清两个关键概念"><a href="#第一步：先厘清两个关键概念" class="headerlink" title="第一步：先厘清两个关键概念"></a>第一步：先厘清两个关键概念</h3><table>
+<thead>
+<tr>
+<th>概念</th>
+<th>计算方式</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Sv39可映射的<strong>最大虚拟页数</strong></td>
+<td>512×512×512 &#x3D; 2²⁷ &#x3D; 134,217,728</td>
+<td>虚拟地址空间（512GB）按4KB分页后的总页数（每个虚拟页对应一个三级PTE）</td>
+</tr>
+<tr>
+<td>页表本身的<strong>理论最大页数</strong></td>
+<td>1（根页表） + 512（二级页表） + 512×512（三级页表） &#x3D; 262,657</td>
+<td>三级页表结构下，“页表页”（存储PTE的物理页）的理论上限（全映射时）</td>
+</tr>
+</tbody></table>
+<p>简单说：512³ 是「虚拟页的数量」，不是「页表页的数量」——这是你混淆的核心。</p>
+<h3 id="第二步：为什么页表页数的理论上限远小于512³？"><a href="#第二步：为什么页表页数的理论上限远小于512³？" class="headerlink" title="第二步：为什么页表页数的理论上限远小于512³？"></a>第二步：为什么页表页数的理论上限远小于512³？</h3><p>Sv39三级页表的设计逻辑是「按需分配页表页」，而非一次性分配全量：</p>
 <ol>
-<li><strong><code>fork</code>创建子进程</strong>：Shell调用<code>fork</code>系统调用，创建一个与自己完全相同的子进程（复制内存、上下文）；</li>
-<li><strong>子进程中<code>exec</code>替换程序</strong>：子进程调用<code>exec</code>系统调用，将自己的程序镜像替换为目标命令对应的可执行文件（比如<code>exec(&quot;ls&quot;, argv)</code>会加载<code>/bin/ls</code>并执行）；</li>
-<li><strong>父进程<code>wait</code>等待子进程结束</strong>：Shell（父进程）调用<code>wait</code>系统调用，阻塞等待子进程执行完毕，然后继续下一轮循环。</li>
+<li><strong>根页表页</strong>：固定1个（4KB），存储512个二级页表的PPN；</li>
+<li><strong>二级页表页</strong>：最多512个（每个对应根页表的1个PTE），每个二级页表页存储512个三级页表的PPN；</li>
+<li><strong>三级页表页</strong>：最多512×512&#x3D;262,144个（每个对应二级页表的1个PTE），每个三级页表页存储512个最终PTE（对应512个虚拟页）。</li>
 </ol>
-<h4 id="4-等待子进程结束，回到循环"><a href="#4-等待子进程结束，回到循环" class="headerlink" title="4. 等待子进程结束，回到循环"></a>4. 等待子进程结束，回到循环</h4><p>外部命令执行时，Shell会阻塞在<code>wait</code>调用中，直到子进程执行完毕（无论是正常退出还是出错）。子进程结束后，Shell会清理子进程的资源，然后回到循环的第一步，等待下一个用户命令。</p>
-<h3 id="三、xv6-Shell的执行示例（以trace-32-grep-hello-README为例）"><a href="#三、xv6-Shell的执行示例（以trace-32-grep-hello-README为例）" class="headerlink" title="三、xv6 Shell的执行示例（以trace 32 grep hello README为例）"></a>三、xv6 Shell的执行示例（以<code>trace 32 grep hello README</code>为例）</h3><ol>
-<li>用户在终端输入<code>trace 32 grep hello README</code>，Shell通过<code>read</code>读取该命令行；</li>
-<li><code>parsecmd</code>将其拆分为命令名<code>trace</code>和参数列表<code>[&quot;trace&quot;, &quot;32&quot;, &quot;grep&quot;, &quot;hello&quot;, &quot;README&quot;]</code>；</li>
-<li>Shell判断<code>trace</code>是外部命令，调用<code>fork</code>创建子进程；</li>
-<li>子进程调用<code>exec(&quot;trace&quot;, argv)</code>，加载并执行<code>trace</code>程序（<code>trace</code>内部会调用<code>trace</code>系统调用设置掩码，再<code>exec</code>执行<code>grep</code>）；</li>
-<li>Shell（父进程）调用<code>wait</code>，等待<code>trace</code>进程执行完毕；</li>
-<li><code>trace</code>执行完成后，Shell回到循环，等待下一个命令。</li>
-</ol>
-<h3 id="四、Shell的核心特点"><a href="#四、Shell的核心特点" class="headerlink" title="四、Shell的核心特点"></a>四、Shell的核心特点</h3><ol>
-<li><strong>Shell是用户程序</strong>：它本身不具备内核权限，所有功能（如创建进程、切换目录）都依赖系统调用；</li>
-<li><strong>内置命令的必要性</strong>：部分操作（如<code>cd</code>、<code>exit</code>）必须在Shell进程中执行，否则无法影响Shell自身的状态；</li>
-<li><strong>依赖进程管理系统调用</strong>：<code>fork</code>、<code>exec</code>、<code>wait</code>是Shell实现“多命令执行”的核心基础。</li>
-</ol>
-<p>总结来说，xv6的Shell是一个“<strong>命令解释器+进程管理器</strong>”，通过“读取-解析-执行-等待”的循环，借助内核的进程管理能力，实现用户命令的执行。</p>
+<p>全量映射时，页表页总数&#x3D;1+512+262144&#x3D;262,657个（约1GB），而512³&#x3D;13400万+，两者差500多倍。</p>
+<h3 id="第三步：xv6实际使用的页表页数（远低于理论上限）"><a href="#第三步：xv6实际使用的页表页数（远低于理论上限）" class="headerlink" title="第三步：xv6实际使用的页表页数（远低于理论上限）"></a>第三步：xv6实际使用的页表页数（远低于理论上限）</h3><p>xv6是极简操作系统，物理内存默认仅128MB左右，且只映射“实际需要的虚拟地址”，因此页表页数极少：</p>
+<h4 id="1-内核页表（所有进程共享）"><a href="#1-内核页表（所有进程共享）" class="headerlink" title="1. 内核页表（所有进程共享）"></a>1. 内核页表（所有进程共享）</h4><p>内核需要映射「所有物理内存」+「内核代码&#x2F;数据&#x2F;栈」：</p>
+<ul>
+<li>物理内存：128MB ÷ 4KB &#x3D; 32768个物理页 → 需32768个三级PTE；</li>
+<li>三级页表页数量：32768 ÷ 512 &#x3D; 64个（每个三级页表页存512个PTE）；</li>
+<li>二级页表页数量：仅1个（因为物理内存连续，根页表的1个PTE指向这个二级页表）；</li>
+<li>根页表页：1个；</li>
+<li>总计：1+1+64&#x3D;66个页表页（≈264KB）。</li>
+</ul>
+<h4 id="2-用户进程页表（每个进程独立）"><a href="#2-用户进程页表（每个进程独立）" class="headerlink" title="2. 用户进程页表（每个进程独立）"></a>2. 用户进程页表（每个进程独立）</h4><p>用户进程仅映射「代码段+数据段+栈段」（通常几MB）：</p>
+<ul>
+<li>比如映射4MB虚拟内存：4MB ÷4KB&#x3D;1024个虚拟页 → 需2个三级页表页（1024÷512）；</li>
+<li>二级页表页：1个；</li>
+<li>根页表页：1个；</li>
+<li>总计：1+1+2&#x3D;4个页表页（≈16KB）。</li>
+</ul>
+<h3 id="第四步：总结核心误区"><a href="#第四步：总结核心误区" class="headerlink" title="第四步：总结核心误区"></a>第四步：总结核心误区</h3><p>你把「Sv39能映射的最大虚拟页数（512³）」和「页表本身的页数」搞混了：</p>
+<ul>
+<li>512³ 是虚拟地址空间的“覆盖范围”（512GB ÷4KB），代表xv6理论上能给进程分配的最大虚拟页数量；</li>
+<li>页表页数是「存储这些虚拟页映射关系的物理页数量」，受三级结构限制，理论上限仅26万+，实际xv6只用几十&#x2F;几个。</li>
+</ul>
+<p>补充：xv6代码中也能印证这一点——创建页表的<code>uvmcreate()</code>函数仅先分配1个根页表页，后续<code>uvmmap()</code>映射虚拟页时，才按需分配二级&#x2F;三级页表页，绝不会一次性分配512³个页（也不可能：512³个4KB页&#x3D;2¹²×2²⁷&#x3D;2³⁹字节&#x3D;512GB，远超xv6的物理内存上限）。</p>
 
     </div>
 </article>
@@ -383,37 +463,37 @@
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
                     <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-sbrk-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%88%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E6%89%A9%E7%BC%A9%E5%AE%B9%EF%BC%89%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 sbrk 系统调用（进程内存扩缩容）核心逻辑总结</a>
+                    <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">git使用</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E5%86%85%E6%A0%B8%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 内核地址空间总结</a>
+                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/satp/">satp</a>
+                    <a href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E9%87%8A%E6%94%BE%E6%9C%BA%E5%88%B6%E6%80%BB%E7%BB%93/">xv6 物理内存分配与释放机制总结</a>
+                    <a href="/2025/12/28/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a>
                 </span>
             </li>
             
@@ -425,13 +505,13 @@
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/">xv6内核架构</a>
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/copyin-copyout%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/">copyin/copyout详细介绍</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/copyin-copyout%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/">copyin/copyout详细介绍</a>
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/">添加系统调用的过程</a>
                 </span>
             </li>
             
@@ -452,17 +532,17 @@
 
                 
                 <li>
-                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
+                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
                 </li>
                 
                 
                 <li>
-                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
+                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
                 </li>
                 
                 
                 <li>
-                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
+                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
                 </li>
                 
             </ul>

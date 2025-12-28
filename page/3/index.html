@@ -18,7 +18,7 @@
     
     
     
-    <title>xv6内核架构 | Ivan&#39;s Tech Blog</title>
+    <title>Ivan&#39;s Tech Blog</title>
     <link href="https://hellonnnnn.github.io" rel="prefetch" />
 
     
@@ -159,168 +159,132 @@
             <div class="row">
                 <div class="col-md-8 gal-right" id="mainstay">
                     
-<article class="article well article-body" id="article">
-    <div class="breadcrumb">
-        <i class="fa fa-home"></i>
-        <a href="https://hellonnnnn.github.io">Ivan&#39;s Tech Blog</a>
-        >
-        <span>xv6内核架构</span>
+<div class="alert well fade in" id="gal-issue" role="alert">
+    <!-- TODO 添加关闭公告框功能 -->
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    <!-- 这里自行配置公告内容 -->
+    这里是公告内容
+    <br>
+    配置相关说明请看<strong>_config.yml</strong>
+    <!-- 自行配置公告内容结束 -->
+</div>
+
+<div id="article-list">
+     
+     
+     <div class="article well clearfix article-body article-excerpt" data-aos="flip-up">
+    
+    <div class="data-article hidden-xs">
+        <span class="month">12月</span>
+        <span class="day">18</span>
     </div>
-    <!-- 大型设备详细文章 -->
-    <div class="hidden-xs">
+    <!-- 大型设备文章 -->
+    <section class="hidden-xs">
         <div class="title-article">
             <h1>
-                <a href="/2025/12/22/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/">xv6内核架构</a>
+                <a href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">
+                    <span>xv6-labs-2020 lab1</span>
+                </a>
             </h1>
         </div>
         <div class="tag-article">
             
-            <span class="label label-gal">
-                <i class="fa fa-calendar"></i> 2025-12-22
-            </span>
             
+            <!-- TODO 添加评论统计 -->
+            <!--<span class="label label-gal">
+                <i class="fa fa-comments"></i>
+                <a href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/#comments">739</a>
+            </span>-->
         </div>
-    </div>
-    <!-- 小型设备详细文章 -->
-    <div class="visible-xs">
-        <center>
-            <div class="title-article">
-                <h4>
-                    <a href="/2025/12/22/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/">xv6内核架构</a>
-                </h4>
+        <div class="alert alert-gal article-body content-article">
+            <div class="item">
+                <a href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">
+                    <div class="img">
+                        
+                        <img src="/imgs/preview/preview4.jpg" alt="xv6-labs-2020 lab1">
+                    </div>
+                    <div class="info">
+                        
+                    </div>
+                </a>
             </div>
-            <p>
-                <i class="fa fa-calendar"></i> 2025-12-22
-            </p>
-            <p>
-                
-                
-            </p>
+        </div>
+    </section>
+    <section class="visible-xs">
+        <div class="title-article">
+            <center>
+                <h4>
+                    <a href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">
+                        <span>xv6-labs-2020 lab1</span>
+                    </a>
+                </h4>
+            </center>
+        </div>
+        <p></p>
+        <center>
+            <i class="fa fa-calendar"></i> 2025-12-18
         </center>
-    </div>
-    <div class="content-article">
-        <p>xv6是MIT开发的<strong>类Unix教学操作系统</strong>（复刻Unix V6），核心用于讲解操作系统的基础架构与核心机制。它采用<strong>单内核架构</strong>（所有内核功能在同一特权级地址空间运行），整体分为**内核态（kernel目录）<strong>和</strong>用户态（user目录）**两大部分，对应你截图中的核心目录结构。</p>
-<h3 id="一、xv6的核心目录与文件功能（对应你的截图）"><a href="#一、xv6的核心目录与文件功能（对应你的截图）" class="headerlink" title="一、xv6的核心目录与文件功能（对应你的截图）"></a>一、xv6的核心目录与文件功能（对应你的截图）</h3><p>从你的截图可以看到xv6的根目录结构，核心目录&#x2F;文件的作用如下：</p>
-<table>
-<thead>
-<tr>
-<th>目录&#x2F;文件</th>
-<th>功能说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>kernel/</code></td>
-<td>内核态代码：包含操作系统的核心功能模块（进程、内存、文件系统等）</td>
-</tr>
-<tr>
-<td><code>user/</code></td>
-<td>用户态代码：包含用户程序（如<code>cat</code>、<code>echo</code>）、系统调用封装、shell等</td>
-</tr>
-<tr>
-<td><code>Makefile</code></td>
-<td>编译配置文件：定义内核、用户程序的编译规则，控制xv6镜像的生成</td>
-</tr>
-<tr>
-<td><code>fs.img</code></td>
-<td>xv6的文件系统镜像：存储用户程序、系统文件的虚拟磁盘</td>
-</tr>
-<tr>
-<td><code>grade-lab-syscall</code></td>
-<td>实验评分脚本：用于验证系统调用类实验（如你之前的<code>trace</code>&#x2F;<code>sysinfo</code>）的正确性</td>
-</tr>
-<tr>
-<td><code>xv6.out</code></td>
-<td>编译生成的xv6内核镜像文件</td>
-</tr>
-</tbody></table>
-<h3 id="二、xv6的系统架构（分模块）"><a href="#二、xv6的系统架构（分模块）" class="headerlink" title="二、xv6的系统架构（分模块）"></a>二、xv6的系统架构（分模块）</h3><p>xv6的架构围绕“<strong>用户态程序请求内核服务</strong>”的核心逻辑展开，内核态分为多个功能模块，用户态通过系统调用与内核交互。</p>
-<h4 id="1-内核态（kernel目录）：操作系统核心功能"><a href="#1-内核态（kernel目录）：操作系统核心功能" class="headerlink" title="1. 内核态（kernel目录）：操作系统核心功能"></a>1. 内核态（kernel目录）：操作系统核心功能</h4><p>内核态是xv6的“服务提供者”，包含以下核心模块（对应<code>kernel/</code>下的文件）：</p>
-<ul>
-<li><p><strong>进程管理模块</strong>（<code>proc.c</code>、<code>proc.h</code>）</p>
-<ul>
-<li>管理进程的生命周期（创建<code>fork</code>、执行<code>exec</code>、终止<code>exit</code>、等待<code>wait</code>）；</li>
-<li>维护进程结构体<code>struct proc</code>（包含进程状态、地址空间、内核栈等）；</li>
-<li>实现进程调度（基于时间片的轮转调度）。</li>
-</ul>
-</li>
-<li><p><strong>内存管理模块</strong>（<code>kalloc.c</code>、<code>vm.c</code>、<code>memlayout.h</code>）</p>
-<ul>
-<li>物理内存分配：通过空闲页链表管理物理内存（<code>kalloc</code>分配、<code>kfree</code>释放）；</li>
-<li>虚拟内存管理：为每个进程维护独立的虚拟地址空间（通过页表<code>pagetable_t</code>实现）；</li>
-<li>地址空间隔离：用户态与内核态地址空间分离，内核态有独立的地址区域。</li>
-</ul>
-</li>
-<li><p><strong>文件系统模块</strong>（<code>fs.c</code>、<code>file.c</code>、<code>inode.c</code>）</p>
-<ul>
-<li>实现类Unix的文件系统：基于inode（索引节点）管理文件&#x2F;目录，支持硬链接、目录遍历；</li>
-<li>统一文件接口：将“文件、目录、设备”抽象为“文件描述符”，用户态通过<code>open/read/write/close</code>操作所有资源。</li>
-</ul>
-</li>
-<li><p><strong>设备驱动模块</strong>（<code>console.c</code>、<code>uart.c</code>、<code>disk.c</code>）</p>
-<ul>
-<li>对接硬件设备：实现终端（console）、串口（uart）、磁盘（disk）的驱动逻辑；</li>
-<li>设备抽象为文件：将设备映射为特殊文件（如<code>/dev/console</code>），通过文件系统接口访问。</li>
-</ul>
-</li>
-<li><p><strong>系统调用模块</strong>（<code>syscall.c</code>、<code>sys_*.c</code>）</p>
-<ul>
-<li>提供系统调用的“入口与映射”：维护<code>syscalls</code>数组（系统调用号→内核函数的映射）；</li>
-<li>处理用户态请求：从<code>trapframe</code>提取参数，调用对应内核函数（如<code>sys_trace</code>&#x2F;<code>sysinfo</code>），并返回结果。</li>
-</ul>
-</li>
-<li><p><strong>中断&#x2F;陷阱处理模块</strong>（<code>trap.c</code>、<code>entry.S</code>）</p>
-<ul>
-<li>处理特权级切换：用户态通过<code>ecall</code>指令触发“陷阱”，进入内核态；</li>
-<li>保存&#x2F;恢复上下文：将用户态寄存器保存到<code>trapframe</code>，内核处理完后恢复寄存器并返回用户态。</li>
-</ul>
-</li>
-<li><p><strong>启动模块</strong>（<code>entry.S</code>、<code>start.c</code>）</p>
-<ul>
-<li>硬件启动后，先执行汇编代码<code>entry.S</code>（初始化CPU状态、跳转到C代码）；</li>
-<li><code>start.c</code>完成内核初始化（内存、进程、文件系统），最终启动第一个用户程序（shell）。</li>
-</ul>
-</li>
-</ul>
-<h4 id="2-用户态（user目录）：应用程序与接口"><a href="#2-用户态（user目录）：应用程序与接口" class="headerlink" title="2. 用户态（user目录）：应用程序与接口"></a>2. 用户态（user目录）：应用程序与接口</h4><p>用户态是xv6的“服务使用者”，包含以下部分（对应<code>user/</code>下的文件）：</p>
-<ul>
-<li><p><strong>用户程序</strong>（如<code>cat.c</code>、<code>echo.c</code>、<code>sysinfotest.c</code>）</p>
-<ul>
-<li>实现具体功能的应用程序，通过系统调用请求内核服务（如<code>echo</code>调用<code>write</code>输出内容）。</li>
-</ul>
-</li>
-<li><p><strong>系统调用封装</strong>（<code>usys.S</code>、<code>user.h</code>）</p>
-<ul>
-<li><code>usys.S</code>：由<code>usys.pl</code>生成的汇编存根，将系统调用封装为用户态函数（如<code>sysinfo</code>对应汇编指令<code>ecall</code>）；</li>
-<li><code>user.h</code>：声明用户态可调用的系统调用接口（如<code>int sysinfo(struct sysinfo *si)</code>）。</li>
-</ul>
-</li>
-<li><p><strong>Shell（<code>sh.c</code>）</strong></p>
-<ul>
-<li>命令解释器：解析用户输入的命令，启动对应的用户程序（如输入<code>ls</code>则启动<code>ls</code>程序）；</li>
-<li>本身是一个用户程序，通过系统调用与内核交互（如<code>fork</code>创建子进程、<code>exec</code>执行命令）。</li>
-</ul>
-</li>
-</ul>
-<h3 id="三、xv6的核心运行逻辑（用户态→内核态交互）"><a href="#三、xv6的核心运行逻辑（用户态→内核态交互）" class="headerlink" title="三、xv6的核心运行逻辑（用户态→内核态交互）"></a>三、xv6的核心运行逻辑（用户态→内核态交互）</h3><p>xv6的核心流程是“<strong>用户程序发起系统调用→内核处理请求→返回用户态</strong>”，以<code>sysinfo</code>为例：</p>
-<ol>
-<li>用户程序调用<code>sysinfo(&amp;si)</code>（<code>user.h</code>中声明的接口）；</li>
-<li>执行<code>usys.S</code>中的汇编存根：将系统调用号<code>SYS_sysinfo</code>存入<code>a7</code>，执行<code>ecall</code>陷入内核；</li>
-<li>内核<code>trap</code>处理程序保存用户态寄存器到<code>trapframe</code>，调用<code>syscall()</code>；</li>
-<li><code>syscall()</code>通过<code>syscalls</code>数组找到<code>sys_sysinfo</code>函数，执行内存&#x2F;进程统计；</li>
-<li>内核通过<code>copyout</code>将结果拷贝到用户态指针<code>&amp;si</code>；</li>
-<li>执行<code>sret</code>返回用户态，用户程序获取结果并继续运行。</li>
-</ol>
-<h3 id="四、xv6架构的特点（教学定位）"><a href="#四、xv6架构的特点（教学定位）" class="headerlink" title="四、xv6架构的特点（教学定位）"></a>四、xv6架构的特点（教学定位）</h3><p>xv6作为教学操作系统，架构设计<strong>简洁且覆盖核心原理</strong>：</p>
-<ul>
-<li>单内核架构：所有内核功能在同一地址空间，简化了模块间的交互（适合教学）；</li>
-<li>功能精简：仅保留Unix的核心机制（进程、内存、文件系统、系统调用），去除了复杂特性（如网络、多CPU）；</li>
-<li>接口与Unix兼容：用户态接口（系统调用、文件系统）与Unix一致，便于理解实际OS的工作方式。</li>
-</ul>
-<p>总结来说，xv6的架构是“<strong>内核态提供核心服务模块，用户态通过统一的系统调用接口请求服务</strong>”，其目录结构（<code>kernel</code>&#x2F;<code>user</code>）直接对应了“内核-用户”的分层逻辑。</p>
+        <p></p>
+        <p></p>
+        <center>
+            
+            
+        </center>
+        <p></p>
+        <div class="alert alert-gal article-body content-article">
+            <p style="text-align: center;">
+                <a href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">
+                    
+                    <img src="/imgs/preview/preview2.jpg" alt="xv6-labs-2020 lab1">
+                </a>
+            </p>
+        </div>
+        
+        <a class="btn btn-danger pull-right read-more btn-block" href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">
+            阅读全文
+            <!--<span class="badge">739</span>-->
+        </a>
+    </section>
+</div>
+     
+</div>
+<!-- 前方最多7个 < 1 2 3 4 5 6 -->
+<!-- 前方超过第7页则分为 < 1 ... (n - 3) (n - 2) (n - 1) n, 此时前面为固定的6个 -->
 
-    </div>
-</article>
+<!-- 后方最多8个 (n + 1) 到 (n + 7) > -->
+<!-- 如果末页和当前页相差超过7, 此时后面为固定的6个, (n + 1) (n + 2) (n + 3) ... total > -->
 
+
+
+<div id="gal-pagination" class="clearfix">
+    <ul class="pagination pagination-gal pull-right">
+        
+        <li class="prev">
+            <a href="/page/2/">«</a>
+        </li>
+        
+        
+        
+        <li>
+            <a href="/">1</a>
+        </li>
+        
+        <li>
+            <a href="/page/2 ">2</a>
+        </li>
+        
+        
+        <li class="current">
+            <span>3</span>
+        </li>
+        
+        
+        
+        
+    </ul>
+</div>
+
+<!-- 加上这段代码原因： gitment在首页加载时, 如果找不到对应的控件会报错，此处加上，同时设置为none，防止报错 -->   
 
                 </div>
                 <aside class="col-md-4 gal-left" id="sidebar">
@@ -379,61 +343,61 @@
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/22/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a>
+                    <a href="/2025/12/28/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a>
+                    <a href="/2025/12/28/%E9%99%B7%E9%98%B1%E6%8C%87%E4%BB%A4%E5%92%8C%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8-%E6%A0%B8%E5%BF%83%E8%A7%A3%E6%9E%90/">陷阱指令和系统调用 核心解析</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a>
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 exec 系统调用核心逻辑总结</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/22/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/">xv6内核架构</a>
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-sbrk-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%88%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E6%89%A9%E7%BC%A9%E5%AE%B9%EF%BC%89%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 sbrk 系统调用（进程内存扩缩容）核心逻辑总结</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/22/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/">添加系统调用的过程</a>
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 进程地址空间总结</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/21/%E7%AC%AC%E4%BA%8C%E7%AB%A0/">第二章</a>
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E9%87%8A%E6%94%BE%E6%9C%BA%E5%88%B6%E6%80%BB%E7%BB%93/">xv6 物理内存分配与释放机制总结</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a>
+                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E5%86%85%E6%A0%B8%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 内核地址空间总结</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">git使用</a>
+                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/satp/">satp</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a>
+                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a>
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/copyin-copyout%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/">copyin/copyout详细介绍</a>
                 </span>
             </li>
             
@@ -455,42 +419,6 @@
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/22/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/">添加系统调用的过程</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2025/12/22/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/">xv6内核架构</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2025/12/22/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2025/12/21/%E7%AC%AC%E4%BA%8C%E7%AB%A0/">第二章</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
                     <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a>
                 </span>
             </li>
@@ -503,13 +431,49 @@
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a>
+                    <a href="/2025/12/28/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a>
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-sbrk-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%88%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E6%89%A9%E7%BC%A9%E5%AE%B9%EF%BC%89%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 sbrk 系统调用（进程内存扩缩容）核心逻辑总结</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 exec 系统调用核心逻辑总结</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E9%87%8A%E6%94%BE%E6%9C%BA%E5%88%B6%E6%80%BB%E7%BB%93/">xv6 物理内存分配与释放机制总结</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/copyin-copyout%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/">copyin/copyout详细介绍</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3/">系统调用正确理解</a>
                 </span>
             </li>
             
@@ -524,17 +488,17 @@
 
                 
                 <li>
-                    <a href="/2025/12/22/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
+                    <a href="/page/3/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
                 </li>
                 
                 
                 <li>
-                    <a href="/2025/12/22/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
+                    <a href="/page/3/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
                 </li>
                 
                 
                 <li>
-                    <a href="/2025/12/22/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
+                    <a href="/page/3/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
                 </li>
                 
             </ul>

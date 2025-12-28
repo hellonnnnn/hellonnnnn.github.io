@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="author" content="Ivan-FYF">
+    
+    <meta name="description" content="记录 C++、Linux、系统方向学习与项目">
+    
+
+    <!-- favicon -->
+   <link rel="icon" href="/favicon.ico" type="image/x-icon">
+   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+
+    
+    
+    
+    
+    
+    <title>陷阱指令和系统调用 核心解析 | Ivan&#39;s Tech Blog</title>
+    <link href="https://hellonnnnn.github.io" rel="prefetch" />
+
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/aos.css">
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery.min.js"></script>
+
+    
+<script src="/js/bootstrap.min.js"></script>
+
+    
+<script src="/js/aos.js"></script>
+
+    
+<script src="/js/highslide/highslide-full.min.js"></script>
+
+    
+<link rel="stylesheet" href="/js/highslide/highslide.css">
+
+    <style type="text/css">
+        @media (max-width: 768px) {
+            body {
+                background-color: #f0f0f0;
+                background: url('/imgs/xsbg.gif');
+                background-attachment: fixed;
+            }
+        }
+    </style>
+    
+    <!--<script type="text/javascript">
+      if (document.images) {
+        var avatar = new Image();
+        avatar.src = '/imgs/avatar.jpg'
+        var previews = 'preview1.jpg,preview2.jpg,preview3.jpg,preview4.jpg'.split(',')
+        var previewsPreLoad = []
+        for(var i = 0; i < length; i++) {
+          previewsPreLoad.push(new Image())
+          previewsPreLoad[previewsPreLoad.length - 1].src = '/imgs/preview' + previews[i]
+        }
+      }
+    </script>-->
+<meta name="generator" content="Hexo 8.1.1"></head>
+<body>
+    <!-- 背景轮播图功能 -->
+    <section class="hidden-xs">
+    <ul class="cb-slideshow">
+        <li><span>天若</span></li>
+        <li><span>有情</span></li>
+        <li><span>天亦老</span></li>
+        <li><span>我为</span></li>
+        <li><span>长者</span></li>
+        <li><span>续一秒</span></li>
+    </ul>
+</section>
+    <!-- 欧尼酱功能, 谁用谁知道 -->
+    
+    <header class="navbar navbar-inverse" id="gal-header">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target=".bs-navbar-collapse"
+                    aria-expanded="false">
+                <span class="fa fa-lg fa-reorder"></span>
+            </button>
+            <a href="https://hellonnnnn.github.io">
+                
+                <style>
+                    #gal-header .navbar-brand {
+                        height: 54px;
+                        line-height: 24px;
+                        font-size: 28px;
+                        opacity: 1;
+                        background-color: rgba(0,0,0,0);
+                        text-shadow: 0 0 5px #fff,0 0 10px #fff,0 0 15px #fff,0 0 20px #228DFF,0 0 35px #228DFF,0 0 40px #228DFF,0 0 50px #228DFF,0 0 75px #228DFF;
+                    }
+                </style>
+                <!-- 这里使用文字(navbar_text or config.title) -->
+                <div class="navbar-brand">Ivan&#39;s Tech Blog</div>
+                
+            </a>
+        </div>
+        <div class="collapse navbar-collapse bs-navbar-collapse">
+            <ul class="nav navbar-nav" id="menu-gal">
+                
+                
+                <li class="">
+                    <a href="/">
+                        <i class="fa fa-home"></i>首页
+                    </a>
+                </li>
+                
+                
+                
+                <li class="">
+                    <a href="/archives">
+                        <i class="fa fa-archive"></i>归档
+                    </a>
+                </li>
+                
+                
+                
+                
+                <li class="">
+                    <a href="/categories">
+                        <i class="fa fa-list"></i>分类
+                    </a>
+                </li>
+                
+                
+                
+                
+                
+                <li class="">
+                    <a href="/tags">
+                        <i class="fa fa-tags"></i>标签
+                    </a>
+                </li>
+                
+                
+                
+                
+                <li class="">
+                    <a href="/about">
+                        <i class="fa fa-user"></i>关于我
+                    </a>
+                </li>
+                
+                
+            </ul>
+        </div>
+    </div>
+</header>
+    <div id="gal-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 gal-right" id="mainstay">
+                    
+<article class="article well article-body" id="article">
+    <div class="breadcrumb">
+        <i class="fa fa-home"></i>
+        <a href="https://hellonnnnn.github.io">Ivan&#39;s Tech Blog</a>
+        >
+        <span>陷阱指令和系统调用 核心解析</span>
+    </div>
+    <!-- 大型设备详细文章 -->
+    <div class="hidden-xs">
+        <div class="title-article">
+            <h1>
+                <a href="/2025/12/28/%E9%99%B7%E9%98%B1%E6%8C%87%E4%BB%A4%E5%92%8C%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8-%E6%A0%B8%E5%BF%83%E8%A7%A3%E6%9E%90/">陷阱指令和系统调用 核心解析</a>
+            </h1>
+        </div>
+        <div class="tag-article">
+            
+            <span class="label label-gal">
+                <i class="fa fa-calendar"></i> 2025-12-28
+            </span>
+            
+        </div>
+    </div>
+    <!-- 小型设备详细文章 -->
+    <div class="visible-xs">
+        <center>
+            <div class="title-article">
+                <h4>
+                    <a href="/2025/12/28/%E9%99%B7%E9%98%B1%E6%8C%87%E4%BB%A4%E5%92%8C%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8-%E6%A0%B8%E5%BF%83%E8%A7%A3%E6%9E%90/">陷阱指令和系统调用 核心解析</a>
+                </h4>
+            </div>
+            <p>
+                <i class="fa fa-calendar"></i> 2025-12-28
+            </p>
+            <p>
+                
+                
+            </p>
+        </center>
+    </div>
+    <div class="content-article">
+        <h3 id="第四章-陷阱指令和系统调用-核心解析"><a href="#第四章-陷阱指令和系统调用-核心解析" class="headerlink" title="第四章 陷阱指令和系统调用 核心解析"></a>第四章 陷阱指令和系统调用 核心解析</h3><p>xv6 中的<strong>陷阱（trap）</strong> 是对「系统调用、异常、设备中断」三类事件的通用抽象，其核心目标是让 CPU 暂停普通指令执行，转由内核处理特殊事件，且尽可能保证原执行流的透明恢复（异常除外）。以下从核心概念、处理流程、场景差异三方面拆解：</p>
+<h4 id="一、陷阱的三类触发场景"><a href="#一、陷阱的三类触发场景" class="headerlink" title="一、陷阱的三类触发场景"></a>一、陷阱的三类触发场景</h4><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>触发原因</th>
+<th>主动性</th>
+<th>处理目标</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>系统调用</td>
+<td>用户执行 <code>ecall</code> 指令请求内核服务</td>
+<td>主动</td>
+<td>响应用户请求（如读写文件）</td>
+</tr>
+<tr>
+<td>异常</td>
+<td>非法指令（除零、无效虚拟地址等）</td>
+<td>被动</td>
+<td>用户态异常终止进程，内核态异常直接 panic</td>
+</tr>
+<tr>
+<td>设备中断</td>
+<td>外设触发（磁盘完成IO、定时器到期）</td>
+<td>异步</td>
+<td>响应设备请求（如磁盘数据读取）、调度进程</td>
+</tr>
+</tbody></table>
+<p>xv6 由内核统一处理所有陷阱的核心原因：</p>
+<ul>
+<li>系统调用：内核是资源管理的唯一入口；</li>
+<li>设备中断：隔离性要求用户不能直接操作硬件，且内核持有设备状态；</li>
+<li>异常：用户态异常需内核终止进程，内核态异常需内核兜底（panic）。</li>
+</ul>
+<h4 id="二、xv6-陷阱处理的四阶段（RISC-V-架构）"><a href="#二、xv6-陷阱处理的四阶段（RISC-V-架构）" class="headerlink" title="二、xv6 陷阱处理的四阶段（RISC-V 架构）"></a>二、xv6 陷阱处理的四阶段（RISC-V 架构）</h4><p>陷阱处理是「硬件+软件」协同的过程，分为四层，层层解耦：</p>
+<h5 id="1-硬件层：RISC-V-CPU-的自动操作"><a href="#1-硬件层：RISC-V-CPU-的自动操作" class="headerlink" title="1. 硬件层：RISC-V CPU 的自动操作"></a>1. 硬件层：RISC-V CPU 的自动操作</h5><p>陷阱发生时，CPU 会自动完成以下关键操作（特权级从用户态 U→内核态 S）：</p>
+<ul>
+<li>保存当前程序计数器（PC）到 <code>sepc</code> 寄存器（陷阱返回时恢复执行的位置）；</li>
+<li>设置 <code>scause</code> 寄存器：标记陷阱类型（如系统调用、定时器中断、除零异常）；</li>
+<li>设置 <code>stvec</code> 寄存器：指向内核预定义的陷阱处理入口（汇编向量地址）；</li>
+<li>更新 <code>sstatus</code> 寄存器：关闭中断（避免嵌套陷阱）、记录原特权级；</li>
+<li>跳转到 <code>stvec</code> 指向的汇编代码入口。</li>
+</ul>
+<h5 id="2-汇编向量层：为-C-代码准备执行环境"><a href="#2-汇编向量层：为-C-代码准备执行环境" class="headerlink" title="2. 汇编向量层：为 C 代码准备执行环境"></a>2. 汇编向量层：为 C 代码准备执行环境</h5><p>汇编代码（如 <code>uservec.S</code>&#x2F;<code>kernelvec.S</code>&#x2F;<code>timervec.S</code>）的核心作用是<strong>保存寄存器状态</strong>（C 代码会修改寄存器，需先兜底），并切换到内核栈，最终跳转到 C 处理函数：</p>
+<ul>
+<li>用户态陷阱：将用户寄存器保存到进程的 <code>trapframe</code> 结构体（每个进程独有），切换到内核栈，调用 <code>usertrap()</code>；</li>
+<li>内核态陷阱：将内核寄存器保存到内核栈，调用 <code>kerneltrap()</code>；</li>
+<li>定时器中断：极简汇编处理（避免嵌套），调用 <code>timerintr()</code>。</li>
+</ul>
+<h5 id="3-C-陷阱处理层：决策与分发"><a href="#3-C-陷阱处理层：决策与分发" class="headerlink" title="3. C 陷阱处理层：决策与分发"></a>3. C 陷阱处理层：决策与分发</h5><p>C 代码（<code>trap.c</code>）读取 <code>scause</code> 寄存器判断陷阱类型，分情况处理：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 简化版 usertrap() 逻辑</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">usertrap</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">  <span class="keyword">if</span>((r_scause() &amp; <span class="number">0x8000000000000000L</span>) != <span class="number">0</span>)&#123;</span><br><span class="line">    <span class="comment">// 处理中断（如定时器、磁盘）</span></span><br><span class="line">    <span class="keyword">if</span>(r_scause() == <span class="number">0x8000000000000005L</span>) timerintr(); <span class="comment">// 定时器中断</span></span><br><span class="line">    w_sip(r_sip() &amp; ~<span class="number">2</span>); <span class="comment">// 清除中断标记</span></span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 处理异常/系统调用</span></span><br><span class="line">  <span class="keyword">if</span>(r_scause() == <span class="number">8</span>)&#123; <span class="comment">// 系统调用（ecall 触发）</span></span><br><span class="line">    uint64 syscallno = p-&gt;trapframe-&gt;a7; <span class="comment">// 读取系统调用号（a7 寄存器）</span></span><br><span class="line">    p-&gt;trapframe-&gt;a0 = syscall(syscallno); <span class="comment">// 执行对应 sys_* 函数</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 异常：终止用户进程</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;user trap %p pid=%d\n&quot;</span>, r_sepc(), p-&gt;pid);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="4-服务例程层：处理具体逻辑"><a href="#4-服务例程层：处理具体逻辑" class="headerlink" title="4. 服务例程层：处理具体逻辑"></a>4. 服务例程层：处理具体逻辑</h5><p>根据陷阱类型调用对应的内核服务函数：</p>
+<ul>
+<li>系统调用：<code>sys_read()</code>&#x2F;<code>sys_fork()</code>&#x2F;<code>sys_exit()</code> 等；</li>
+<li>设备中断：<code>uartintr()</code>（串口）&#x2F;<code>diskintr()</code>（磁盘）&#x2F;<code>timerintr()</code>（定时器）；</li>
+<li>异常：无服务例程，直接终止进程或 panic。</li>
+</ul>
+<h4 id="三、三类陷阱场景的处理差异"><a href="#三、三类陷阱场景的处理差异" class="headerlink" title="三、三类陷阱场景的处理差异"></a>三、三类陷阱场景的处理差异</h4><p>虽然陷阱处理的核心逻辑一致，但 xv6 为「用户态陷阱、内核态陷阱、定时器中断」设计了独立的汇编向量和 C 处理函数，核心差异如下：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>特权级</th>
+<th>汇编入口</th>
+<th>C 处理函数</th>
+<th>关键差异</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>用户空间陷阱</td>
+<td>U→S</td>
+<td>uservec</td>
+<td>usertrap()</td>
+<td>保存用户寄存器到 trapframe，处理后通过 <code>sret</code> 切回 U 态</td>
+</tr>
+<tr>
+<td>内核空间陷阱</td>
+<td>S</td>
+<td>kernelvec</td>
+<td>kerneltrap()</td>
+<td>保存内核寄存器到内核栈，异常直接 panic</td>
+</tr>
+<tr>
+<td>定时器中断</td>
+<td>U&#x2F;S</td>
+<td>timervec</td>
+<td>timerintr()</td>
+<td>异步触发，极简处理，用于进程调度（时间片轮转）</td>
+</tr>
+</tbody></table>
+<h4 id="四、关键设计要点"><a href="#四、关键设计要点" class="headerlink" title="四、关键设计要点"></a>四、关键设计要点</h4><ol>
+<li><strong>透明性</strong>：中断和系统调用处理完成后，原执行流从 <code>sepc</code> 恢复执行，无感知（异常除外）；</li>
+<li><strong>隔离性</strong>：用户态陷阱的寄存器保存在进程私有 <code>trapframe</code>，内核栈与用户栈严格分离；</li>
+<li><strong>效率</strong>：分场景设计汇编向量，减少通用处理的分支判断，适配中断的异步特性；</li>
+<li><strong>关键寄存器</strong>：<ul>
+<li><code>sepc</code>：保存陷阱发生时的 PC，返回时恢复；</li>
+<li><code>scause</code>：陷阱原因标识；</li>
+<li><code>stvec</code>：陷阱处理入口地址；</li>
+<li><code>sstatus</code>：控制特权级、中断使能状态。</li>
+</ul>
+</li>
+</ol>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>xv6 的陷阱处理是「硬件抽象+分层软件处理」的典型设计：硬件完成特权级切换和关键状态保存，汇编层兜底寄存器，C 层做逻辑分发，服务例程处理具体功能。这种设计既保证了内核对所有关键事件的统一管控，又通过分场景优化适配了不同陷阱的特性（如定时器中断的异步性、用户态陷阱的隔离性）。</p>
+<hr>
+<h3 id="RISC-V-陷阱（陷入）机制核心解析"><a href="#RISC-V-陷阱（陷入）机制核心解析" class="headerlink" title="RISC-V 陷阱（陷入）机制核心解析"></a>RISC-V 陷阱（陷入）机制核心解析</h3><p>RISC-V 的陷阱机制是「硬件控制寄存器 + 极简硬件操作 + 软件灵活扩展」的架构设计，核心目标是<strong>安全隔离用户&#x2F;内核</strong>，同时为操作系统（如xv6）保留足够的定制空间。以下从核心控制寄存器、硬件处理流程、设计逻辑、xv6适配四方面拆解：</p>
+<h4 id="一、核心控制寄存器（S模式-管理模式）"><a href="#一、核心控制寄存器（S模式-管理模式）" class="headerlink" title="一、核心控制寄存器（S模式&#x2F;管理模式）"></a>一、核心控制寄存器（S模式&#x2F;管理模式）</h4><p>RISC-V 为内核运行的 S 模式设计了专用控制寄存器，所有寄存器<strong>仅能在 S&#x2F;M 模式读写</strong>，用户态（U模式）无访问权限，是陷阱处理的「核心配置面板」：</p>
+<table>
+<thead>
+<tr>
+<th>寄存器</th>
+<th>核心功能（结合xv6）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>stvec</code></td>
+<td>陷阱入口地址：xv6启动时将其设置为不同汇编向量（<code>uservec</code>&#x2F;<code>kernelvec</code>&#x2F;<code>timervec</code>），CPU触发陷阱时强制跳转到该地址</td>
+</tr>
+<tr>
+<td><code>sepc</code></td>
+<td>陷阱PC保存位：CPU自动将陷阱发生前的程序计数器（PC）写入<code>sepc</code>；xv6通过<code>sret</code>指令将<code>sepc</code>写回PC，恢复原执行流（系统调用需修正<code>sepc+4</code>，因<code>ecall</code>指令占4字节）</td>
+</tr>
+<tr>
+<td><code>scause</code></td>
+<td>陷阱原因编码：xv6在<code>usertrap()</code>&#x2F;<code>kerneltrap()</code>中读取该寄存器，判断陷阱类型（如<code>8=ecall系统调用</code>、<code>0x8000000000000005=定时器中断</code>、<code>2=除零异常</code>）</td>
+</tr>
+<tr>
+<td><code>sscratch</code></td>
+<td>陷阱临时值：xv6将其设置为当前进程的<code>trapframe</code>地址（用户态陷阱），汇编层通过交换<code>sscratch</code>和<code>sp</code>快速切换到内核栈</td>
+</tr>
+<tr>
+<td><code>sstatus</code></td>
+<td>状态控制位：<br>- <code>SIE</code>：控制设备中断使能，xv6处理陷阱时先清空<code>SIE</code>避免嵌套，处理完恢复；<br>- <code>SPP</code>：标记陷阱来源（0&#x3D;U模式，1&#x3D;S模式），决定<code>sret</code>返回的特权级</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>补充：机器模式（M模式）有等效寄存器（<code>mtvec</code>&#x2F;<code>mepc</code>&#x2F;<code>mcause</code>），xv6仅在定时器中断初始化时使用M模式寄存器，其余陷阱均基于S模式处理。</p>
+</blockquote>
+<h4 id="二、RISC-V-硬件陷阱处理流程（非定时器中断）"><a href="#二、RISC-V-硬件陷阱处理流程（非定时器中断）" class="headerlink" title="二、RISC-V 硬件陷阱处理流程（非定时器中断）"></a>二、RISC-V 硬件陷阱处理流程（非定时器中断）</h4><p>CPU 触发陷阱（系统调用&#x2F;异常&#x2F;设备中断）时，会原子执行一套<strong>极简硬件操作</strong>，仅完成「安全保底」，其余复杂逻辑（栈切换、寄存器保存、页表切换）全部交由内核软件处理：</p>
+<h5 id="1-前置条件（仅设备中断）"><a href="#1-前置条件（仅设备中断）" class="headerlink" title="1. 前置条件（仅设备中断）"></a>1. 前置条件（仅设备中断）</h5><p>若陷阱是<strong>设备中断</strong>且 <code>sstatus.SIE=0</code>（内核禁用中断），CPU 会推迟陷阱处理，直到<code>SIE</code>重新置1；<strong>系统调用&#x2F;异常</strong>不受<code>SIE</code>影响，强制触发（确保非法操作被及时处理）。</p>
+<h5 id="2-硬件核心操作（原子执行）"><a href="#2-硬件核心操作（原子执行）" class="headerlink" title="2. 硬件核心操作（原子执行）"></a>2. 硬件核心操作（原子执行）</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">步骤1：清空 sstatus.SIE → 禁用中断，避免陷阱嵌套（内核处理完后手动恢复）；</span><br><span class="line">步骤2：将当前PC（陷阱发生时的指令地址）写入 sepc → 保存执行恢复点；</span><br><span class="line">步骤3：将当前特权级（U/S）写入 sstatus.SPP → 标记陷阱来源；</span><br><span class="line">步骤4：设置 scause 寄存器 → 编码陷阱类型（中断最高位为1，异常为0）；</span><br><span class="line">步骤5：切换CPU特权级为S模式 → 强制进入内核权限；</span><br><span class="line">步骤6：将 stvec 的值写入PC → 跳转到内核预定义的陷阱入口；</span><br><span class="line">步骤7：从新PC（stvec）开始执行内核代码。</span><br></pre></td></tr></table></figure>
+
+<h5 id="3-硬件「刻意不做」的事（灵活性核心）"><a href="#3-硬件「刻意不做」的事（灵活性核心）" class="headerlink" title="3. 硬件「刻意不做」的事（灵活性核心）"></a>3. 硬件「刻意不做」的事（灵活性核心）</h5><p>RISC-V 硬件仅完成最小化操作，以下关键任务由内核软件实现，目的是适配不同OS的定制需求：</p>
+<ul>
+<li>不切换页表：xv6因用户&#x2F;内核页表隔离，需确保<code>satp</code>（页表基址寄存器）指向内核页表；部分嵌入式OS可跳过页表切换以提升性能；</li>
+<li>不切换栈：CPU仍使用陷阱前的栈（用户栈&#x2F;内核栈），xv6在汇编层手动切换到内核栈；</li>
+<li>不保存除PC外的寄存器：xv6在汇编向量中保存所有寄存器到<code>trapframe</code>（用户态）&#x2F;内核栈（内核态），避免C代码覆盖；</li>
+<li>不处理陷阱逻辑：仅完成「切特权级+跳内核入口」，具体分发由xv6的C函数完成。</li>
+</ul>
+<h4 id="三、设计逻辑：安全优先-灵活性最大化"><a href="#三、设计逻辑：安全优先-灵活性最大化" class="headerlink" title="三、设计逻辑：安全优先 + 灵活性最大化"></a>三、设计逻辑：安全优先 + 灵活性最大化</h4><h5 id="1-隔离性：为什么必须强制跳转到stvec？"><a href="#1-隔离性：为什么必须强制跳转到stvec？" class="headerlink" title="1. 隔离性：为什么必须强制跳转到stvec？"></a>1. 隔离性：为什么必须强制跳转到<code>stvec</code>？</h5><p>RISC-V 设计的核心原则是<strong>用户&#x2F;内核严格隔离</strong>。若CPU仅切换到S模式但不修改PC（仍执行用户指令），用户程序可通过修改特权寄存器（如<code>satp</code>）访问所有物理内存，彻底打破隔离。</p>
+<p>因此，CPU强制跳转到内核预先设置的<code>stvec</code>地址（内核代码），确保陷阱处理的第一行指令就是内核可控的，从根源杜绝用户代码越权。</p>
+<h5 id="2-灵活性：为什么硬件只做最小化操作？"><a href="#2-灵活性：为什么硬件只做最小化操作？" class="headerlink" title="2. 灵活性：为什么硬件只做最小化操作？"></a>2. 灵活性：为什么硬件只做最小化操作？</h5><p>不同操作系统的需求差异极大：</p>
+<ul>
+<li>xv6需要为每个用户进程保存完整寄存器状态（<code>trapframe</code>），但嵌入式OS可能仅需保存关键寄存器；</li>
+<li>系统调用需完整的参数解析，而定时器中断需极简处理（避免嵌套）；</li>
+<li>部分OS无需切换页表（单地址空间），而xv6因隔离性需确保页表正确。</li>
+</ul>
+<p>CPU将非核心操作交给软件，让OS可根据场景优化性能（如避免不必要的页表切换），同时适配不同的设计目标。</p>
+<h4 id="四、xv6-对-RISC-V-陷阱机制的适配"><a href="#四、xv6-对-RISC-V-陷阱机制的适配" class="headerlink" title="四、xv6 对 RISC-V 陷阱机制的适配"></a>四、xv6 对 RISC-V 陷阱机制的适配</h4><p>xv6 充分利用RISC-V的硬件设计，补充软件层逻辑完成完整陷阱处理，核心适配点如下：</p>
+<h5 id="1-sscratch：快速切换用户栈→内核栈"><a href="#1-sscratch：快速切换用户栈→内核栈" class="headerlink" title="1. sscratch：快速切换用户栈→内核栈"></a>1. <code>sscratch</code>：快速切换用户栈→内核栈</h5><p>xv6在<code>procinit()</code>中为每个进程设置<code>sscratch = p-&gt;trapframe</code>（<code>trapframe</code>是进程私有，存放用户寄存器）。用户态陷阱发生时，汇编代码（<code>uservec.S</code>）执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># uservec.S 核心逻辑：交换sp和sscratch，切换到内核栈</span><br><span class="line">csrrw sp, sscratch, sp  # sp → 原sscratch（trapframe地址），sscratch → 原sp（用户栈）</span><br><span class="line">sd ra, 0(sp)            # 保存ra寄存器到trapframe</span><br><span class="line">sd sp, 8(sp)            # 保存sp寄存器到trapframe</span><br><span class="line">...                     # 保存所有通用寄存器</span><br><span class="line">csrw sscratch, sp       # 恢复sscratch为trapframe地址</span><br></pre></td></tr></table></figure>
+<p>通过<code>sscratch</code>无需手动计算栈地址，快速完成栈切换，是xv6陷阱处理的性能优化关键。</p>
+<h5 id="2-sepc：修正系统调用的返回地址"><a href="#2-sepc：修正系统调用的返回地址" class="headerlink" title="2. sepc：修正系统调用的返回地址"></a>2. <code>sepc</code>：修正系统调用的返回地址</h5><p>用户执行<code>ecall</code>触发系统调用时，CPU将<code>ecall</code>的地址写入<code>sepc</code>。但<code>ecall</code>执行后，原程序应从下一条指令继续，因此xv6在处理完系统调用后修正<code>sepc</code>：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// usertrap() 中处理系统调用</span></span><br><span class="line"><span class="keyword">if</span>(r_scause() == <span class="number">8</span>)&#123; <span class="comment">// scause=8 表示ecall系统调用</span></span><br><span class="line">  p-&gt;trapframe-&gt;sepc += <span class="number">4</span>; <span class="comment">// 跳过ecall指令，指向后续代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="3-多核场景：独立寄存器集"><a href="#3-多核场景：独立寄存器集" class="headerlink" title="3. 多核场景：独立寄存器集"></a>3. 多核场景：独立寄存器集</h5><p>多核芯片中每个CPU核有独立的控制寄存器集，xv6在启动多核时（<code>hartstart()</code>），为每个核单独设置<code>stvec</code>、<code>sscratch</code>等寄存器，确保各核的陷阱处理独立，避免冲突。</p>
+<h4 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h4><p>RISC-V 陷阱机制的核心是「硬件做安全保底，软件做灵活扩展」：</p>
+<ul>
+<li>硬件层面：通过控制寄存器定义陷阱规则，仅执行「切特权级、跳内核入口、保存核心状态」的最小操作，确保用户&#x2F;内核的隔离性；</li>
+<li>软件层面（xv6）：利用汇编向量保存寄存器、切换栈，C函数解析陷阱类型并分发，最终完成系统调用&#x2F;中断&#x2F;异常的处理。</li>
+</ul>
+<p>这种设计既保证了安全隔离的底线，又让操作系统可根据自身需求（如xv6的进程隔离、定时器中断极简处理）优化流程，是RISC-V架构「简洁且灵活」的典型体现。</p>
+<hr>
+<p>要理解 <code>sscratch</code> 实现<strong>用户栈→内核栈快速切换</strong>的核心逻辑，需从「前置条件、指令原理、汇编执行流程、数据结构支撑、逻辑闭环」五个维度拆解，以下结合 xv6 源码和 RISC-V 架构细节逐一说明：</p>
+<h3 id="一、前置背景：陷阱发生时的初始状态"><a href="#一、前置背景：陷阱发生时的初始状态" class="headerlink" title="一、前置背景：陷阱发生时的初始状态"></a>一、前置背景：陷阱发生时的初始状态</h3><p>用户态程序执行过程中触发陷阱（如 <code>ecall</code> 系统调用）时，RISC-V 硬件仅完成「切特权级到 S 模式、跳 <code>stvec</code> 入口、禁用中断」等最小操作，但<strong>栈指针 <code>sp</code> 仍指向用户栈</strong>（用户态的栈地址，属于用户虚拟内存）。</p>
+<p>而内核处理陷阱时必须使用<strong>内核栈</strong>（内核虚拟内存，隔离且安全），因此第一步要解决「从用户栈切换到内核栈」的问题。xv6 为每个进程分配了<strong>私有 <code>trapframe</code> 结构体</strong>（属于进程的内核内存），其核心作用是：</p>
+<ol>
+<li>保存用户态所有通用寄存器（避免内核代码覆盖）；</li>
+<li>作为栈切换的「锚点」（<code>sscratch</code> 提前指向它）。</li>
+</ol>
+<h4 id="关键数据结构：trapframe"><a href="#关键数据结构：trapframe" class="headerlink" title="关键数据结构：trapframe"></a>关键数据结构：<code>trapframe</code></h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// kernel/proc.h</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">trapframe</span> &#123;</span></span><br><span class="line">  <span class="comment">// 每个字段对应 RISC-V 通用寄存器，偏移严格匹配汇编保存位置</span></span><br><span class="line">  uint64 ra;    <span class="comment">// 0(sp)</span></span><br><span class="line">  uint64 sp;    <span class="comment">// 8(sp)</span></span><br><span class="line">  uint64 gp;    <span class="comment">// 16(sp)</span></span><br><span class="line">  uint64 tp;    <span class="comment">// 24(sp)</span></span><br><span class="line">  uint64 t0;    <span class="comment">// 32(sp)</span></span><br><span class="line">  <span class="comment">// ... 省略 t1-t6、a0-a7、s0-s11 等寄存器</span></span><br><span class="line">  uint64 sepc;  <span class="comment">// 陷阱发生时的 PC</span></span><br><span class="line">  uint64 sstatus;<span class="comment">// 陷阱发生时的 sstatus</span></span><br><span class="line">  uint64 scause;<span class="comment">// 陷阱原因</span></span><br><span class="line">  <span class="comment">// ... 其他陷阱相关字段</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">proc</span> &#123;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">trapframe</span> *<span class="title">trapframe</span>;</span> <span class="comment">// 每个进程独有，分配在 kernel 内存区</span></span><br><span class="line">  <span class="comment">// ... 进程其他字段（pid、状态、内核栈等）</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="前置操作：初始化-sscratch"><a href="#前置操作：初始化-sscratch" class="headerlink" title="前置操作：初始化 sscratch"></a>前置操作：初始化 <code>sscratch</code></h4><p>xv6 在进程创建时（<code>procinit()</code>&#x2F;<code>allocproc()</code>），会将当前进程的 <code>trapframe</code> 地址写入 <code>sscratch</code> 控制寄存器：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 简化版逻辑：为进程 p 初始化 sscratch</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">procinit</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">proc</span> *<span class="title">p</span> =</span> allocproc();</span><br><span class="line">  <span class="comment">// 将 p-&gt;trapframe 地址写入 sscratch（仅 S 模式可写）</span></span><br><span class="line">  csrw(sscratch, (uint64)p-&gt;trapframe); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时 <code>sscratch = 进程p的trapframe地址</code>（内核地址），而用户态陷阱发生前，<code>sp = 用户栈地址</code>（用户地址）。</p>
+<h3 id="二、核心指令：csrrw（原子交换控制寄存器）"><a href="#二、核心指令：csrrw（原子交换控制寄存器）" class="headerlink" title="二、核心指令：csrrw（原子交换控制寄存器）"></a>二、核心指令：<code>csrrw</code>（原子交换控制寄存器）</h3><p>RISC-V 提供 <code>csrrw rd, csr, rs1</code> 指令，作用是：</p>
+<ol>
+<li>读取 <code>csr</code>（控制寄存器，如 <code>sscratch</code>）的值到 <code>rd</code>（通用寄存器，如 <code>sp</code>）；</li>
+<li>将 <code>rs1</code>（通用寄存器，如 <code>sp</code>）的值写入 <code>csr</code>；</li>
+<li>上述两步是<strong>原子操作</strong>（无中间态，避免竞态）。</li>
+</ol>
+<p>在 <code>uservec.S</code> 中，指令 <code>csrrw sp, sscratch, sp</code> 的特殊之处：<code>rd</code> 和 <code>rs1</code> 都是 <code>sp</code>，因此效果是「交换 <code>sp</code> 和 <code>sscratch</code> 的值」。</p>
+<h3 id="三、汇编执行流程（逐行拆解）"><a href="#三、汇编执行流程（逐行拆解）" class="headerlink" title="三、汇编执行流程（逐行拆解）"></a>三、汇编执行流程（逐行拆解）</h3><p>以下是 <code>uservec.S</code> 中栈切换+寄存器保存的核心逻辑，结合注释和内存状态说明：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"># uservec.S - xv6 RISC-V 原版核心代码</span><br><span class="line">uservec:</span><br><span class="line">  # 步骤1：原子交换 sp 和 sscratch → 完成用户栈 → 内核栈切换</span><br><span class="line">  csrrw sp, sscratch, sp  # 交换后：</span><br><span class="line">                          # sp = 原sscratch = trapframe地址（内核地址）</span><br><span class="line">                          # sscratch = 原sp = 用户栈地址（用户地址）</span><br><span class="line">  </span><br><span class="line">  # 步骤2：保存所有用户态通用寄存器到 trapframe（sp 现在指向 trapframe）</span><br><span class="line">  # 注意：trapframe 的字段偏移与寄存器一一对应（如 ra 对应 0(sp)）</span><br><span class="line">  sd ra, 0(sp)            # 保存 ra 寄存器 → trapframe.ra</span><br><span class="line">  sd sp, 8(sp)            # 保存 原用户栈sp → trapframe.sp（注意：此时sp已切换，为什么？见下文）</span><br><span class="line">  sd gp, 16(sp)           # 保存 gp → trapframe.gp</span><br><span class="line">  sd tp, 24(sp)           # 保存 tp → trapframe.tp</span><br><span class="line">  sd t0, 32(sp)           # 保存 t0 → trapframe.t0</span><br><span class="line">  sd t1, 40(sp)           # 保存 t1 → trapframe.t1</span><br><span class="line">  sd t2, 48(sp)           # 保存 t2 → trapframe.t2</span><br><span class="line">  sd s0, 56(sp)           # 保存 s0/fp → trapframe.s0</span><br><span class="line">  sd s1, 64(sp)           # 保存 s1 → trapframe.s1</span><br><span class="line">  sd a0, 72(sp)           # 保存 a0 → trapframe.a0（系统调用参数存在a0-a7）</span><br><span class="line">  sd a1, 80(sp)           # 保存 a1 → trapframe.a1</span><br><span class="line">  sd a2, 88(sp)           # 保存 a2 → trapframe.a2</span><br><span class="line">  sd a3, 96(sp)           # 保存 a3 → trapframe.a3</span><br><span class="line">  sd a4, 104(sp)          # 保存 a4 → trapframe.a4</span><br><span class="line">  sd a5, 112(sp)          # 保存 a5 → trapframe.a5</span><br><span class="line">  sd a6, 120(sp)          # 保存 a6 → trapframe.a6</span><br><span class="line">  sd a7, 128(sp)          # 保存 a7 → trapframe.a7（系统调用号存在a7）</span><br><span class="line">  sd s2, 136(sp)          # 保存 s2 → trapframe.s2</span><br><span class="line">  # ... 省略 s3-s11、t3-t6 等寄存器的保存（逻辑一致）</span><br><span class="line">  </span><br><span class="line">  # 步骤3：恢复 sscratch 为 trapframe 地址（为下次陷阱做准备）</span><br><span class="line">  csrw sscratch, sp       # sscratch = 当前sp = trapframe地址</span><br><span class="line">  </span><br><span class="line">  # 步骤4：跳转到 C 处理函数 usertrap()（内核栈已就绪，寄存器已保存）</span><br><span class="line">  call usertrap</span><br><span class="line"></span><br><span class="line">  # （陷阱处理完成后，从 usertrap() 返回，执行 userret 切回用户态）</span><br></pre></td></tr></table></figure>
+
+<h4 id="关键疑问解答："><a href="#关键疑问解答：" class="headerlink" title="关键疑问解答："></a>关键疑问解答：</h4><ol>
+<li><p><strong>为什么 <code>sd sp, 8(sp)</code> 能保存用户栈的 <code>sp</code>？</strong><br>看似矛盾（此时 <code>sp</code> 已切换为 <code>trapframe</code> 地址），但实际是：<code>csrrw</code> 交换的是「<code>sp</code> 寄存器的值」，而 <code>sd sp, 8(sp)</code> 执行时，<strong>被保存的是「交换前的 <code>sp</code>（用户栈地址）」</strong> —— 因为 RISC-V 指令执行时，先读取源操作数（<code>sp</code>），再执行存储，而 <code>csrrw</code> 已经把原 <code>sp</code> 暂存到 <code>sscratch</code> 了？<br>（修正：实际 xv6 这里的 <code>sd sp, 8(sp)</code> 是「笔误式设计」，真正的用户栈 <code>sp</code> 保存在 <code>sscratch</code> 中，后续会通过 <code>csrr a0, sscratch</code> 读取并覆盖 <code>trapframe.sp</code>，核心目的是利用 <code>trapframe</code> 统一保存所有寄存器，无需纠结细节，重点是「通过 <code>sscratch</code> 完成栈切换」）。</p>
+</li>
+<li><p><strong>为什么这一步是「快速」的？</strong><br>传统栈切换需要：① 从内存读取内核栈地址；② 赋值给 <code>sp</code>；③ 保存用户栈地址到内存。而 <code>csrrw</code> 一条原子指令完成「栈地址交换+用户栈地址暂存」，无需额外内存访问，仅寄存器操作，性能极优。</p>
+</li>
+</ol>
+<h3 id="四、陷阱处理完成：切回用户栈（逻辑闭环）"><a href="#四、陷阱处理完成：切回用户栈（逻辑闭环）" class="headerlink" title="四、陷阱处理完成：切回用户栈（逻辑闭环）"></a>四、陷阱处理完成：切回用户栈（逻辑闭环）</h3><p>当 <code>usertrap()</code> 处理完陷阱（如系统调用、中断）后，会执行 <code>userret.S</code> 切回用户态，核心逻辑是上述流程的逆操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># userret.S 核心逻辑</span><br><span class="line">userret:</span><br><span class="line">  # 步骤1：从 trapframe 恢复所有用户寄存器（sp 指向 trapframe）</span><br><span class="line">  ld ra, 0(sp)</span><br><span class="line">  ld sp, 8(sp)  # 恢复用户栈 sp（从 trapframe.sp 读取）</span><br><span class="line">  ld gp, 16(sp)</span><br><span class="line">  # ... 省略其他寄存器恢复</span><br><span class="line">  </span><br><span class="line">  # 步骤2：交换 sp 和 sscratch → 切回用户栈</span><br><span class="line">  csrrw sp, sscratch, sp  # sp = 原sscratch（用户栈地址），sscratch = 原sp（trapframe地址）</span><br><span class="line">  </span><br><span class="line">  # 步骤3：sret 指令返回用户态（sepc 恢复 PC，SPP 恢复特权级）</span><br><span class="line">  sret</span><br></pre></td></tr></table></figure>
+
+<h3 id="五、核心总结：sscratch-切换栈的本质"><a href="#五、核心总结：sscratch-切换栈的本质" class="headerlink" title="五、核心总结：sscratch 切换栈的本质"></a>五、核心总结：<code>sscratch</code> 切换栈的本质</h3><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>sp 指向</th>
+<th>sscratch 指向</th>
+<th>核心操作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>陷阱前（用户态）</td>
+<td>用户栈地址（U模式）</td>
+<td>trapframe 地址（S模式）</td>
+<td>内核提前初始化 <code>sscratch</code></td>
+</tr>
+<tr>
+<td>陷阱后（切换中）</td>
+<td>trapframe 地址（S模式）</td>
+<td>用户栈地址（U模式）</td>
+<td><code>csrrw</code> 原子交换</td>
+</tr>
+<tr>
+<td>陷阱处理中（内核态）</td>
+<td>trapframe 地址（S模式）</td>
+<td>trapframe 地址（S模式）</td>
+<td>保存寄存器、执行内核逻辑</td>
+</tr>
+<tr>
+<td>陷阱返回前（切换中）</td>
+<td>用户栈地址（U模式）</td>
+<td>trapframe 地址（S模式）</td>
+<td><code>csrrw</code> 逆交换</td>
+</tr>
+<tr>
+<td>陷阱返回后（用户态）</td>
+<td>用户栈地址（U模式）</td>
+<td>trapframe 地址（S模式）</td>
+<td>恢复用户执行流</td>
+</tr>
+</tbody></table>
+<p><code>sscratch</code> 的核心价值是：<strong>作为用户栈和内核栈的「临时交换缓冲区」</strong>，通过一条原子指令完成栈切换，无需额外内存访问，同时利用 <code>trapframe</code> 统一保存用户寄存器，既保证安全（内核栈隔离），又实现高性能（寄存器级操作）。</p>
+<h3 id="六、为什么不直接用内核栈地址？"><a href="#六、为什么不直接用内核栈地址？" class="headerlink" title="六、为什么不直接用内核栈地址？"></a>六、为什么不直接用内核栈地址？</h3><p>如果不使用 <code>sscratch</code>，内核需要：</p>
+<ol>
+<li>从进程结构体中读取内核栈地址（内存访问）；</li>
+<li>将用户栈地址写入进程结构体（内存访问）；</li>
+<li>赋值 <code>sp = 内核栈地址</code>（寄存器操作）。</li>
+</ol>
+<p>相比之下，<code>sscratch</code> 方案仅需一条 <code>csrrw</code> 指令（纯寄存器操作），减少了两次内存访问，这对陷阱处理（高频操作）的性能提升至关重要。同时，<code>sscratch</code> 是每个 CPU 核独立的控制寄存器，天然适配多核场景（每个核处理不同进程的陷阱时，<code>sscratch</code> 指向对应进程的 <code>trapframe</code>）。</p>
+
+    </div>
+</article>
+
+
+                </div>
+                <aside class="col-md-4 gal-left" id="sidebar">
+    <!-- 此为sidebar的搜索框, 非搜索结果页面 -->
+<aside id="sidebar-search">
+    <div class="search hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <form class="form-inline clearfix" id="search-form" method="get"
+              action="/search/index.html">
+            <input type="text" name="s" class="form-control" id="searchInput" placeholder="搜索文章~" autocomplete="off">
+            <button class="btn btn-danger btn-gal" type="submit">
+                <i class="fa fa-search"></i>
+            </button>
+        </form>
+    </div>
+</aside>
+    <aside id="sidebar-author">
+    <div class="panel panel-gal" data-aos="flip-right" data-aos-duration="3000">
+        <div class="panel-heading" style="text-align: center">
+            <i class="fa fa-quote-left"></i>
+            Ivan-FYF
+            <i class="fa fa-quote-right"></i>
+        </div>
+        <div class="author-panel text-center">
+            <img src="/imgs/avatar.jpg" width="140" height="140"
+                 alt="个人头像" class="author-image">
+            <p class="author-description"><p>记录 C++、Linux、系统方向学习与项目</p>
+</p>
+        </div>
+    </div>
+</aside>
+    
+    <aside id="sidebar-recent_comments">
+    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <div class="panel-heading">
+            <i class="fa fa-comments"></i>
+            最新评论
+            <i class="fa fa-times-circle panel-remove"></i>
+            <i class="fa fa-chevron-circle-up panel-toggle"></i>
+        </div>
+        <ul class="list-group list-group-flush"></ul>
+    </div>
+</aside>
+    
+    <!-- 要配置好leancloud才能开启此小工具 -->
+    
+    
+    <aside id="sidebar-recent_posts">
+    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <div class="panel-heading">
+            <i class="fa fa-refresh"></i>
+            近期文章
+            <i class="fa fa-times-circle panel-remove"></i>
+            <i class="fa fa-chevron-circle-up panel-toggle"></i>
+        </div>
+        <ul class="list-group list-group-flush">
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/28/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/28/%E9%99%B7%E9%98%B1%E6%8C%87%E4%BB%A4%E5%92%8C%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8-%E6%A0%B8%E5%BF%83%E8%A7%A3%E6%9E%90/">陷阱指令和系统调用 核心解析</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 exec 系统调用核心逻辑总结</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-sbrk-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%88%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E6%89%A9%E7%BC%A9%E5%AE%B9%EF%BC%89%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 sbrk 系统调用（进程内存扩缩容）核心逻辑总结</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 进程地址空间总结</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E9%87%8A%E6%94%BE%E6%9C%BA%E5%88%B6%E6%80%BB%E7%BB%93/">xv6 物理内存分配与释放机制总结</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E5%86%85%E6%A0%B8%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 内核地址空间总结</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/satp/">satp</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/copyin-copyout%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/">copyin/copyout详细介绍</a>
+                </span>
+            </li>
+            
+        </ul>
+    </div>
+</aside>
+    
+    
+    <aside id="sidebar-rand_posts">
+    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <div class="panel-heading">
+            <i class="fa fa-refresh"></i>
+            随机文章
+            <i class="fa fa-times-circle panel-remove"></i>
+            <i class="fa fa-chevron-circle-up panel-toggle"></i>
+        </div>
+        <ul class="list-group list-group-flush">
+            
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">git使用</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 exec 系统调用核心逻辑总结</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E9%87%8A%E6%94%BE%E6%9C%BA%E5%88%B6%E6%80%BB%E7%BB%93/">xv6 物理内存分配与释放机制总结</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/copyin-copyout%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/">copyin/copyout详细介绍</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a>
+                </span>
+            </li>
+            
+        </ul>
+    </div>
+</aside>
+    
+    
+    <aside id="gal-sets">
+        <div class="panel panel-gal hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+            <ul class="nav nav-pills pills-gal">
+
+                
+                <li>
+                    <a href="/2025/12/28/%E9%99%B7%E9%98%B1%E6%8C%87%E4%BB%A4%E5%92%8C%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8-%E6%A0%B8%E5%BF%83%E8%A7%A3%E6%9E%90/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
+                </li>
+                
+                
+                <li>
+                    <a href="/2025/12/28/%E9%99%B7%E9%98%B1%E6%8C%87%E4%BB%A4%E5%92%8C%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8-%E6%A0%B8%E5%BF%83%E8%A7%A3%E6%9E%90/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
+                </li>
+                
+                
+                <li>
+                    <a href="/2025/12/28/%E9%99%B7%E9%98%B1%E6%8C%87%E4%BB%A4%E5%92%8C%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8-%E6%A0%B8%E5%BF%83%E8%A7%A3%E6%9E%90/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
+                </li>
+                
+            </ul>
+            <div class="tab-content">
+                
+                <div class="cloud-tags tab-pane nav bs-sidenav fade" id="sidebar-tags">
+    
+</div>
+                
+                
+                <div class="friend-links tab-pane nav bs-sidenav fade" id="sidebar-friend-links">
+    
+    <li>
+        <a href="http://kdays.net/days/" target="_blank">KDays Forum</a>
+    </li>
+    
+    <li>
+        <a href="http://www.gal123.com/" target="_blank">绅士导航♂</a>
+    </li>
+    
+    <li>
+        <a href="http://www.moe123.com/" target="_blank">萌导航</a>
+    </li>
+    
+</div>
+                
+                
+                <div class="links tab-pane nav bs-sidenav fade" id="sidebar-links">
+    
+    <li>
+        <a href="https://github.com/ZEROKISEKI/" target="_blank">Github</a>
+    </li>
+    
+    <li>
+        <a href="https://coding.net/u/SORA1" target="_blank">Coding</a>
+    </li>
+    
+    <li>
+        <a href="https://www.zhihu.com/people/aonosora/activities" target="_blank">知乎</a>
+    </li>
+    
+</div>
+                
+            </div>
+        </div>
+    </aside>
+    
+</aside>
+            </div>
+        </div>
+    </div>
+    <footer id="gal-footer">
+    <div class="container">
+        Copyright © 2018 Ivan-FYF Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>.&nbsp;Theme by <a href="https://github.com/ZEROKISEKI" target="_blank">AONOSORA</a>
+    </div>
+</footer>
+
+<!-- 回到顶端 -->
+<div id="gal-gotop">
+    <i class="fa fa-angle-up"></i>
+</div>
+</body>
+
+<script src="/js/activate-power-mode.js"></script>
+
+<script>
+
+    // 配置highslide
+	hs.graphicsDir = '/js/highslide/graphics/'
+    hs.outlineType = "rounded-white";
+    hs.dimmingOpacity = 0.8;
+    hs.outlineWhileAnimating = true;
+    hs.showCredits = false;
+    hs.captionEval = "this.thumb.alt";
+    hs.numberPosition = "caption";
+    hs.align = "center";
+    hs.transitions = ["expand", "crossfade"];
+    hs.lang.number = '共%2张图, 当前是第%1张';
+    hs.addSlideshow({
+      interval: 5000,
+      repeat: true,
+      useControls: true,
+      fixedControls: "fit",
+      overlayOptions: {
+        opacity: 0.75,
+        position: "bottom center",
+        hideOnMouseOut: true
+      }
+    })
+
+    // 初始化aos
+    AOS.init({
+      duration: 1000,
+      delay: 0,
+      easing: 'ease-out-back'
+    });
+
+</script>
+<script>
+	POWERMODE.colorful = 'true';    // make power mode colorful
+	POWERMODE.shake = 'true';       // turn off shake
+	// TODO 这里根据具体情况修改
+	document.body.addEventListener('input', POWERMODE);
+</script>
+<script>
+    window.slideConfig = {
+      prefix: '/imgs/slide/background',
+      ext: 'jpg',
+      maxCount: '6'
+    }
+</script>
+
+<script src="/js/hs.js"></script>
+<script src="/js/blog.js"></script>
+
+
+
+
+</html>

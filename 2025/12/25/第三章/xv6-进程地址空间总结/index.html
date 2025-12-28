@@ -18,7 +18,7 @@
     
     
     
-    <title>shell的运行过程 | Ivan&#39;s Tech Blog</title>
+    <title>xv6 进程地址空间总结 | Ivan&#39;s Tech Blog</title>
     <link href="https://hellonnnnn.github.io" rel="prefetch" />
 
     
@@ -164,19 +164,19 @@
         <i class="fa fa-home"></i>
         <a href="https://hellonnnnn.github.io">Ivan&#39;s Tech Blog</a>
         >
-        <span>shell的运行过程</span>
+        <span>xv6 进程地址空间总结</span>
     </div>
     <!-- 大型设备详细文章 -->
     <div class="hidden-xs">
         <div class="title-article">
             <h1>
-                <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a>
+                <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 进程地址空间总结</a>
             </h1>
         </div>
         <div class="tag-article">
             
             <span class="label label-gal">
-                <i class="fa fa-calendar"></i> 2025-12-22
+                <i class="fa fa-calendar"></i> 2025-12-25
             </span>
             
         </div>
@@ -186,11 +186,11 @@
         <center>
             <div class="title-article">
                 <h4>
-                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a>
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 进程地址空间总结</a>
                 </h4>
             </div>
             <p>
-                <i class="fa fa-calendar"></i> 2025-12-22
+                <i class="fa fa-calendar"></i> 2025-12-25
             </p>
             <p>
                 
@@ -199,52 +199,156 @@
         </center>
     </div>
     <div class="content-article">
-        <p>在xv6中，<strong>Shell是一个运行在用户态的程序</strong>（对应<code>user/sh.c</code>），它的核心逻辑是“<strong>命令解析→进程管理→等待执行结果</strong>”的循环，依赖<code>fork</code>、<code>exec</code>、<code>wait</code>等系统调用与内核交互。以下是它的完整运行流程：</p>
-<h3 id="一、Shell的启动：内核初始化后的第一个用户程序"><a href="#一、Shell的启动：内核初始化后的第一个用户程序" class="headerlink" title="一、Shell的启动：内核初始化后的第一个用户程序"></a>一、Shell的启动：内核初始化后的第一个用户程序</h3><p>xv6启动时，内核完成初始化（内存、进程、文件系统）后，会通过<code>exec</code>系统调用启动<strong>第一个用户程序——Shell</strong>（对应<code>user/sh.c</code>编译后的可执行文件）。此时Shell成为xv6系统中第一个运行的用户进程。</p>
-<h3 id="二、Shell的核心循环：“读命令→解析→执行→等待”"><a href="#二、Shell的核心循环：“读命令→解析→执行→等待”" class="headerlink" title="二、Shell的核心循环：“读命令→解析→执行→等待”"></a>二、Shell的核心循环：“读命令→解析→执行→等待”</h3><p>Shell启动后，会进入一个<strong>无限循环</strong>，持续处理用户输入的命令，直到系统关闭。核心流程分为4步：</p>
-<h4 id="1-读取用户输入（读命令行）"><a href="#1-读取用户输入（读命令行）" class="headerlink" title="1. 读取用户输入（读命令行）"></a>1. 读取用户输入（读命令行）</h4><p>Shell通过<code>read</code>系统调用，从“标准输入”（默认是终端<code>/dev/console</code>）读取用户输入的一行命令（比如<code>ls</code>、<code>trace 32 grep hello README</code>）。</p>
-<p>xv6的Shell中，这一步由<code>readline</code>函数实现（封装了<code>read</code>系统调用），会等待用户输入并处理换行符，最终得到一个字符串形式的命令行。</p>
-<h4 id="2-解析命令行（拆分命令与参数）"><a href="#2-解析命令行（拆分命令与参数）" class="headerlink" title="2. 解析命令行（拆分命令与参数）"></a>2. 解析命令行（拆分命令与参数）</h4><p>Shell将读取到的命令行字符串拆分为<strong>命令名</strong>和<strong>参数列表</strong>：</p>
-<ul>
-<li>比如输入<code>trace 32 grep hello README</code>，会被拆分为：<ul>
-<li>命令名：<code>trace</code></li>
-<li>参数列表：<code>[&quot;trace&quot;, &quot;32&quot;, &quot;grep&quot;, &quot;hello&quot;, &quot;README&quot;]</code></li>
-</ul>
-</li>
-</ul>
-<p>xv6的Shell中，这一步由<code>parsecmd</code>函数实现（字符串分割逻辑），最终生成一个命令结构（包含命令类型、参数等）。</p>
-<h4 id="3-执行命令：区分“内置命令”和“外部命令”"><a href="#3-执行命令：区分“内置命令”和“外部命令”" class="headerlink" title="3. 执行命令：区分“内置命令”和“外部命令”"></a>3. 执行命令：区分“内置命令”和“外部命令”</h4><p>Shell会根据命令类型，选择不同的执行方式：</p>
-<h5 id="（1）内置命令：直接在Shell进程中执行（不创建子进程）"><a href="#（1）内置命令：直接在Shell进程中执行（不创建子进程）" class="headerlink" title="（1）内置命令：直接在Shell进程中执行（不创建子进程）"></a>（1）内置命令：直接在Shell进程中执行（不创建子进程）</h5><p>内置命令是<strong>Shell自身实现的功能</strong>，无法通过“启动外部程序”完成，因此必须在Shell进程中直接执行（依赖对应的系统调用）。</p>
-<p>xv6中典型的内置命令是<code>cd</code>（切换工作目录）：</p>
-<ul>
-<li>原因：如果<code>cd</code>在子进程中执行，子进程的工作目录会改变，但<strong>父进程（Shell）的工作目录不会受影响</strong>（进程的工作目录是独立的），所以必须由Shell自己调用<code>chdir</code>系统调用完成切换。</li>
-</ul>
-<p>执行逻辑：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 以cd为例</span></span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">strcmp</span>(cmd, <span class="string">&quot;cd&quot;</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (argc &lt; <span class="number">2</span>) &#123; <span class="comment">/* 处理参数不足 */</span> &#125;</span><br><span class="line">  <span class="comment">// 直接在Shell进程中调用chdir系统调用</span></span><br><span class="line">  <span class="keyword">if</span> (chdir(argv[<span class="number">1</span>]) &lt; <span class="number">0</span>) &#123; <span class="comment">/* 处理错误 */</span> &#125;</span><br><span class="line">  <span class="keyword">return</span>; <span class="comment">// 执行完后回到Shell循环</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h5 id="（2）外部命令：创建子进程执行（依赖fork-exec）"><a href="#（2）外部命令：创建子进程执行（依赖fork-exec）" class="headerlink" title="（2）外部命令：创建子进程执行（依赖fork+exec）"></a>（2）外部命令：创建子进程执行（依赖fork+exec）</h5><p>外部命令是<strong>独立的用户程序</strong>（如<code>ls</code>、<code>grep</code>、<code>sysinfotest</code>），需要通过“创建子进程+替换程序镜像”的方式执行：</p>
-<p>执行逻辑分为3步：</p>
+        <h1 id="xv6进程地址空间总结"><a href="#xv6进程地址空间总结" class="headerlink" title="xv6进程地址空间总结"></a>xv6进程地址空间总结</h1><p>xv6中每个进程拥有独立页表，对应<strong>私有用户地址空间</strong>，虚拟地址范围为<code>0 ~ MAXVA</code>（原则上支持256G寻址），通过页表实现“虚拟连续、物理离散”的内存抽象，同时借助特殊布局与机制保障安全与功能。</p>
+<h2 id="一、核心基础"><a href="#一、核心基础" class="headerlink" title="一、核心基础"></a>一、核心基础</h2><ol>
+<li><strong>独立页表</strong>：每个进程对应专属<code>pagetable_t</code>页表，进程切换时xv6会更新<code>satp</code>寄存器，让硬件切换到新进程的页表；</li>
+<li><strong>地址范围</strong>：用户虚拟地址空间为<code>0 ~ MAXVA</code>（<code>MAXVA</code>为虚拟地址空间顶部），仅映射实际使用的区域（未用区域PTE_V&#x3D;0）；</li>
+<li><strong>内存分配逻辑</strong>：进程请求更多用户内存时，xv6通过<code>kalloc()</code>分配物理页，向进程页表中添加PTE（设置<code>PTE_W</code>&#x2F;<code>PTE_R</code>&#x2F;<code>PTE_U</code>&#x2F;<code>PTE_V</code>标志）。</li>
+</ol>
+<h2 id="二、地址空间布局（虚拟地址从低到高）"><a href="#二、地址空间布局（虚拟地址从低到高）" class="headerlink" title="二、地址空间布局（虚拟地址从低到高）"></a>二、地址空间布局（虚拟地址从低到高）</h2><p>结合图2.3与图3.4，用户地址空间分为以下核心区域：</p>
+<table>
+<thead>
+<tr>
+<th>虚拟地址区域</th>
+<th>内容</th>
+<th>核心作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>低地址（0起始）</td>
+<td>user text and data</td>
+<td>代码段（只读可执行，存进程指令）+ 数据段（读写，存全局&#x2F;静态变量）</td>
+</tr>
+<tr>
+<td>text&#x2F;data上方</td>
+<td>guard page（保护页）</td>
+<td>无效页（PTE_V&#x3D;0），位于用户栈下方，防栈溢出</td>
+</tr>
+<tr>
+<td>保护页上方</td>
+<td>user stack（用户栈）</td>
+<td>初始为1个4KB页，存储函数调用栈、局部变量</td>
+</tr>
+<tr>
+<td>栈上方</td>
+<td>heap（堆）</td>
+<td>动态内存分配区域，随<code>brk</code>系统调用向上扩展</td>
+</tr>
+<tr>
+<td>heap上方</td>
+<td>trapframe</td>
+<td>存储进程陷入内核时的上下文（寄存器状态）</td>
+</tr>
+<tr>
+<td>高地址（MAXVA附近）</td>
+<td>trampoline（蹦床页）</td>
+<td>映射内核的蹦床代码物理页，所有进程页表共享此映射（用户-内核态切换的统一入口）</td>
+</tr>
+</tbody></table>
+<h2 id="三、初始栈结构（exec创建后的栈）"><a href="#三、初始栈结构（exec创建后的栈）" class="headerlink" title="三、初始栈结构（exec创建后的栈）"></a>三、初始栈结构（exec创建后的栈）</h2><p>图3.4展示了<code>exec</code>加载程序后，用户栈的初始内容（模拟<code>main(argc, argv)</code>的调用栈），从**栈顶部（高地址）到底部（低地址）**依次为：</p>
 <ol>
-<li><strong><code>fork</code>创建子进程</strong>：Shell调用<code>fork</code>系统调用，创建一个与自己完全相同的子进程（复制内存、上下文）；</li>
-<li><strong>子进程中<code>exec</code>替换程序</strong>：子进程调用<code>exec</code>系统调用，将自己的程序镜像替换为目标命令对应的可执行文件（比如<code>exec(&quot;ls&quot;, argv)</code>会加载<code>/bin/ls</code>并执行）；</li>
-<li><strong>父进程<code>wait</code>等待子进程结束</strong>：Shell（父进程）调用<code>wait</code>系统调用，阻塞等待子进程执行完毕，然后继续下一轮循环。</li>
+<li>命令行参数字符串（以null结尾）；</li>
+<li><code>argv</code>数组：存储各参数字符串的地址；</li>
+<li><code>argv</code>数组的地址（即<code>&amp;argv[0]</code>）；</li>
+<li><code>argc</code>：命令行参数的数量；</li>
+<li>返回PC（值为<code>0xFFFFFFFF</code>）：模拟<code>main</code>函数的调用者返回地址（仅占位）。</li>
 </ol>
-<h4 id="4-等待子进程结束，回到循环"><a href="#4-等待子进程结束，回到循环" class="headerlink" title="4. 等待子进程结束，回到循环"></a>4. 等待子进程结束，回到循环</h4><p>外部命令执行时，Shell会阻塞在<code>wait</code>调用中，直到子进程执行完毕（无论是正常退出还是出错）。子进程结束后，Shell会清理子进程的资源，然后回到循环的第一步，等待下一个用户命令。</p>
-<h3 id="三、xv6-Shell的执行示例（以trace-32-grep-hello-README为例）"><a href="#三、xv6-Shell的执行示例（以trace-32-grep-hello-README为例）" class="headerlink" title="三、xv6 Shell的执行示例（以trace 32 grep hello README为例）"></a>三、xv6 Shell的执行示例（以<code>trace 32 grep hello README</code>为例）</h3><ol>
-<li>用户在终端输入<code>trace 32 grep hello README</code>，Shell通过<code>read</code>读取该命令行；</li>
-<li><code>parsecmd</code>将其拆分为命令名<code>trace</code>和参数列表<code>[&quot;trace&quot;, &quot;32&quot;, &quot;grep&quot;, &quot;hello&quot;, &quot;README&quot;]</code>；</li>
-<li>Shell判断<code>trace</code>是外部命令，调用<code>fork</code>创建子进程；</li>
-<li>子进程调用<code>exec(&quot;trace&quot;, argv)</code>，加载并执行<code>trace</code>程序（<code>trace</code>内部会调用<code>trace</code>系统调用设置掩码，再<code>exec</code>执行<code>grep</code>）；</li>
-<li>Shell（父进程）调用<code>wait</code>，等待<code>trace</code>进程执行完毕；</li>
-<li><code>trace</code>执行完成后，Shell回到循环，等待下一个命令。</li>
+<h2 id="四、页表的核心能力"><a href="#四、页表的核心能力" class="headerlink" title="四、页表的核心能力"></a>四、页表的核心能力</h2><p>进程页表通过三级映射实现以下关键特性：</p>
+<ol>
+<li><strong>私有内存隔离</strong>：不同进程的相同虚拟地址，会映射到不同物理页，进程间内存互不干扰；</li>
+<li><strong>虚拟连续、物理离散</strong>：进程看到的是连续虚拟地址，但实际物理页可非连续分配，提升内存利用率；</li>
+<li><strong>共享公共页</strong>：所有进程的页表都会映射同一个蹦床页物理地址，实现用户-内核态切换的代码共享。</li>
 </ol>
-<h3 id="四、Shell的核心特点"><a href="#四、Shell的核心特点" class="headerlink" title="四、Shell的核心特点"></a>四、Shell的核心特点</h3><ol>
-<li><strong>Shell是用户程序</strong>：它本身不具备内核权限，所有功能（如创建进程、切换目录）都依赖系统调用；</li>
-<li><strong>内置命令的必要性</strong>：部分操作（如<code>cd</code>、<code>exit</code>）必须在Shell进程中执行，否则无法影响Shell自身的状态；</li>
-<li><strong>依赖进程管理系统调用</strong>：<code>fork</code>、<code>exec</code>、<code>wait</code>是Shell实现“多命令执行”的核心基础。</li>
+<h2 id="五、栈溢出防护：保护页机制"><a href="#五、栈溢出防护：保护页机制" class="headerlink" title="五、栈溢出防护：保护页机制"></a>五、栈溢出防护：保护页机制</h2><p>xv6在用户栈<strong>正下方</strong>设置“保护页”：</p>
+<ul>
+<li>保护页的PTE未置<code>PTE_V</code>（映射无效）；</li>
+<li>若用户栈溢出并访问保护页地址，硬件会触发<strong>页故障异常</strong>，避免溢出覆盖其他用户内存（xv6会直接报错，实际OS可能自动扩容栈）。</li>
+</ul>
+<hr>
+<h1 id="xv6进程地址空间各区域PTE权限配置表"><a href="#xv6进程地址空间各区域PTE权限配置表" class="headerlink" title="xv6进程地址空间各区域PTE权限配置表"></a>xv6进程地址空间各区域PTE权限配置表</h1><p>下表清晰列出用户地址空间各核心区域的PTE标志位配置（1&#x3D;启用，0&#x3D;禁用），并解释权限设计的核心逻辑：</p>
+<table>
+<thead>
+<tr>
+<th>虚拟地址区域</th>
+<th>PTE_V（有效）</th>
+<th>PTE_R（读）</th>
+<th>PTE_W（写）</th>
+<th>PTE_X（执行）</th>
+<th>PTE_U（用户可访问）</th>
+<th>权限说明（核心设计逻辑）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>user text（代码段）</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>只读可执行：防止进程修改自身代码，用户态可执行指令、读取代码；</td>
+</tr>
+<tr>
+<td>user data（数据段）</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>可读可写：存储全局&#x2F;静态变量，用户态可读写数据，但禁止执行（防代码注入）；</td>
+</tr>
+<tr>
+<td>栈保护页（guard page）</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>完全无效：栈溢出访问时触发页故障，核心用于栈溢出检测；</td>
+</tr>
+<tr>
+<td>user stack（用户栈）</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>可读可写：存储函数调用栈、局部变量，用户态可读写，禁止执行（安全防护）；</td>
+</tr>
+<tr>
+<td>heap（堆）</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>可读可写：动态内存分配区域（如malloc），用户态可读写，禁止执行；</td>
+</tr>
+<tr>
+<td>trapframe（上下文帧）</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>内核专属：存储进程陷入内核的寄存器状态，仅内核态可访问（用户态不可见）；</td>
+</tr>
+<tr>
+<td>trampoline（蹦床页）</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>只读可执行：所有进程共享的态切换代码，用户态可执行、读取，禁止写入（防篡改）；</td>
+</tr>
+</tbody></table>
+<h2 id="关键补充说明"><a href="#关键补充说明" class="headerlink" title="关键补充说明"></a>关键补充说明</h2><ol>
+<li><strong>权限最小化原则</strong>：每个区域仅开放必要权限（如代码段仅开放读+执行，数据段仅开放读+写），降低安全风险；</li>
+<li><strong>PTE_U的核心作用</strong>：区分“用户态可访问”（PTE_U&#x3D;1）和“仅内核态可访问”（PTE_U&#x3D;0），trapframe仅内核可操作，保障进程上下文安全；</li>
+<li><strong>蹦床页的特殊性</strong>：所有进程的页表都映射同一个蹦床页物理地址，且权限为<code>R-X+U</code>，确保用户态陷入内核时能执行统一的切换代码；</li>
+<li><strong>保护页的无物理内存特性</strong>：保护页仅占用虚拟地址空间，不映射任何物理页（PTE_V&#x3D;0），因此不消耗物理内存，仅作为栈溢出的“安全缓冲”。4</li>
 </ol>
-<p>总结来说，xv6的Shell是一个“<strong>命令解释器+进程管理器</strong>”，通过“读取-解析-执行-等待”的循环，借助内核的进程管理能力，实现用户命令的执行。</p>
+<p>xv6 为每个用户进程分配独立的虚拟地址空间，布局如下（地址从低到高）：<br>plaintext<br>0x00000000<br>  ├── text：程序代码段（ELF 加载的指令）<br>  ├── data + bss：数据段（全局变量、未初始化变量）<br>  ├── fixed-size stack：固定大小的用户栈（初始 1 页）<br>  ├── expandable heap：可扩展的堆（sbrk 系统调用扩展）<br>  ├── …（堆扩展区）<br>  ├── TRAPFRAME：进程上下文帧（仅内核可访问）<br>  └── TRAMPOLINE：蹦床页（用户&#x2F;内核共享，可执行）<br>关键特点：<br>栈在堆下方（向下生长），堆向上扩展，中间是空闲区；<br>栈下方有「保护页」（PTE_U&#x3D;0），检测栈溢出；<br>高地址仅保留 TRAPFRAME 和 TRAMPOLINE，与内核地址空间隔离。</p>
 
     </div>
 </article>
@@ -389,7 +493,13 @@
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a>
+                    <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">git使用</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/28/%E9%99%B7%E9%98%B1%E6%8C%87%E4%BB%A4%E5%92%8C%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8-%E6%A0%B8%E5%BF%83%E8%A7%A3%E6%9E%90/">陷阱指令和系统调用 核心解析</a>
                 </span>
             </li>
             
@@ -407,37 +517,31 @@
             
             <li class="list-group-item">
                 <span class="post-title">
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 exec 系统调用核心逻辑总结</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
                     <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/satp/">satp</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E9%87%8A%E6%94%BE%E6%9C%BA%E5%88%B6%E6%80%BB%E7%BB%93/">xv6 物理内存分配与释放机制总结</a>
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 进程地址空间总结</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a>
+                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
                     <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/">xv6内核架构</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/copyin-copyout%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/">copyin/copyout详细介绍</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a>
                 </span>
             </li>
             
@@ -452,17 +556,17 @@
 
                 
                 <li>
-                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
                 </li>
                 
                 
                 <li>
-                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
                 </li>
                 
                 
                 <li>
-                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
                 </li>
                 
             </ul>
