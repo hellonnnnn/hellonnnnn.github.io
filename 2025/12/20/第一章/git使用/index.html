@@ -248,12 +248,12 @@
 </ol>
 <p>在 MIT 6.S081 实验中，需要配置两个远程仓库：</p>
 <h1 id="查看当前远程配置"><a href="#查看当前远程配置" class="headerlink" title="查看当前远程配置"></a>查看当前远程配置</h1><p>git remote -v</p>
-<h1 id="典型输出："><a href="#典型输出：" class="headerlink" title="典型输出："></a>典型输出：</h1><p>github  <a href="mailto:&#103;&#x69;&#x74;&#64;&#x67;&#105;&#x74;&#104;&#x75;&#98;&#x2e;&#x63;&#x6f;&#x6d;">git@github.com</a>:hellonnnnn&#x2F;xv6-labs-2020.git (fetch)<br>github  <a href="mailto:&#x67;&#105;&#116;&#x40;&#103;&#105;&#116;&#x68;&#117;&#x62;&#46;&#99;&#111;&#x6d;">git@github.com</a>:hellonnnnn&#x2F;xv6-labs-2020.git (push)<br>origin  git:&#x2F;&#x2F;g.csail.mit.edu&#x2F;xv6-labs-2020 (fetch)<br>origin  git:&#x2F;&#x2F;g.csail.mit.edu&#x2F;xv6-labs-2020 (push)</p>
+<h1 id="典型输出："><a href="#典型输出：" class="headerlink" title="典型输出："></a>典型输出：</h1><p>github  <a href="mailto:&#x67;&#105;&#116;&#64;&#x67;&#105;&#116;&#104;&#117;&#x62;&#46;&#99;&#111;&#x6d;">git@github.com</a>:hellonnnnn&#x2F;xv6-labs-2020.git (fetch)<br>github  <a href="mailto:&#103;&#x69;&#x74;&#x40;&#103;&#x69;&#x74;&#x68;&#x75;&#98;&#46;&#99;&#x6f;&#x6d;">git@github.com</a>:hellonnnnn&#x2F;xv6-labs-2020.git (push)<br>origin  git:&#x2F;&#x2F;g.csail.mit.edu&#x2F;xv6-labs-2020 (fetch)<br>origin  git:&#x2F;&#x2F;g.csail.mit.edu&#x2F;xv6-labs-2020 (push)</p>
 <ol start="2">
 <li>两个远程仓库的区别</li>
 </ol>
 <p>特性 github (你的仓库) origin (MIT 仓库)</p>
-<p>地址 <a href="mailto:&#x67;&#105;&#x74;&#x40;&#x67;&#105;&#116;&#x68;&#117;&#x62;&#x2e;&#x63;&#111;&#x6d;">git@github.com</a>:你的用户名&#x2F;仓库.git git:&#x2F;&#x2F;g.csail.mit.edu&#x2F;xv6-labs-2020</p>
+<p>地址 <a href="mailto:&#103;&#105;&#x74;&#64;&#103;&#105;&#x74;&#x68;&#117;&#x62;&#46;&#99;&#x6f;&#x6d;">git@github.com</a>:你的用户名&#x2F;仓库.git git:&#x2F;&#x2F;g.csail.mit.edu&#x2F;xv6-labs-2020</p>
 <p>权限 读写权限 只读权限</p>
 <p>用途 备份你的代码，提交作业 获取官方更新</p>
 <p>操作 push, pull, fetch 只能 pull, fetch</p>
@@ -264,7 +264,7 @@
 </ol>
 <p>3.1 添加远程仓库</p>
 <h1 id="添加-MIT-官方仓库"><a href="#添加-MIT-官方仓库" class="headerlink" title="添加 MIT 官方仓库"></a>添加 MIT 官方仓库</h1><p>git remote add origin git:&#x2F;&#x2F;g.csail.mit.edu&#x2F;xv6-labs-2020</p>
-<h1 id="添加你的-GitHub-仓库"><a href="#添加你的-GitHub-仓库" class="headerlink" title="添加你的 GitHub 仓库"></a>添加你的 GitHub 仓库</h1><p>git remote add github <a href="mailto:&#103;&#x69;&#116;&#64;&#103;&#x69;&#x74;&#x68;&#117;&#x62;&#46;&#x63;&#111;&#x6d;">git@github.com</a>:你的用户名&#x2F;仓库名.git</p>
+<h1 id="添加你的-GitHub-仓库"><a href="#添加你的-GitHub-仓库" class="headerlink" title="添加你的 GitHub 仓库"></a>添加你的 GitHub 仓库</h1><p>git remote add github <a href="mailto:&#x67;&#105;&#x74;&#64;&#103;&#105;&#x74;&#x68;&#x75;&#98;&#46;&#x63;&#111;&#x6d;">git@github.com</a>:你的用户名&#x2F;仓库名.git</p>
 <p>3.2 修改远程地址</p>
 <h1 id="修改远程地址"><a href="#修改远程地址" class="headerlink" title="修改远程地址"></a>修改远程地址</h1><p>git remote set-url origin 新地址</p>
 <h1 id="重命名远程"><a href="#重命名远程" class="headerlink" title="重命名远程"></a>重命名远程</h1><p>git remote rename 旧名称 新名称</p>
@@ -284,7 +284,7 @@
 <p>步骤 1: 克隆 MIT 官方仓库</p>
 <p>git clone git:&#x2F;&#x2F;g.csail.mit.edu&#x2F;xv6-labs-2020<br>cd xv6-labs-2020</p>
 <p>步骤 2: 添加 GitHub 远程</p>
-<p>git remote add github <a href="mailto:&#103;&#105;&#116;&#x40;&#103;&#105;&#116;&#x68;&#x75;&#x62;&#x2e;&#x63;&#111;&#x6d;">git@github.com</a>:你的用户名&#x2F;xv6-labs-2020.git</p>
+<p>git remote add github <a href="mailto:&#x67;&#105;&#116;&#x40;&#x67;&#x69;&#x74;&#x68;&#x75;&#x62;&#46;&#x63;&#111;&#109;">git@github.com</a>:你的用户名&#x2F;xv6-labs-2020.git</p>
 <p>步骤 3: 验证配置</p>
 <p>git remote -v</p>
 <h1 id="应该显示两个远程仓库"><a href="#应该显示两个远程仓库" class="headerlink" title="应该显示两个远程仓库"></a>应该显示两个远程仓库</h1><ol start="2">
@@ -321,7 +321,7 @@
 <ol start="6">
 <li>多设备同步</li>
 </ol>
-<h1 id="在新设备上"><a href="#在新设备上" class="headerlink" title="在新设备上"></a>在新设备上</h1><p>git clone <a href="mailto:&#x67;&#105;&#116;&#x40;&#103;&#x69;&#116;&#x68;&#x75;&#98;&#46;&#x63;&#111;&#x6d;">git@github.com</a>:你的用户名&#x2F;xv6-labs-2020.git<br>cd xv6-labs-2020<br>git remote add origin git:&#x2F;&#x2F;g.csail.mit.edu&#x2F;xv6-labs-2020<br>git checkout syscall<br>git pull github syscall</p>
+<h1 id="在新设备上"><a href="#在新设备上" class="headerlink" title="在新设备上"></a>在新设备上</h1><p>git clone <a href="mailto:&#103;&#x69;&#x74;&#x40;&#x67;&#105;&#x74;&#104;&#x75;&#x62;&#x2e;&#x63;&#111;&#109;">git@github.com</a>:你的用户名&#x2F;xv6-labs-2020.git<br>cd xv6-labs-2020<br>git remote add origin git:&#x2F;&#x2F;g.csail.mit.edu&#x2F;xv6-labs-2020<br>git checkout syscall<br>git pull github syscall</p>
 <p>常见问题与解决方案</p>
 <ol>
 <li>分支相关错误</li>
@@ -602,19 +602,25 @@
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">git使用</a>
+                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E5%86%85%E6%A0%B8%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 内核地址空间总结</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 exec 系统调用核心逻辑总结</a>
+                    <a href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a>
+                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a>
                 </span>
             </li>
             
@@ -632,31 +638,25 @@
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2026/01/22/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E4%B8%80%E5%A4%A9/">算法训练营第一天</a>
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E4%B8%AD-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF/">xv6 中 exec 系统调用的完整调用链路</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从内核空间陷入</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a>
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/trap-c%E8%AF%A6%E8%A7%A3/">trap.c详解</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
                     <a href="/2026/01/21/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E8%B9%A6%E5%BA%8A%E9%A1%B5/">蹦床页</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8%EF%BC%9Axv6-%E6%9E%81%E7%AE%80%E5%A4%84%E7%90%86-vs-%E7%9C%9F%E5%AE%9E-OS-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/">页面错误异常：xv6 极简处理 vs 真实 OS 的高级应用</a>
                 </span>
             </li>
             
