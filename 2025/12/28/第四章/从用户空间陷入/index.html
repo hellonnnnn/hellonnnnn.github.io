@@ -170,7 +170,7 @@
     <div class="hidden-xs">
         <div class="title-article">
             <h1>
-                <a href="/2025/12/28/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a>
+                <a href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a>
             </h1>
         </div>
         <div class="tag-article">
@@ -186,7 +186,7 @@
         <center>
             <div class="title-article">
                 <h4>
-                    <a href="/2025/12/28/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a>
+                    <a href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a>
                 </h4>
             </div>
             <p>
@@ -291,6 +291,63 @@
 </ol>
 <h3 id="最终流程闭环"><a href="#最终流程闭环" class="headerlink" title="最终流程闭环"></a>最终流程闭环</h3><p>用户态陷阱的完整链路：<br><code>用户指令触发陷阱</code> → CPU硬件切S模式跳uservec → uservec保存寄存器+切内核页表 → usertrap分发处理（系统调用&#x2F;中断&#x2F;异常） → usertrapret准备返回环境 → userret切回用户页表+恢复寄存器 → sret返回用户态继续执行。</p>
 <p>这个流程的核心是「利用蹦床页跨页表执行、利用陷阱帧保存上下文、利用硬件控制寄存器保证特权级隔离」，既解决了用户&#x2F;内核的隔离性问题，又保证了陷阱处理的性能和灵活性。</p>
+<hr>
+<h3 id="核心结论"><a href="#核心结论" class="headerlink" title="核心结论"></a>核心结论</h3><p>在 xv6 的 RISC-V 实现中，<strong>用户态陷阱入口 <code>uservec</code> 里实际交换的是 <code>a0</code> 和 <code>sscratch</code></strong>；而“<code>sp</code> 与 <code>sscratch</code> 交换”是 RISC-V 陷阱切换栈的<strong>通用架构思路</strong>（文档&#x2F;教程常举的示例），但 xv6 为了更安全的寄存器管理，选择了 <code>a0</code> 而非 <code>sp</code>——这是你产生混淆的核心原因。</p>
+<h3 id="一、误解来源：通用思路-vs-xv6-实际实现"><a href="#一、误解来源：通用思路-vs-xv6-实际实现" class="headerlink" title="一、误解来源：通用思路 vs xv6 实际实现"></a>一、误解来源：通用思路 vs xv6 实际实现</h3><h4 id="1-RISC-V-架构的“通用建议”：交换-sp-和-sscratch"><a href="#1-RISC-V-架构的“通用建议”：交换-sp-和-sscratch" class="headerlink" title="1. RISC-V 架构的“通用建议”：交换 sp 和 sscratch"></a>1. RISC-V 架构的“通用建议”：交换 sp 和 sscratch</h4><p>RISC-V 官方文档&#x2F;入门教程中，陷阱切换栈的典型思路是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 通用示例（非xv6）：交换sp和sscratch，直接切换到内核栈</span><br><span class="line">csrrw sp, sscratch, sp  # sp = 原sscratch（内核栈/trapframe地址），sscratch = 原sp（用户栈）</span><br></pre></td></tr></table></figure>
+<p>这个思路的核心是「用 sscratch 锚定内核栈地址，一条指令完成栈切换」，逻辑简洁，但有个前提：<strong>切换 sp 前无需保存其他寄存器</strong>（或仅需保存少量）。</p>
+<h4 id="2-xv6-的实际选择：交换-a0-和-sscratch"><a href="#2-xv6-的实际选择：交换-a0-和-sscratch" class="headerlink" title="2. xv6 的实际选择：交换 a0 和 sscratch"></a>2. xv6 的实际选择：交换 a0 和 sscratch</h4><p>xv6 中 <code>uservec</code>（trampoline.S）的真实代码是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"># kernel/trampoline.S: uservec 入口（xv6 RISC-V 原版）</span><br><span class="line">uservec:</span><br><span class="line">  # 交换 a0 和 sscratch：解锁第一个可用寄存器，锚定 trapframe 地址</span><br><span class="line">  csrrw a0, sscratch, a0  # a0 = 原sscratch (TRAPFRAME地址)；sscratch = 原a0 (用户态a0值)</span><br><span class="line">  </span><br><span class="line">  # 保存所有用户寄存器到 trapframe（此时a0指向TRAPFRAME，用户页表可访问）</span><br><span class="line">  sd ra, 0(a0)</span><br><span class="line">  sd sp, 8(a0)   # 保存用户态的sp（此时sp仍指向用户栈）</span><br><span class="line">  sd gp, 16(a0)</span><br><span class="line">  sd tp, 24(a0)</span><br><span class="line">  sd t0, 32(a0)</span><br><span class="line">  sd t1, 40(a0)</span><br><span class="line">  sd t2, 48(a0)</span><br><span class="line">  sd s0, 56(a0)</span><br><span class="line">  sd s1, 64(a0)</span><br><span class="line">  sd a1, 72(a0)  # 注意：a0已经被交换，所以先存a1，最后恢复用户a0</span><br><span class="line">  sd a2, 80(a0)</span><br><span class="line">  # ... 省略其他寄存器（a3-a7、s2-s11、t3-t6等）</span><br><span class="line">  csrr a1, sscratch       # 从sscratch取回用户态的a0值</span><br><span class="line">  sd a1, 68(a0)           # 保存用户态a0到trapframe.a0</span><br><span class="line">  </span><br><span class="line">  # 后续：切换内核页表、跳转到usertrap...</span><br></pre></td></tr></table></figure>
+
+<h3 id="二、xv6-选择-a0-而非-sp-的核心原因"><a href="#二、xv6-选择-a0-而非-sp-的核心原因" class="headerlink" title="二、xv6 选择 a0 而非 sp 的核心原因"></a>二、xv6 选择 a0 而非 sp 的核心原因</h3><p>陷阱触发后，CPU 刚跳转到 <code>uservec</code> 时，<strong>所有 32 个通用寄存器都持有用户态的值</strong>，且此时仍在「用户页表」上下文（未切换到内核页表）。xv6 选择 a0 交换的关键考量是：</p>
+<ol>
+<li><p><strong>避免过早修改 sp 导致寄存器保存失败</strong><br>若先交换 sp（用户栈→trapframe），此时 sp 指向 trapframe，但还未保存任何用户寄存器（包括原 sp），后续保存 <code>sd sp, 8(a0)</code> 时，写入的是「已切换后的 sp（trapframe 地址）」，而非用户态的 sp——会导致用户栈地址丢失。</p>
+<p>而先交换 a0：</p>
+<ul>
+<li>sp 仍指向用户栈，可先把「用户态 sp」保存到 trapframe；</li>
+<li>a0 被解锁为「可用寄存器」（指向 trapframe），后续所有寄存器保存操作都基于 a0 完成，无冲突。</li>
+</ul>
+</li>
+<li><p><strong>trapframe 需先保存全量寄存器，再切换栈&#x2F;页表</strong><br>xv6 的 trapframe 要保存所有用户寄存器（而非仅 sp），且保存操作必须在「用户页表」下完成（因为还未切换到内核页表）。先拿 a0 锚定 trapframe 地址，才能安全完成全量寄存器保存，再执行后续的「切换内核栈（sp）」和「切换内核页表（satp）」。</p>
+</li>
+</ol>
+<h3 id="三、关键补充：sp-的切换时机（在-a0-交换之后）"><a href="#三、关键补充：sp-的切换时机（在-a0-交换之后）" class="headerlink" title="三、关键补充：sp 的切换时机（在 a0 交换之后）"></a>三、关键补充：sp 的切换时机（在 a0 交换之后）</h3><p>xv6 并非不切换 sp，而是<strong>把 sp 切换延后到“保存完所有用户寄存器、切换到内核页表之后”</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># uservec 中保存完寄存器后，切换到内核栈</span><br><span class="line">ld sp, (TRAPFRAME + kernel_sp)(a0)  # sp = 进程的内核栈地址（从trapframe读取）</span><br><span class="line">csrw satp, t0                       # 切换到内核页表</span><br><span class="line">sfence.vma</span><br><span class="line">jr t1                               # 跳转到usertrap（此时sp已为内核栈）</span><br></pre></td></tr></table></figure>
+<p>此时切换 sp 是安全的：用户寄存器已全部保存到 trapframe，且已切换到内核页表，内核栈地址（trapframe.kernel_sp）是内核可访问的。</p>
+<h3 id="四、总结：两种交换的核心目的一致，仅时机-寄存器选择不同"><a href="#四、总结：两种交换的核心目的一致，仅时机-寄存器选择不同" class="headerlink" title="四、总结：两种交换的核心目的一致，仅时机&#x2F;寄存器选择不同"></a>四、总结：两种交换的核心目的一致，仅时机&#x2F;寄存器选择不同</h3><table>
+<thead>
+<tr>
+<th>对比维度</th>
+<th>通用思路（sp交换）</th>
+<th>xv6 实现（a0交换）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>核心目的</td>
+<td>用 sscratch 锚定内核地址，切换栈</td>
+<td>用 sscratch 锚定 trapframe 地址，解锁寄存器</td>
+</tr>
+<tr>
+<td>交换时机</td>
+<td>陷阱入口第一步</td>
+<td>陷阱入口第一步（先解锁寄存器）</td>
+</tr>
+<tr>
+<td>sp 切换时机</td>
+<td>与 sscratch 交换时同步完成</td>
+<td>保存完所有寄存器、切换页表后</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>极简陷阱处理（仅切换栈）</td>
+<td>全量寄存器保存+跨页表切换</td>
+</tr>
+</tbody></table>
+<p>简单来说：</p>
+<ul>
+<li>你之前看到的“sp 和 sscratch 交换”是<strong>架构级通用示例</strong>；</li>
+<li>xv6 实际执行的是“a0 和 sscratch 交换”，是针对「全量寄存器保存+用户&#x2F;内核页表切换」场景的优化，本质都是利用 <code>sscratch</code> 作为“内核侧锚点”，只是选择了不同的临时寄存器。</li>
+</ul>
 
     </div>
 </article>
@@ -353,61 +410,61 @@
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/28/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a>
+                    <a href="/2026/01/22/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E4%B8%80%E5%A4%A9/">算法训练营第一天</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/28/%E9%99%B7%E9%98%B1%E6%8C%87%E4%BB%A4%E5%92%8C%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8-%E6%A0%B8%E5%BF%83%E8%A7%A3%E6%9E%90/">陷阱指令和系统调用 核心解析</a>
+                    <a href="/2026/01/21/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E8%B9%A6%E5%BA%8A%E9%A1%B5/">蹦床页</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 exec 系统调用核心逻辑总结</a>
+                    <a href="/2026/01/21/unbuntu%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%82%A8%E4%B8%8D%E8%B6%B3/">unbuntu系统存储不足</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-sbrk-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%88%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E6%89%A9%E7%BC%A9%E5%AE%B9%EF%BC%89%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 sbrk 系统调用（进程内存扩缩容）核心逻辑总结</a>
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/trap-c%E8%AF%A6%E8%A7%A3/">trap.c详解</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 进程地址空间总结</a>
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8%EF%BC%9Axv6-%E6%9E%81%E7%AE%80%E5%A4%84%E7%90%86-vs-%E7%9C%9F%E5%AE%9E-OS-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/">页面错误异常：xv6 极简处理 vs 真实 OS 的高级应用</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E9%87%8A%E6%94%BE%E6%9C%BA%E5%88%B6%E6%80%BB%E7%BB%93/">xv6 物理内存分配与释放机制总结</a>
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从内核空间陷入</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E5%86%85%E6%A0%B8%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 内核地址空间总结</a>
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0/">xv6 系统调用参数处理：提取、校验与安全传输</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/satp/">satp</a>
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E4%B8%AD-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF/">xv6 中 exec 系统调用的完整调用链路</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a>
+                    <a href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/copyin-copyout%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/">copyin/copyout详细介绍</a>
+                    <a href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/RISC-V%E9%99%B7%E5%85%A5%E6%9C%BA%E5%88%B6/">陷阱指令和系统调用 核心解析</a>
                 </span>
             </li>
             
@@ -429,25 +486,13 @@
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a>
+                    <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2025/12/28/%E9%99%B7%E9%98%B1%E6%8C%87%E4%BB%A4%E5%92%8C%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8-%E6%A0%B8%E5%BF%83%E8%A7%A3%E6%9E%90/">陷阱指令和系统调用 核心解析</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-sbrk-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%88%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E6%89%A9%E7%BC%A9%E5%AE%B9%EF%BC%89%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 sbrk 系统调用（进程内存扩缩容）核心逻辑总结</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E5%86%85%E6%A0%B8%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 内核地址空间总结</a>
+                    <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">git使用</a>
                 </span>
             </li>
             
@@ -459,19 +504,19 @@
             
             <li class="list-group-item">
                 <span class="post-title">
+                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/satp/">satp</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E9%87%8A%E6%94%BE%E6%9C%BA%E5%88%B6%E6%80%BB%E7%BB%93/">xv6 物理内存分配与释放机制总结</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
                     <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/">添加系统调用的过程</a>
                 </span>
             </li>
             
@@ -487,6 +532,18 @@
                 </span>
             </li>
             
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3/">系统调用正确理解</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E4%B8%AD-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF/">xv6 中 exec 系统调用的完整调用链路</a>
+                </span>
+            </li>
+            
         </ul>
     </div>
 </aside>
@@ -498,17 +555,17 @@
 
                 
                 <li>
-                    <a href="/2025/12/28/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
+                    <a href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
                 </li>
                 
                 
                 <li>
-                    <a href="/2025/12/28/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
+                    <a href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
                 </li>
                 
                 
                 <li>
-                    <a href="/2025/12/28/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
+                    <a href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
                 </li>
                 
             </ul>
