@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Ivan-FYF" />
+
+
+
+<meta name="description" content="xv6 trap.c 源码全解析：陷阱（中断&#x2F;异常&#x2F;系统调用）处理核心trap.c 是 xv6 处理 RISC-V 架构陷阱（Trap） 的核心文件，负责接管所有「用户态→内核态」的切换（系统调用、用户态中断&#x2F;异常）和「内核态自身的中断&#x2F;异常」，是理解 xv6 特权级切换、中断处理、系统调用分发的关键。以下按「代码结构、核心函数、关键逻辑、设计思路」逐层解析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="trap.c详解">
+<meta property="og:url" content="https://hellonnnnn.github.io/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/trap-c%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="Ivan&#39;s Tech Blog">
+<meta property="og:description" content="xv6 trap.c 源码全解析：陷阱（中断&#x2F;异常&#x2F;系统调用）处理核心trap.c 是 xv6 处理 RISC-V 架构陷阱（Trap） 的核心文件，负责接管所有「用户态→内核态」的切换（系统调用、用户态中断&#x2F;异常）和「内核态自身的中断&#x2F;异常」，是理解 xv6 特权级切换、中断处理、系统调用分发的关键。以下按「代码结构、核心函数、关键逻辑、设计思路」逐层解析">
+<meta property="og:locale">
+<meta property="article:published_time" content="2025-12-29T13:06:03.000Z">
+<meta property="article:modified_time" content="2025-12-29T13:26:13.633Z">
+<meta property="article:author" content="Ivan-FYF">
+<meta name="twitter:card" content="summary">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Ivan&#39;s Tech Blog" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>trap.c详解 | Ivan&#39;s Tech Blog</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: 
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/"></a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-第四章/trap-c详解" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/trap-c%E8%AF%A6%E8%A7%A3/" class="article-date">
+      <time datetime="2025-12-29T13:06:03.000Z" itemprop="datePublished">2025-12-29</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      trap.c详解
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="xv6-trap-c-源码全解析：陷阱（中断-异常-系统调用）处理核心"><a href="#xv6-trap-c-源码全解析：陷阱（中断-异常-系统调用）处理核心" class="headerlink" title="xv6 trap.c 源码全解析：陷阱（中断&#x2F;异常&#x2F;系统调用）处理核心"></a>xv6 trap.c 源码全解析：陷阱（中断&#x2F;异常&#x2F;系统调用）处理核心</h1><p><code>trap.c</code> 是 xv6 处理 RISC-V 架构<strong>陷阱（Trap）</strong> 的核心文件，负责接管所有「用户态→内核态」的切换（系统调用、用户态中断&#x2F;异常）和「内核态自身的中断&#x2F;异常」，是理解 xv6 特权级切换、中断处理、系统调用分发的关键。以下按「代码结构、核心函数、关键逻辑、设计思路」逐层解析。</p>
+<h2 id="一、文件核心作用"><a href="#一、文件核心作用" class="headerlink" title="一、文件核心作用"></a>一、文件核心作用</h2><p>陷阱是 RISC-V CPU 对「中断（如计时器、外设）、异常（如页面错误、非法指令）、系统调用（ecall）」的统一响应机制。该文件实现：</p>
+<ol>
+<li>陷阱初始化（设置陷阱入口、自旋锁）；</li>
+<li>用户态陷阱处理（<code>usertrap</code>）与返回（<code>usertrapret</code>）；</li>
+<li>内核态陷阱处理（<code>kerneltrap</code>）；</li>
+<li>设备中断识别（<code>devintr</code>）与时钟中断（<code>clockintr</code>）；</li>
+<li>衔接蹦床页（trampoline）完成用户&#x2F;内核页表切换。</li>
+</ol>
+<h2 id="二、前置声明与全局变量"><a href="#二、前置声明与全局变量" class="headerlink" title="二、前置声明与全局变量"></a>二、前置声明与全局变量</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;types.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;param.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;memlayout.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;riscv.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;spinlock.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;proc.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;defs.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 保护 ticks 计数器的自旋锁（多核心安全）</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">spinlock</span> <span class="title">tickslock</span>;</span></span><br><span class="line"><span class="comment">// 系统启动后的时钟滴答数（计时器中断累加）</span></span><br><span class="line">uint ticks;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 外部声明：蹦床页的汇编函数（trampoline.S）</span></span><br><span class="line"><span class="keyword">extern</span> <span class="type">char</span> trampoline[], uservec[], userret[];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 外部声明：kernelvec.S 中的内核陷阱入口，会调用 kerneltrap()</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">kernelvec</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 外部声明：设备中断处理函数（识别并处理外设中断）</span></span><br><span class="line"><span class="keyword">extern</span> <span class="type">int</span> <span class="title function_">devintr</span><span class="params">()</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>trampoline/uservec/userret</code>：蹦床页的汇编代码，负责用户态陷阱的入口&#x2F;返回、页表切换；</li>
+<li><code>kernelvec</code>：内核态陷阱的汇编入口，会保存寄存器后调用 <code>kerneltrap</code>；</li>
+<li><code>ticks</code>：全局时钟计数器，用于系统计时、进程调度（计时器中断触发）。</li>
+</ul>
+<h2 id="三、初始化函数：陷阱环境准备"><a href="#三、初始化函数：陷阱环境准备" class="headerlink" title="三、初始化函数：陷阱环境准备"></a>三、初始化函数：陷阱环境准备</h2><h3 id="1-trapinit：全局初始化"><a href="#1-trapinit：全局初始化" class="headerlink" title="1. trapinit：全局初始化"></a>1. trapinit：全局初始化</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span></span><br><span class="line"><span class="title function_">trapinit</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  initlock(&amp;tickslock, <span class="string">&quot;time&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>初始化保护 <code>ticks</code> 的自旋锁 <code>tickslock</code>，避免多核心同时修改 <code>ticks</code> 导致竞态。</li>
+</ul>
+<h3 id="2-trapinithart：每个核心的陷阱入口设置"><a href="#2-trapinithart：每个核心的陷阱入口设置" class="headerlink" title="2. trapinithart：每个核心的陷阱入口设置"></a>2. trapinithart：每个核心的陷阱入口设置</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span></span><br><span class="line"><span class="title function_">trapinithart</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  w_stvec((uint64)kernelvec);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>w_stvec</code>：写入 RISC-V 的 <code>stvec</code> 寄存器（陷阱向量基址）；</li>
+<li>作用：设置<strong>内核态</strong>的陷阱入口为 <code>kernelvec</code>（汇编函数），内核执行时触发的所有陷阱（中断&#x2F;异常）都会跳转到 <code>kernelvec</code>。</li>
+</ul>
+<h2 id="四、用户态陷阱处理：usertrap（核心）"><a href="#四、用户态陷阱处理：usertrap（核心）" class="headerlink" title="四、用户态陷阱处理：usertrap（核心）"></a>四、用户态陷阱处理：usertrap（核心）</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span></span><br><span class="line"><span class="title function_">usertrap</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> which_dev = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 校验：必须来自用户态（SSTATUS_SPP=0 表示上一级是用户态）</span></span><br><span class="line">  <span class="keyword">if</span>((r_sstatus() &amp; SSTATUS_SPP) != <span class="number">0</span>)</span><br><span class="line">    panic(<span class="string">&quot;usertrap: not from user mode&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 切换内核态的陷阱入口：后续内核内的陷阱跳转到 kernelvec</span></span><br><span class="line">  w_stvec((uint64)kernelvec);</span><br><span class="line"></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">proc</span> *<span class="title">p</span> =</span> myproc();</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 保存用户态的程序计数器（sepc）到进程的 trapframe</span></span><br><span class="line">  <span class="comment">// sepc 存储触发陷阱的用户态指令地址（如 ecall）</span></span><br><span class="line">  p-&gt;trapframe-&gt;epc = r_sepc();</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 场景1：处理系统调用（scause=8 表示用户态 ecall）</span></span><br><span class="line">  <span class="keyword">if</span>(r_scause() == <span class="number">8</span>)&#123;</span><br><span class="line">    <span class="comment">// 若进程已被标记为 killed，直接退出</span></span><br><span class="line">    <span class="keyword">if</span>(p-&gt;killed)</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 调整 epc：sepc 指向 ecall 指令，返回时需执行下一条（+4 字节）</span></span><br><span class="line">    p-&gt;trapframe-&gt;epc += <span class="number">4</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 开启中断（此前陷阱触发时硬件自动关中断，系统调用可响应外设中断）</span></span><br><span class="line">    intr_on();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 分发系统调用（syscall.c）：读取 trapframe 的 a7（调用号），执行对应函数</span></span><br><span class="line">    syscall();</span><br><span class="line">  &#125; </span><br><span class="line">  <span class="comment">// 场景2：处理设备中断（devintr 识别中断类型，返回非0表示处理成功）</span></span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span>((which_dev = devintr()) != <span class="number">0</span>)&#123;</span><br><span class="line">    <span class="comment">// 设备中断处理完成，无需额外操作</span></span><br><span class="line">  &#125; </span><br><span class="line">  <span class="comment">// 场景3：未知异常（如页面错误、非法指令）</span></span><br><span class="line">  <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 打印错误信息，标记进程为 killed</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;usertrap(): unexpected scause %p pid=%d\n&quot;</span>, r_scause(), p-&gt;pid);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;            sepc=%p stval=%p\n&quot;</span>, r_sepc(), r_stval());</span><br><span class="line">    p-&gt;killed = <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 若进程被标记为 killed，退出进程</span></span><br><span class="line">  <span class="keyword">if</span>(p-&gt;killed)</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 若为计时器中断（which_dev=2），让出 CPU 调度其他进程</span></span><br><span class="line">  <span class="keyword">if</span>(which_dev == <span class="number">2</span>)</span><br><span class="line">    yield();</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 返回到用户态</span></span><br><span class="line">  usertrapret();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="关键逻辑拆解"><a href="#关键逻辑拆解" class="headerlink" title="关键逻辑拆解"></a>关键逻辑拆解</h3><ol>
+<li><strong>用户态校验</strong>：<code>SSTATUS_SPP</code> 是 RISC-V <code>sstatus</code> 寄存器的位，0&#x3D;上一级是用户态，1&#x3D;内核态；若内核态调用 <code>usertrap</code> 直接 panic（致命错误）。</li>
+<li><strong>stvec 切换</strong>：进入内核后，将陷阱入口改为 <code>kernelvec</code>（内核态陷阱用），避免内核内的陷阱跳回用户态的 <code>uservec</code>。</li>
+<li><strong>系统调用处理</strong>：<ul>
+<li><code>r_scause() == 8</code>：RISC-V 定义 <code>scause=8</code> 为「用户态触发 ecall」；</li>
+<li><code>epc +=4</code>：ecall 指令占 4 字节，返回用户态时需从下一条指令执行；</li>
+<li><code>syscall()</code>：分发系统调用（如 exec&#x2F;read&#x2F;write），读取 <code>trapframe-&gt;a7</code> 的调用号，执行对应内核函数。</li>
+</ul>
+</li>
+<li><strong>设备中断处理</strong>：<code>devintr()</code> 识别中断类型（计时器、UART、磁盘），返回值：<ul>
+<li>2：计时器中断；</li>
+<li>1：其他外设中断（UART&#x2F;磁盘）；</li>
+<li>0：未识别的中断&#x2F;异常。</li>
+</ul>
+</li>
+<li><strong>异常处理</strong>：未知异常直接标记进程为 killed，后续 <code>exit(-1)</code> 终止进程（xv6 对用户态异常的极简处理）。</li>
+<li><strong>计时器中断调度</strong>：<code>yield()</code> 触发进程调度，让其他进程有机会运行。</li>
+</ol>
+<h2 id="五、用户态陷阱返回：usertrapret（核心）"><a href="#五、用户态陷阱返回：usertrapret（核心）" class="headerlink" title="五、用户态陷阱返回：usertrapret（核心）"></a>五、用户态陷阱返回：usertrapret（核心）</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span></span><br><span class="line"><span class="title function_">usertrapret</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">proc</span> *<span class="title">p</span> =</span> myproc();</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 关中断：切换 stvec 前避免触发新陷阱（防止入口错误）</span></span><br><span class="line">  intr_off();</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 切换陷阱入口：用户态的陷阱跳转到蹦床页的 uservec</span></span><br><span class="line">  w_stvec(TRAMPOLINE + (uservec - trampoline));</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 填充 trapframe：uservec 后续需要这些信息来恢复内核态上下文</span></span><br><span class="line">  p-&gt;trapframe-&gt;kernel_satp = r_satp();         <span class="comment">// 内核页表（satp 寄存器值）</span></span><br><span class="line">  p-&gt;trapframe-&gt;kernel_sp = p-&gt;kstack + PGSIZE; <span class="comment">// 进程的内核栈顶</span></span><br><span class="line">  p-&gt;trapframe-&gt;kernel_trap = (uint64)usertrap; <span class="comment">// 下次用户态陷阱的入口</span></span><br><span class="line">  p-&gt;trapframe-&gt;kernel_hartid = r_tp();         <span class="comment">// 核心 ID（cpuid() 用）</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 配置 sstatus 寄存器：准备返回用户态</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">long</span> x = r_sstatus();</span><br><span class="line">  x &amp;= ~SSTATUS_SPP; <span class="comment">// 清除 SPP 位（标记下一级为用户态）</span></span><br><span class="line">  x |= SSTATUS_SPIE; <span class="comment">// 开启 SPIE 位（用户态允许中断）</span></span><br><span class="line">  w_sstatus(x);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 恢复用户态的程序计数器（sepc = 保存的 epc）</span></span><br><span class="line">  w_sepc(p-&gt;trapframe-&gt;epc);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 构造用户页表的 satp 值（MAKE_SATP 宏：页表基址 + ASID）</span></span><br><span class="line">  uint64 satp = MAKE_SATP(p-&gt;pagetable);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 跳转到蹦床页的 userret 汇编函数：</span></span><br><span class="line">  <span class="comment">// 1. 切换到用户页表；2. 恢复用户寄存器；3. sret 返回用户态</span></span><br><span class="line">  uint64 fn = TRAMPOLINE + (userret - trampoline);</span><br><span class="line">  ((<span class="type">void</span> (*)(uint64,uint64))fn)(TRAPFRAME, satp);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="关键逻辑拆解-1"><a href="#关键逻辑拆解-1" class="headerlink" title="关键逻辑拆解"></a>关键逻辑拆解</h3><ol>
+<li><strong>stvec 切换</strong>：<code>TRAMPOLINE</code> 是蹦床页的固定地址（所有进程共享），<code>uservec - trampoline</code> 是 <code>uservec</code> 在蹦床页内的偏移；设置后，用户态触发的陷阱会跳转到蹦床页的 <code>uservec</code>。</li>
+<li><strong>trapframe 填充</strong>：<code>trapframe</code> 是进程私有、映射在用户页表中的内存，<code>uservec</code> 后续需要这些字段来：<ul>
+<li><code>kernel_satp</code>：切换回内核页表；</li>
+<li><code>kernel_sp</code>：切换到进程的内核栈；</li>
+<li><code>kernel_trap</code>：跳转到 <code>usertrap</code> 处理陷阱。</li>
+</ul>
+</li>
+<li><strong>sstatus 配置</strong>：<ul>
+<li><code>~SSTATUS_SPP</code>：清除「上一级特权级」为用户态；</li>
+<li><code>SSTATUS_SPIE</code>：开启用户态中断（用户程序可响应外设&#x2F;计时器中断）。</li>
+</ul>
+</li>
+<li><strong>跳转到 userret</strong>：<ul>
+<li><code>TRAPFRAME</code> 是 <code>trapframe</code> 的用户虚拟地址；</li>
+<li><code>satp</code> 是用户页表的地址；</li>
+<li><code>userret</code> 汇编函数会：切换到用户页表 → 恢复用户寄存器 → 执行 <code>sret</code>（将 <code>sepc</code> 写入 PC，回到用户态）。</li>
+</ul>
+</li>
+</ol>
+<h2 id="六、内核态陷阱处理：kerneltrap"><a href="#六、内核态陷阱处理：kerneltrap" class="headerlink" title="六、内核态陷阱处理：kerneltrap"></a>六、内核态陷阱处理：kerneltrap</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> </span><br><span class="line"><span class="title function_">kerneltrap</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> which_dev = <span class="number">0</span>;</span><br><span class="line">  uint64 sepc = r_sepc();    <span class="comment">// 触发陷阱的内核指令地址</span></span><br><span class="line">  uint64 sstatus = r_sstatus(); <span class="comment">// 陷阱触发时的 sstatus</span></span><br><span class="line">  uint64 scause = r_scause();   <span class="comment">// 陷阱原因</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 校验：必须来自内核态（SSTATUS_SPP=1）</span></span><br><span class="line">  <span class="keyword">if</span>((sstatus &amp; SSTATUS_SPP) == <span class="number">0</span>)</span><br><span class="line">    panic(<span class="string">&quot;kerneltrap: not from supervisor mode&quot;</span>);</span><br><span class="line">  <span class="comment">// 校验：中断必须关闭（内核陷阱不支持嵌套）</span></span><br><span class="line">  <span class="keyword">if</span>(intr_get() != <span class="number">0</span>)</span><br><span class="line">    panic(<span class="string">&quot;kerneltrap: interrupts enabled&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 处理设备中断</span></span><br><span class="line">  <span class="keyword">if</span>((which_dev = devintr()) == <span class="number">0</span>)&#123;</span><br><span class="line">    <span class="comment">// 未识别的陷阱（内核态异常，如页面错误、非法指令）→ panic</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;scause %p\n&quot;</span>, scause);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;sepc=%p stval=%p\n&quot;</span>, r_sepc(), r_stval());</span><br><span class="line">    panic(<span class="string">&quot;kerneltrap&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 若为计时器中断，且当前进程正在运行 → 让出 CPU</span></span><br><span class="line">  <span class="keyword">if</span>(which_dev == <span class="number">2</span> &amp;&amp; myproc() != <span class="number">0</span> &amp;&amp; myproc()-&gt;state == RUNNING)</span><br><span class="line">    yield();</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 恢复 sepc 和 sstatus（yield 可能修改这些寄存器）</span></span><br><span class="line">  w_sepc(sepc);</span><br><span class="line">  w_sstatus(sstatus);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="关键逻辑拆解-2"><a href="#关键逻辑拆解-2" class="headerlink" title="关键逻辑拆解"></a>关键逻辑拆解</h3><ol>
+<li><strong>内核态校验</strong>：内核态陷阱必须满足 <code>SSTATUS_SPP=1</code>，且中断关闭（<code>intr_get()=0</code>），否则 panic（内核代码不应出现这种错误）。</li>
+<li><strong>异常处理</strong>：内核态的非设备中断（如页面错误、非法指令）是致命错误，直接 panic（xv6 不处理内核态异常）。</li>
+<li><strong>计时器中断调度</strong>：和 <code>usertrap</code> 逻辑一致，触发 <code>yield()</code> 调度进程。</li>
+<li><strong>寄存器恢复</strong>：<code>yield()</code> 可能切换线程，修改 <code>sepc</code>&#x2F;<code>sstatus</code>，需恢复到陷阱触发时的状态，确保返回后继续执行被中断的内核代码。</li>
+</ol>
+<h2 id="七、时钟中断处理：clockintr"><a href="#七、时钟中断处理：clockintr" class="headerlink" title="七、时钟中断处理：clockintr"></a>七、时钟中断处理：clockintr</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span></span><br><span class="line"><span class="title function_">clockintr</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  acquire(&amp;tickslock); <span class="comment">// 加锁：多核心安全</span></span><br><span class="line">  ticks++;             <span class="comment">// 时钟滴答数+1</span></span><br><span class="line">  wakeup(&amp;ticks);      <span class="comment">// 唤醒所有等待 ticks 的进程（如 sleep 系统调用）</span></span><br><span class="line">  release(&amp;tickslock); <span class="comment">// 解锁</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>ticks</code> 是全局计时基准，<code>sleep</code>&#x2F;<code>wait</code> 等系统调用会等待 <code>ticks</code> 增加；</li>
+<li>自旋锁 <code>tickslock</code> 确保多核心同时触发计时器中断时，<code>ticks</code> 不会被并发修改。</li>
+</ul>
+<h2 id="八、设备中断识别：devintr"><a href="#八、设备中断识别：devintr" class="headerlink" title="八、设备中断识别：devintr"></a>八、设备中断识别：devintr</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span></span><br><span class="line"><span class="title function_">devintr</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  uint64 scause = r_scause();</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 场景1：PLIC 外部中断（scause 最高位=1 表示中断，低8位=9 表示 supervisor 外部中断）</span></span><br><span class="line">  <span class="keyword">if</span>((scause &amp; <span class="number">0x8000000000000000L</span>) &amp;&amp;</span><br><span class="line">     (scause &amp; <span class="number">0xff</span>) == <span class="number">9</span>)&#123;</span><br><span class="line">    <span class="comment">// 向 PLIC（平台级中断控制器）申请中断号（识别哪个设备触发）</span></span><br><span class="line">    <span class="type">int</span> irq = plic_claim();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 处理 UART 中断（串口输入）</span></span><br><span class="line">    <span class="keyword">if</span>(irq == UART0_IRQ)&#123;</span><br><span class="line">      uartintr();</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="comment">// 处理 virtio 磁盘中断</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(irq == VIRTIO0_IRQ)&#123;</span><br><span class="line">      virtio_disk_intr();</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="comment">// 未知外设中断</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(irq)&#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">&quot;unexpected interrupt irq=%d\n&quot;</span>, irq);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 通知 PLIC：该设备中断已处理，可再次触发</span></span><br><span class="line">    <span class="keyword">if</span>(irq)</span><br><span class="line">      plic_complete(irq);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>; <span class="comment">// 标记为“外设中断”</span></span><br><span class="line">  &#125; </span><br><span class="line">  <span class="comment">// 场景2：软件中断（计时器中断，scause=0x8000000000000001）</span></span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span>(scause == <span class="number">0x8000000000000001L</span>)&#123;</span><br><span class="line">    <span class="comment">// 仅核心0处理全局时钟（避免多核心重复累加 ticks）</span></span><br><span class="line">    <span class="keyword">if</span>(cpuid() == <span class="number">0</span>)&#123;</span><br><span class="line">      clockintr();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 清除软件中断标记（SSIP 位），允许下次计时器中断</span></span><br><span class="line">    w_sip(r_sip() &amp; ~<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span>; <span class="comment">// 标记为“计时器中断”</span></span><br><span class="line">  &#125; </span><br><span class="line">  <span class="comment">// 场景3：未识别的陷阱（异常）</span></span><br><span class="line">  <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="关键逻辑拆解-3"><a href="#关键逻辑拆解-3" class="headerlink" title="关键逻辑拆解"></a>关键逻辑拆解</h3><ol>
+<li><strong>RISC-V 中断编码</strong>：<code>scause</code> 最高位为 1 表示「中断」（可恢复），为 0 表示「异常」（不可恢复）；</li>
+<li><strong>PLIC 控制器</strong>：RISC-V 处理外设中断的核心组件，<code>plic_claim()</code> 获取中断源，<code>plic_complete()</code> 确认处理完成；</li>
+<li><strong>计时器中断</strong>：属于「软件中断」（由机器模式的时钟触发，转发到监督模式），仅核心0处理全局 <code>ticks</code>；</li>
+<li>返回值约定：<ul>
+<li>2：计时器中断（触发调度）；</li>
+<li>1：其他外设中断（UART&#x2F;磁盘）；</li>
+<li>0：未识别（异常）。</li>
+</ul>
+</li>
+</ol>
+<h2 id="九、核心设计思路总结"><a href="#九、核心设计思路总结" class="headerlink" title="九、核心设计思路总结"></a>九、核心设计思路总结</h2><table>
+<thead>
+<tr>
+<th>模块</th>
+<th>核心设计目标</th>
+<th>关键技巧</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>usertrap&#x2F;usertrapret</td>
+<td>安全切换用户&#x2F;内核态，处理系统调用&#x2F;中断</td>
+<td>蹦床页+页表切换、trapframe 保存上下文</td>
+</tr>
+<tr>
+<td>kerneltrap</td>
+<td>处理内核态中断，异常直接 panic</td>
+<td>寄存器恢复、禁止中断嵌套</td>
+</tr>
+<tr>
+<td>devintr</td>
+<td>识别中断源，解耦外设中断处理</td>
+<td>PLIC 申请&#x2F;确认、中断类型分类</td>
+</tr>
+<tr>
+<td>自旋锁（tickslock）</td>
+<td>多核心下的全局变量安全</td>
+<td>加锁&#x2F;解锁保护 ticks 累加</td>
+</tr>
+</tbody></table>
+<h3 id="与真实OS的差异（回顾之前知识点）"><a href="#与真实OS的差异（回顾之前知识点）" class="headerlink" title="与真实OS的差异（回顾之前知识点）"></a>与真实OS的差异（回顾之前知识点）</h3><ol>
+<li>xv6 对用户态异常直接终止进程，真实OS会处理页面错误（COW&#x2F;惰性分配）；</li>
+<li>xv6 内核态异常直接 panic，真实OS会尝试恢复（如换入磁盘页）；</li>
+<li>xv6 依赖蹦床页切换页表，真实OS将内核映射到用户页表，避免页表切换开销。</li>
+</ol>
+<p>该文件是 xv6 特权级管理的“心脏”，所有用户态到内核态的交互（系统调用、中断）都通过这里完成，其极简的设计（牺牲效率换简洁）也正是教学OS的核心特点。</p>
+<hr>
+<h1 id="xv6-trampoline-S-源码全解析：用户-内核态切换的汇编桥梁"><a href="#xv6-trampoline-S-源码全解析：用户-内核态切换的汇编桥梁" class="headerlink" title="xv6 trampoline.S 源码全解析：用户&#x2F;内核态切换的汇编桥梁"></a>xv6 trampoline.S 源码全解析：用户&#x2F;内核态切换的汇编桥梁</h1><p><code>trampoline.S</code> 是 xv6 实现「用户态↔内核态」切换的核心汇编代码，映射在所有进程的用户页表和内核页表的<strong>同一虚拟地址（TRAMPOLINE）</strong>，解决了「页表切换时代码连续性」的关键问题。文件核心包含 <code>uservec</code>（用户态陷阱入口）和 <code>userret</code>（内核态返回用户态）两个函数，以下逐行拆解逻辑、寄存器操作和设计原理。</p>
+<h2 id="一、核心背景：蹦床页（Trampoline）的意义"><a href="#一、核心背景：蹦床页（Trampoline）的意义" class="headerlink" title="一、核心背景：蹦床页（Trampoline）的意义"></a>一、核心背景：蹦床页（Trampoline）的意义</h2><ol>
+<li><strong>地址一致性</strong>：TRAMPOLINE 是固定虚拟地址（如 <code>0xFFFF000000000000</code>），同时映射到「用户页表」和「内核页表」，且权限为「S模式可执行」，因此切换页表后代码仍能继续执行；</li>
+<li><strong>无数据依赖</strong>：蹦床页仅包含汇编代码，不访问任何进程私有数据，仅依赖 <code>trapframe</code>（进程私有、映射在用户页表的 TRAPFRAME 地址）；</li>
+<li><strong>核心作用</strong>：<ul>
+<li><code>uservec</code>：用户态触发陷阱（ecall&#x2F;中断&#x2F;异常）后，完成「用户寄存器保存→切换到内核页表→跳转到 usertrap()」；</li>
+<li><code>userret</code>：内核态返回用户态时，完成「切换到用户页表→恢复用户寄存器→sret 返回用户态」。</li>
+</ul>
+</li>
+</ol>
+<h2 id="二、代码结构与前置约定"><a href="#二、代码结构与前置约定" class="headerlink" title="二、代码结构与前置约定"></a>二、代码结构与前置约定</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 标记段为 trampsec（链接脚本 kernel.ld 会将其对齐到页边界）</span><br><span class="line">.section trampsec</span><br><span class="line">.globl trampoline</span><br><span class="line">trampoline:</span><br><span class="line">.align 4  # 4字节对齐（RISC-V 指令长度）</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>.section trampsec</code>：自定义段，确保蹦床页代码被链接到独立的页；</li>
+<li><code>.globl</code>：导出符号，让内核 C 代码（如 trap.c）能引用 <code>trampoline/uservec/userret</code>；</li>
+<li><code>.align 4</code>：RISC-V 指令是 4 字节，对齐后保证指令正确执行。</li>
+</ul>
+<h2 id="三、核心1：uservec（用户态→内核态的陷阱入口）"><a href="#三、核心1：uservec（用户态→内核态的陷阱入口）" class="headerlink" title="三、核心1：uservec（用户态→内核态的陷阱入口）"></a>三、核心1：uservec（用户态→内核态的陷阱入口）</h2><p><code>uservec</code> 是用户态陷阱的第一个入口（stvec 指向此处），执行时 CPU 处于「S模式、用户页表」，最终切换到内核页表并跳转到 <code>usertrap()</code>。</p>
+<h3 id="逐行拆解-逻辑注释"><a href="#逐行拆解-逻辑注释" class="headerlink" title="逐行拆解 &amp; 逻辑注释"></a>逐行拆解 &amp; 逻辑注释</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line">.globl uservec</span><br><span class="line">uservec:    </span><br><span class="line">        # 背景：</span><br><span class="line">        # 1. 触发陷阱后，CPU 进入 S 模式，sepc 保存用户态陷阱指令地址；</span><br><span class="line">        # 2. sscratch 预先设置为 TRAPFRAME（进程 trapframe 的用户虚拟地址）；</span><br><span class="line">        # 3. 此时仍使用用户页表，仅能访问用户空间 + TRAMPOLINE + TRAPFRAME。</span><br><span class="line"></span><br><span class="line">        # 步骤1：交换 a0 和 sscratch，让 a0 = TRAPFRAME（trapframe 地址）</span><br><span class="line">        # csrrw：原子读+写 sscratch，将 sscratch 原值写入 a0，a0 原值写入 sscratch</span><br><span class="line">        csrrw a0, sscratch, a0</span><br><span class="line"></span><br><span class="line">        # 步骤2：保存所有用户态通用寄存器到 trapframe（TRAPFRAME 偏移对应字段）</span><br><span class="line">        # 注：trapframe 是进程私有结构，映射在用户页表的 TRAPFRAME 地址</span><br><span class="line">        sd ra, 40(a0)   # 保存返回地址 ra 到 trapframe+40</span><br><span class="line">        sd sp, 48(a0)   # 保存用户栈指针 sp 到 trapframe+48</span><br><span class="line">        sd gp, 56(a0)   # 保存全局指针 gp 到 trapframe+56</span><br><span class="line">        sd tp, 64(a0)   # 保存线程指针 tp 到 trapframe+64</span><br><span class="line">        sd t0, 72(a0)   # 临时寄存器 t0-t6 依次保存</span><br><span class="line">        sd t1, 80(a0)</span><br><span class="line">        sd t2, 88(a0)</span><br><span class="line">        sd s0, 96(a0)   # 保存寄存器 s0-s11（保存寄存器）</span><br><span class="line">        sd s1, 104(a0)</span><br><span class="line">        sd a1, 120(a0)  # 保存 a1-a7（系统调用参数寄存器）</span><br><span class="line">        sd a2, 128(a0)</span><br><span class="line">        sd a3, 136(a0)</span><br><span class="line">        sd a4, 144(a0)</span><br><span class="line">        sd a5, 152(a0)</span><br><span class="line">        sd a6, 160(a0)</span><br><span class="line">        sd a7, 168(a0)</span><br><span class="line">        sd s2, 176(a0)</span><br><span class="line">        sd s3, 184(a0)</span><br><span class="line">        sd s4, 192(a0)</span><br><span class="line">        sd s5, 200(a0)</span><br><span class="line">        sd s6, 208(a0)</span><br><span class="line">        sd s7, 216(a0)</span><br><span class="line">        sd s8, 224(a0)</span><br><span class="line">        sd s9, 232(a0)</span><br><span class="line">        sd s10, 240(a0)</span><br><span class="line">        sd s11, 248(a0)</span><br><span class="line">        sd t3, 256(a0)</span><br><span class="line">        sd t4, 264(a0)</span><br><span class="line">        sd t5, 272(a0)</span><br><span class="line">        sd t6, 280(a0)</span><br><span class="line"></span><br><span class="line">        # 步骤3：保存用户态 a0 到 trapframe+112</span><br><span class="line">        # 此前 csrrw 交换了 a0 和 sscratch，sscratch 中是原用户态 a0（系统调用参数）</span><br><span class="line">        csrr t0, sscratch  # 读取 sscratch（原用户 a0）到 t0</span><br><span class="line">        sd t0, 112(a0)     # 写入 trapframe+112（a0 字段）</span><br><span class="line"></span><br><span class="line">        # 步骤4：切换到进程的内核栈（从 trapframe 读取 kernel_sp）</span><br><span class="line">        # trapframe+8 存储的是进程内核栈顶地址（kernel_sp）</span><br><span class="line">        ld sp, 8(a0)</span><br><span class="line"></span><br><span class="line">        # 步骤5：设置 tp 寄存器为当前核心 ID（hartid）</span><br><span class="line">        # trapframe+32 存储 kernel_hartid（核心 ID），tp 用于 cpuid()</span><br><span class="line">        ld tp, 32(a0)</span><br><span class="line"></span><br><span class="line">        # 步骤6：加载 usertrap() 的地址（trapframe+16 存储 kernel_trap）</span><br><span class="line">        ld t0, 16(a0)</span><br><span class="line"></span><br><span class="line">        # 步骤7：切换到内核页表（关键！）</span><br><span class="line">        # 1. 从 trapframe+0 读取 kernel_satp（内核页表的 satp 值）</span><br><span class="line">        ld t1, 0(a0)</span><br><span class="line">        # 2. 写入 satp 寄存器，切换到内核页表</span><br><span class="line">        csrw satp, t1</span><br><span class="line">        # 3. 刷新 TLB，确保页表切换生效（zero 表示刷新所有地址）</span><br><span class="line">        sfence.vma zero, zero</span><br><span class="line"></span><br><span class="line">        # 注意：切换内核页表后，TRAPFRAME（用户虚拟地址）不再有效，a0 失效</span><br><span class="line">        # 内核页表不映射用户态的 trapframe，因此后续不能访问 a0 指向的地址</span><br><span class="line"></span><br><span class="line">        # 步骤8：跳转到 usertrap()（C 函数），不再返回</span><br><span class="line">        jr t0</span><br></pre></td></tr></table></figure>
+
+<h3 id="uservec-核心目标总结"><a href="#uservec-核心目标总结" class="headerlink" title="uservec 核心目标总结"></a>uservec 核心目标总结</h3><table>
+<thead>
+<tr>
+<th>操作阶段</th>
+<th>核心成果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>寄存器保存</td>
+<td>所有用户态寄存器存入 trapframe，不丢失上下文</td>
+</tr>
+<tr>
+<td>栈切换</td>
+<td>sp 从用户栈切换到进程私有内核栈</td>
+</tr>
+<tr>
+<td>页表切换</td>
+<td>satp 从用户页表切换到内核页表</td>
+</tr>
+<tr>
+<td>入口跳转</td>
+<td>从汇编跳转到 C 层的 usertrap() 处理陷阱</td>
+</tr>
+</tbody></table>
+<h2 id="四、核心2：userret（内核态→用户态的返回入口）"><a href="#四、核心2：userret（内核态→用户态的返回入口）" class="headerlink" title="四、核心2：userret（内核态→用户态的返回入口）"></a>四、核心2：userret（内核态→用户态的返回入口）</h2><p><code>userret</code> 由 <code>usertrapret()</code> 调用，执行时 CPU 处于「S模式、内核页表」，最终切换到用户页表并通过 <code>sret</code> 返回用户态。</p>
+<h3 id="逐行拆解-逻辑注释-1"><a href="#逐行拆解-逻辑注释-1" class="headerlink" title="逐行拆解 &amp; 逻辑注释"></a>逐行拆解 &amp; 逻辑注释</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">.globl userret</span><br><span class="line">userret:</span><br><span class="line">        # 背景：</span><br><span class="line">        # 1. usertrapret() 调用 userret，传入两个参数：</span><br><span class="line">        #    a0 = TRAPFRAME（trapframe 的用户虚拟地址）</span><br><span class="line">        #    a1 = 用户页表的 satp 值（MAKE_SATP(p-&gt;pagetable)）</span><br><span class="line">        # 2. 此时仍使用内核页表，需先切换到用户页表才能访问 TRAPFRAME。</span><br><span class="line"></span><br><span class="line">        # 步骤1：切换到用户页表（关键！）</span><br><span class="line">        # 1. 写入 satp 寄存器，切换到用户页表</span><br><span class="line">        csrw satp, a1</span><br><span class="line">        # 2. 刷新 TLB，确保页表切换生效</span><br><span class="line">        sfence.vma zero, zero</span><br><span class="line"></span><br><span class="line">        # 步骤2：恢复用户态 a0 到 sscratch（为最后一步交换做准备）</span><br><span class="line">        # 从 trapframe+112 读取保存的用户 a0，写入 sscratch</span><br><span class="line">        ld t0, 112(a0)</span><br><span class="line">        csrw sscratch, t0</span><br><span class="line"></span><br><span class="line">        # 步骤3：从 trapframe 恢复所有用户态寄存器（除 a0）</span><br><span class="line">        ld ra, 40(a0)   # 恢复返回地址 ra</span><br><span class="line">        ld sp, 48(a0)   # 恢复用户栈指针 sp（关键！回到用户栈）</span><br><span class="line">        ld gp, 56(a0)   # 恢复全局指针 gp</span><br><span class="line">        ld tp, 64(a0)   # 恢复线程指针 tp</span><br><span class="line">        ld t0, 72(a0)   # 恢复临时寄存器 t0-t6</span><br><span class="line">        ld t1, 80(a0)</span><br><span class="line">        ld t2, 88(a0)</span><br><span class="line">        ld s0, 96(a0)   # 恢复保存寄存器 s0-s11</span><br><span class="line">        ld s1, 104(a0)</span><br><span class="line">        ld a1, 120(a0)  # 恢复参数寄存器 a1-a7</span><br><span class="line">        ld a2, 128(a0)</span><br><span class="line">        ld a3, 136(a0)</span><br><span class="line">        ld a4, 144(a0)</span><br><span class="line">        ld a5, 152(a0)</span><br><span class="line">        ld a6, 160(a0)</span><br><span class="line">        ld a7, 168(a0)</span><br><span class="line">        ld s2, 176(a0)</span><br><span class="line">        ld s3, 184(a0)</span><br><span class="line">        ld s4, 192(a0)</span><br><span class="line">        ld s5, 200(a0)</span><br><span class="line">        ld s6, 208(a0)</span><br><span class="line">        ld s7, 216(a0)</span><br><span class="line">        ld s8, 224(a0)</span><br><span class="line">        ld s9, 232(a0)</span><br><span class="line">        ld s10, 240(a0)</span><br><span class="line">        ld s11, 248(a0)</span><br><span class="line">        ld t3, 256(a0)</span><br><span class="line">        ld t4, 264(a0)</span><br><span class="line">        ld t5, 272(a0)</span><br><span class="line">        ld t6, 280(a0)</span><br><span class="line"></span><br><span class="line">        # 步骤4：恢复用户态 a0，同时将 TRAPFRAME 写回 sscratch</span><br><span class="line">        # csrrw：交换 a0 和 sscratch，a0 恢复为用户态原值，sscratch 保存 TRAPFRAME</span><br><span class="line">        csrrw a0, sscratch, a0</span><br><span class="line">        </span><br><span class="line">        # 步骤5：返回用户态（关键！）</span><br><span class="line">        # sret 指令：</span><br><span class="line">        # 1. 将 sepc 写入 PC，跳转到用户态陷阱指令的下一条；</span><br><span class="line">        # 2. 将 sstatus.SPP 置为 0（用户态），恢复中断使能；</span><br><span class="line">        # 3. 特权级从 S 模式切回 U 模式。</span><br><span class="line">        # 注：sstatus 和 sepc 已由 usertrapret() 提前设置好。</span><br><span class="line">        sret</span><br></pre></td></tr></table></figure>
+
+<h3 id="userret-核心目标总结"><a href="#userret-核心目标总结" class="headerlink" title="userret 核心目标总结"></a>userret 核心目标总结</h3><table>
+<thead>
+<tr>
+<th>操作阶段</th>
+<th>核心成果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>页表切换</td>
+<td>satp 从内核页表切换到用户页表</td>
+</tr>
+<tr>
+<td>寄存器恢复</td>
+<td>所有用户态寄存器从 trapframe 恢复</td>
+</tr>
+<tr>
+<td>特权级切换</td>
+<td>sret 切回 U 模式，从 sepc 继续执行用户代码</td>
+</tr>
+</tbody></table>
+<h2 id="五、关键设计细节与答疑"><a href="#五、关键设计细节与答疑" class="headerlink" title="五、关键设计细节与答疑"></a>五、关键设计细节与答疑</h2><h3 id="1-为什么需要-csrrw-交换-a0-和-sscratch？"><a href="#1-为什么需要-csrrw-交换-a0-和-sscratch？" class="headerlink" title="1. 为什么需要 csrrw 交换 a0 和 sscratch？"></a>1. 为什么需要 csrrw 交换 a0 和 sscratch？</h3><ul>
+<li><code>sscratch</code> 是 RISC-V 为陷阱处理设计的「临时寄存器」，专门用于存储 trapframe 地址；</li>
+<li>用户态执行时，<code>a0</code> 可能存储系统调用参数（如 exec 的 path），直接覆盖会丢失数据；</li>
+<li><code>csrrw</code> 是原子操作，确保「trapframe 地址获取」和「用户 a0 保存」一步完成，无数据丢失。</li>
+</ul>
+<h3 id="2-为什么切换页表后不能访问-a0（TRAPFRAME）？"><a href="#2-为什么切换页表后不能访问-a0（TRAPFRAME）？" class="headerlink" title="2. 为什么切换页表后不能访问 a0（TRAPFRAME）？"></a>2. 为什么切换页表后不能访问 a0（TRAPFRAME）？</h3><ul>
+<li>TRAPFRAME 是「用户虚拟地址」，仅在用户页表中有效；</li>
+<li>内核页表仅映射「内核空间 + TRAMPOLINE」，不映射用户态的 trapframe，因此切换后 a0 指向的地址无效。</li>
+</ul>
+<h3 id="3-sfence-vma-的作用是什么？"><a href="#3-sfence-vma-的作用是什么？" class="headerlink" title="3. sfence.vma 的作用是什么？"></a>3. sfence.vma 的作用是什么？</h3><ul>
+<li>RISC-V 的 TLB 会缓存「虚拟地址→物理地址」映射，页表切换后 TLB 缓存失效；</li>
+<li><code>sfence.vma zero, zero</code> 表示「刷新所有核心、所有地址的 TLB」，确保后续内存访问使用新页表。</li>
+</ul>
+<h3 id="4-为什么-trampoline-要映射到同一虚拟地址？"><a href="#4-为什么-trampoline-要映射到同一虚拟地址？" class="headerlink" title="4. 为什么 trampoline 要映射到同一虚拟地址？"></a>4. 为什么 trampoline 要映射到同一虚拟地址？</h3><ul>
+<li>切换页表的过程中，CPU 仍在执行 trampoline 的代码；</li>
+<li>若 trampoline 在用户&#x2F;内核页表的虚拟地址不同，切换页表后 PC 会指向无效地址，导致崩溃；</li>
+<li>同一地址映射保证了「页表切换时代码执行的连续性」。</li>
+</ul>
+<h2 id="六、核心设计思路总结"><a href="#六、核心设计思路总结" class="headerlink" title="六、核心设计思路总结"></a>六、核心设计思路总结</h2><table>
+<thead>
+<tr>
+<th>模块</th>
+<th>核心挑战</th>
+<th>解决方案</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>uservec</td>
+<td>用户页表→内核页表切换，寄存器保存</td>
+<td>先保存寄存器到 trapframe，再切换页表&#x2F;栈</td>
+</tr>
+<tr>
+<td>userret</td>
+<td>内核页表→用户页表切换，上下文恢复</td>
+<td>先切换页表，再恢复寄存器，sret 切回用户态</td>
+</tr>
+<tr>
+<td>整体</td>
+<td>页表切换时代码不中断</td>
+<td>蹦床页映射到统一地址，仅用汇编执行切换</td>
+</tr>
+</tbody></table>
+<h3 id="与真实OS的差异"><a href="#与真实OS的差异" class="headerlink" title="与真实OS的差异"></a>与真实OS的差异</h3><ol>
+<li>xv6 用蹦床页+显式页表切换，真实OS（如Linux）将内核映射到用户页表，无需切换页表；</li>
+<li>xv6 保存所有寄存器，真实OS仅保存「调用约定中需要保留的寄存器」，减少开销；</li>
+<li>xv6 陷阱处理路径极简，真实OS会处理页面错误、COW等复杂场景。</li>
+</ol>
+<h2 id="七、关键关联（与-trap-c-的协作）"><a href="#七、关键关联（与-trap-c-的协作）" class="headerlink" title="七、关键关联（与 trap.c 的协作）"></a>七、关键关联（与 trap.c 的协作）</h2><table>
+<thead>
+<tr>
+<th>trampoline.S 操作</th>
+<th>trap.c 对应操作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>uservec 跳转到 usertrap()</td>
+<td>usertrap() 处理系统调用&#x2F;中断&#x2F;异常</td>
+</tr>
+<tr>
+<td>userret 被 usertrapret() 调用</td>
+<td>usertrapret() 配置 sstatus&#x2F;sepc 等寄存器</td>
+</tr>
+<tr>
+<td>trapframe 字段读写</td>
+<td>usertrap()&#x2F;usertrapret() 填充 trapframe</td>
+</tr>
+</tbody></table>
+<p><code>trampoline.S</code> 是「纯汇编的硬件层切换」，<code>trap.c</code> 是「C 层的逻辑处理」，两者协作完成了 xv6 最核心的特权级切换流程。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/trap-c%E8%AF%A6%E8%A7%A3/">trap.c详解</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页"></a></p>
+        <p><span>发布时间:</span>2025-12-29, 21:06:03</p>
+        <p><span>最后更新:</span>2025-12-29, 21:26:13</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/trap-c%E8%AF%A6%E8%A7%A3/" title="trap.c详解">https://hellonnnnn.github.io/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/trap-c%E8%AF%A6%E8%A7%A3/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://hellonnnnn.github.io/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/trap-c%E8%AF%A6%E8%A7%A3/　　作者: " title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2026/01/21/unbuntu%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%82%A8%E4%B8%8D%E8%B6%B3/">
+                    unbuntu系统存储不足
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8%EF%BC%9Axv6-%E6%9E%81%E7%AE%80%E5%A4%84%E7%90%86-vs-%E7%9C%9F%E5%AE%9E-OS-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/">
+                    页面错误异常：xv6 极简处理 vs 真实 OS 的高级应用
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#xv6-trap-c-%E6%BA%90%E7%A0%81%E5%85%A8%E8%A7%A3%E6%9E%90%EF%BC%9A%E9%99%B7%E9%98%B1%EF%BC%88%E4%B8%AD%E6%96%AD-%E5%BC%82%E5%B8%B8-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%89%E5%A4%84%E7%90%86%E6%A0%B8%E5%BF%83"><span class="toc-number">1.</span> <span class="toc-text">xv6 trap.c 源码全解析：陷阱（中断&#x2F;异常&#x2F;系统调用）处理核心</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%96%87%E4%BB%B6%E6%A0%B8%E5%BF%83%E4%BD%9C%E7%94%A8"><span class="toc-number">1.1.</span> <span class="toc-text">一、文件核心作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%89%8D%E7%BD%AE%E5%A3%B0%E6%98%8E%E4%B8%8E%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F"><span class="toc-number">1.2.</span> <span class="toc-text">二、前置声明与全局变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%88%9D%E5%A7%8B%E5%8C%96%E5%87%BD%E6%95%B0%EF%BC%9A%E9%99%B7%E9%98%B1%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="toc-number">1.3.</span> <span class="toc-text">三、初始化函数：陷阱环境准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-trapinit%EF%BC%9A%E5%85%A8%E5%B1%80%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. trapinit：全局初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-trapinithart%EF%BC%9A%E6%AF%8F%E4%B8%AA%E6%A0%B8%E5%BF%83%E7%9A%84%E9%99%B7%E9%98%B1%E5%85%A5%E5%8F%A3%E8%AE%BE%E7%BD%AE"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. trapinithart：每个核心的陷阱入口设置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E7%94%A8%E6%88%B7%E6%80%81%E9%99%B7%E9%98%B1%E5%A4%84%E7%90%86%EF%BC%9Ausertrap%EF%BC%88%E6%A0%B8%E5%BF%83%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">四、用户态陷阱处理：usertrap（核心）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E9%80%BB%E8%BE%91%E6%8B%86%E8%A7%A3"><span class="toc-number">1.4.1.</span> <span class="toc-text">关键逻辑拆解</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E7%94%A8%E6%88%B7%E6%80%81%E9%99%B7%E9%98%B1%E8%BF%94%E5%9B%9E%EF%BC%9Ausertrapret%EF%BC%88%E6%A0%B8%E5%BF%83%EF%BC%89"><span class="toc-number">1.5.</span> <span class="toc-text">五、用户态陷阱返回：usertrapret（核心）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E9%80%BB%E8%BE%91%E6%8B%86%E8%A7%A3-1"><span class="toc-number">1.5.1.</span> <span class="toc-text">关键逻辑拆解</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%86%85%E6%A0%B8%E6%80%81%E9%99%B7%E9%98%B1%E5%A4%84%E7%90%86%EF%BC%9Akerneltrap"><span class="toc-number">1.6.</span> <span class="toc-text">六、内核态陷阱处理：kerneltrap</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E9%80%BB%E8%BE%91%E6%8B%86%E8%A7%A3-2"><span class="toc-number">1.6.1.</span> <span class="toc-text">关键逻辑拆解</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E6%97%B6%E9%92%9F%E4%B8%AD%E6%96%AD%E5%A4%84%E7%90%86%EF%BC%9Aclockintr"><span class="toc-number">1.7.</span> <span class="toc-text">七、时钟中断处理：clockintr</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E8%AE%BE%E5%A4%87%E4%B8%AD%E6%96%AD%E8%AF%86%E5%88%AB%EF%BC%9Adevintr"><span class="toc-number">1.8.</span> <span class="toc-text">八、设备中断识别：devintr</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E9%80%BB%E8%BE%91%E6%8B%86%E8%A7%A3-3"><span class="toc-number">1.8.1.</span> <span class="toc-text">关键逻辑拆解</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93"><span class="toc-number">1.9.</span> <span class="toc-text">九、核心设计思路总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8E%E7%9C%9F%E5%AE%9EOS%E7%9A%84%E5%B7%AE%E5%BC%82%EF%BC%88%E5%9B%9E%E9%A1%BE%E4%B9%8B%E5%89%8D%E7%9F%A5%E8%AF%86%E7%82%B9%EF%BC%89"><span class="toc-number">1.9.1.</span> <span class="toc-text">与真实OS的差异（回顾之前知识点）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#xv6-trampoline-S-%E6%BA%90%E7%A0%81%E5%85%A8%E8%A7%A3%E6%9E%90%EF%BC%9A%E7%94%A8%E6%88%B7-%E5%86%85%E6%A0%B8%E6%80%81%E5%88%87%E6%8D%A2%E7%9A%84%E6%B1%87%E7%BC%96%E6%A1%A5%E6%A2%81"><span class="toc-number">2.</span> <span class="toc-text">xv6 trampoline.S 源码全解析：用户&#x2F;内核态切换的汇编桥梁</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%A0%B8%E5%BF%83%E8%83%8C%E6%99%AF%EF%BC%9A%E8%B9%A6%E5%BA%8A%E9%A1%B5%EF%BC%88Trampoline%EF%BC%89%E7%9A%84%E6%84%8F%E4%B9%89"><span class="toc-number">2.1.</span> <span class="toc-text">一、核心背景：蹦床页（Trampoline）的意义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84%E4%B8%8E%E5%89%8D%E7%BD%AE%E7%BA%A6%E5%AE%9A"><span class="toc-number">2.2.</span> <span class="toc-text">二、代码结构与前置约定</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%831%EF%BC%9Auservec%EF%BC%88%E7%94%A8%E6%88%B7%E6%80%81%E2%86%92%E5%86%85%E6%A0%B8%E6%80%81%E7%9A%84%E9%99%B7%E9%98%B1%E5%85%A5%E5%8F%A3%EF%BC%89"><span class="toc-number">2.3.</span> <span class="toc-text">三、核心1：uservec（用户态→内核态的陷阱入口）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%90%E8%A1%8C%E6%8B%86%E8%A7%A3-%E9%80%BB%E8%BE%91%E6%B3%A8%E9%87%8A"><span class="toc-number">2.3.1.</span> <span class="toc-text">逐行拆解 &amp; 逻辑注释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#uservec-%E6%A0%B8%E5%BF%83%E7%9B%AE%E6%A0%87%E6%80%BB%E7%BB%93"><span class="toc-number">2.3.2.</span> <span class="toc-text">uservec 核心目标总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%A0%B8%E5%BF%832%EF%BC%9Auserret%EF%BC%88%E5%86%85%E6%A0%B8%E6%80%81%E2%86%92%E7%94%A8%E6%88%B7%E6%80%81%E7%9A%84%E8%BF%94%E5%9B%9E%E5%85%A5%E5%8F%A3%EF%BC%89"><span class="toc-number">2.4.</span> <span class="toc-text">四、核心2：userret（内核态→用户态的返回入口）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%90%E8%A1%8C%E6%8B%86%E8%A7%A3-%E9%80%BB%E8%BE%91%E6%B3%A8%E9%87%8A-1"><span class="toc-number">2.4.1.</span> <span class="toc-text">逐行拆解 &amp; 逻辑注释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#userret-%E6%A0%B8%E5%BF%83%E7%9B%AE%E6%A0%87%E6%80%BB%E7%BB%93"><span class="toc-number">2.4.2.</span> <span class="toc-text">userret 核心目标总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%85%B3%E9%94%AE%E8%AE%BE%E8%AE%A1%E7%BB%86%E8%8A%82%E4%B8%8E%E7%AD%94%E7%96%91"><span class="toc-number">2.5.</span> <span class="toc-text">五、关键设计细节与答疑</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-csrrw-%E4%BA%A4%E6%8D%A2-a0-%E5%92%8C-sscratch%EF%BC%9F"><span class="toc-number">2.5.1.</span> <span class="toc-text">1. 为什么需要 csrrw 交换 a0 和 sscratch？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%88%87%E6%8D%A2%E9%A1%B5%E8%A1%A8%E5%90%8E%E4%B8%8D%E8%83%BD%E8%AE%BF%E9%97%AE-a0%EF%BC%88TRAPFRAME%EF%BC%89%EF%BC%9F"><span class="toc-number">2.5.2.</span> <span class="toc-text">2. 为什么切换页表后不能访问 a0（TRAPFRAME）？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-sfence-vma-%E7%9A%84%E4%BD%9C%E7%94%A8%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">2.5.3.</span> <span class="toc-text">3. sfence.vma 的作用是什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E4%B8%BA%E4%BB%80%E4%B9%88-trampoline-%E8%A6%81%E6%98%A0%E5%B0%84%E5%88%B0%E5%90%8C%E4%B8%80%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%EF%BC%9F"><span class="toc-number">2.5.4.</span> <span class="toc-text">4. 为什么 trampoline 要映射到同一虚拟地址？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93"><span class="toc-number">2.6.</span> <span class="toc-text">六、核心设计思路总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8E%E7%9C%9F%E5%AE%9EOS%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="toc-number">2.6.1.</span> <span class="toc-text">与真实OS的差异</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E5%85%B3%E9%94%AE%E5%85%B3%E8%81%94%EF%BC%88%E4%B8%8E-trap-c-%E7%9A%84%E5%8D%8F%E4%BD%9C%EF%BC%89"><span class="toc-number">2.7.</span> <span class="toc-text">七、关键关联（与 trap.c 的协作）</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"trap.c详解　| Ivan's Tech Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2026/01/21/unbuntu%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%82%A8%E4%B8%8D%E8%B6%B3/" title="上一篇: unbuntu系统存储不足">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8%EF%BC%9Axv6-%E6%9E%81%E7%AE%80%E5%A4%84%E7%90%86-vs-%E7%9C%9F%E5%AE%9E-OS-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/" title="下一篇: 页面错误异常：xv6 极简处理 vs 真实 OS 的高级应用">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/01/22/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E4%B8%80%E5%A4%A9/">算法训练营第一天</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/01/21/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E8%B9%A6%E5%BA%8A%E9%A1%B5/">蹦床页</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/01/21/unbuntu%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%82%A8%E4%B8%8D%E8%B6%B3/">unbuntu系统存储不足</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/trap-c%E8%AF%A6%E8%A7%A3/">trap.c详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8%EF%BC%9Axv6-%E6%9E%81%E7%AE%80%E5%A4%84%E7%90%86-vs-%E7%9C%9F%E5%AE%9E-OS-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/">页面错误异常：xv6 极简处理 vs 真实 OS 的高级应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从内核空间陷入</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0/">xv6 系统调用参数处理：提取、校验与安全传输</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E4%B8%AD-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF/">xv6 中 exec 系统调用的完整调用链路</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/RISC-V%E9%99%B7%E5%85%A5%E6%9C%BA%E5%88%B6/">陷阱指令和系统调用 核心解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 exec 系统调用核心逻辑总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-sbrk-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%88%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E6%89%A9%E7%BC%A9%E5%AE%B9%EF%BC%89%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 sbrk 系统调用（进程内存扩缩容）核心逻辑总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 进程地址空间总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E9%87%8A%E6%94%BE%E6%9C%BA%E5%88%B6%E6%80%BB%E7%BB%93/">xv6 物理内存分配与释放机制总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E5%86%85%E6%A0%B8%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 内核地址空间总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/satp/">satp</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/copyin-copyout%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/">copyin/copyout详细介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3/">系统调用正确理解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/">xv6内核架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/">添加系统调用的过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/21/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0/">第二章</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">git使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2026 Ivan-FYF
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Ivan-FYF" />
+
+
+
+<meta name="description" content="xv6是MIT开发的类Unix教学操作系统（复刻Unix V6），核心用于讲解操作系统的基础架构与核心机制。它采用单内核架构（所有内核功能在同一特权级地址空间运行），整体分为**内核态（kernel目录）和用户态（user目录）**两大部分，对应你截图中的核心目录结构。 一、xv6的核心目录与文件功能（对应你的截图）从你的截图可以看到xv6的根目录结构，核心目录&#x2F;文件的作用如下：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xv6内核架构">
+<meta property="og:url" content="https://hellonnnnn.github.io/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/index.html">
+<meta property="og:site_name" content="Ivan&#39;s Tech Blog">
+<meta property="og:description" content="xv6是MIT开发的类Unix教学操作系统（复刻Unix V6），核心用于讲解操作系统的基础架构与核心机制。它采用单内核架构（所有内核功能在同一特权级地址空间运行），整体分为**内核态（kernel目录）和用户态（user目录）**两大部分，对应你截图中的核心目录结构。 一、xv6的核心目录与文件功能（对应你的截图）从你的截图可以看到xv6的根目录结构，核心目录&#x2F;文件的作用如下：">
+<meta property="og:locale">
+<meta property="article:published_time" content="2025-12-22T09:45:42.000Z">
+<meta property="article:modified_time" content="2025-12-22T11:20:29.875Z">
+<meta property="article:author" content="Ivan-FYF">
+<meta name="twitter:card" content="summary">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Ivan&#39;s Tech Blog" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>xv6内核架构 | Ivan&#39;s Tech Blog</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: 
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/"></a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-第二章/xv6内核架构" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/" class="article-date">
+      <time datetime="2025-12-22T09:45:42.000Z" itemprop="datePublished">2025-12-22</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      xv6内核架构
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>xv6是MIT开发的<strong>类Unix教学操作系统</strong>（复刻Unix V6），核心用于讲解操作系统的基础架构与核心机制。它采用<strong>单内核架构</strong>（所有内核功能在同一特权级地址空间运行），整体分为**内核态（kernel目录）<strong>和</strong>用户态（user目录）**两大部分，对应你截图中的核心目录结构。</p>
+<h3 id="一、xv6的核心目录与文件功能（对应你的截图）"><a href="#一、xv6的核心目录与文件功能（对应你的截图）" class="headerlink" title="一、xv6的核心目录与文件功能（对应你的截图）"></a>一、xv6的核心目录与文件功能（对应你的截图）</h3><p>从你的截图可以看到xv6的根目录结构，核心目录&#x2F;文件的作用如下：</p>
+<table>
+<thead>
+<tr>
+<th>目录&#x2F;文件</th>
+<th>功能说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>kernel/</code></td>
+<td>内核态代码：包含操作系统的核心功能模块（进程、内存、文件系统等）</td>
+</tr>
+<tr>
+<td><code>user/</code></td>
+<td>用户态代码：包含用户程序（如<code>cat</code>、<code>echo</code>）、系统调用封装、shell等</td>
+</tr>
+<tr>
+<td><code>Makefile</code></td>
+<td>编译配置文件：定义内核、用户程序的编译规则，控制xv6镜像的生成</td>
+</tr>
+<tr>
+<td><code>fs.img</code></td>
+<td>xv6的文件系统镜像：存储用户程序、系统文件的虚拟磁盘</td>
+</tr>
+<tr>
+<td><code>grade-lab-syscall</code></td>
+<td>实验评分脚本：用于验证系统调用类实验（如你之前的<code>trace</code>&#x2F;<code>sysinfo</code>）的正确性</td>
+</tr>
+<tr>
+<td><code>xv6.out</code></td>
+<td>编译生成的xv6内核镜像文件</td>
+</tr>
+</tbody></table>
+<h3 id="二、xv6的系统架构（分模块）"><a href="#二、xv6的系统架构（分模块）" class="headerlink" title="二、xv6的系统架构（分模块）"></a>二、xv6的系统架构（分模块）</h3><p>xv6的架构围绕“<strong>用户态程序请求内核服务</strong>”的核心逻辑展开，内核态分为多个功能模块，用户态通过系统调用与内核交互。</p>
+<h4 id="1-内核态（kernel目录）：操作系统核心功能"><a href="#1-内核态（kernel目录）：操作系统核心功能" class="headerlink" title="1. 内核态（kernel目录）：操作系统核心功能"></a>1. 内核态（kernel目录）：操作系统核心功能</h4><p>内核态是xv6的“服务提供者”，包含以下核心模块（对应<code>kernel/</code>下的文件）：</p>
+<ul>
+<li><p><strong>进程管理模块</strong>（<code>proc.c</code>、<code>proc.h</code>）</p>
+<ul>
+<li>管理进程的生命周期（创建<code>fork</code>、执行<code>exec</code>、终止<code>exit</code>、等待<code>wait</code>）；</li>
+<li>维护进程结构体<code>struct proc</code>（包含进程状态、地址空间、内核栈等）；</li>
+<li>实现进程调度（基于时间片的轮转调度）。</li>
+</ul>
+</li>
+<li><p><strong>内存管理模块</strong>（<code>kalloc.c</code>、<code>vm.c</code>、<code>memlayout.h</code>）</p>
+<ul>
+<li>物理内存分配：通过空闲页链表管理物理内存（<code>kalloc</code>分配、<code>kfree</code>释放）；</li>
+<li>虚拟内存管理：为每个进程维护独立的虚拟地址空间（通过页表<code>pagetable_t</code>实现）；</li>
+<li>地址空间隔离：用户态与内核态地址空间分离，内核态有独立的地址区域。</li>
+</ul>
+</li>
+<li><p><strong>文件系统模块</strong>（<code>fs.c</code>、<code>file.c</code>、<code>inode.c</code>）</p>
+<ul>
+<li>实现类Unix的文件系统：基于inode（索引节点）管理文件&#x2F;目录，支持硬链接、目录遍历；</li>
+<li>统一文件接口：将“文件、目录、设备”抽象为“文件描述符”，用户态通过<code>open/read/write/close</code>操作所有资源。</li>
+</ul>
+</li>
+<li><p><strong>设备驱动模块</strong>（<code>console.c</code>、<code>uart.c</code>、<code>disk.c</code>）</p>
+<ul>
+<li>对接硬件设备：实现终端（console）、串口（uart）、磁盘（disk）的驱动逻辑；</li>
+<li>设备抽象为文件：将设备映射为特殊文件（如<code>/dev/console</code>），通过文件系统接口访问。</li>
+</ul>
+</li>
+<li><p><strong>系统调用模块</strong>（<code>syscall.c</code>、<code>sys_*.c</code>）</p>
+<ul>
+<li>提供系统调用的“入口与映射”：维护<code>syscalls</code>数组（系统调用号→内核函数的映射）；</li>
+<li>处理用户态请求：从<code>trapframe</code>提取参数，调用对应内核函数（如<code>sys_trace</code>&#x2F;<code>sysinfo</code>），并返回结果。</li>
+</ul>
+</li>
+<li><p><strong>中断&#x2F;陷阱处理模块</strong>（<code>trap.c</code>、<code>entry.S</code>）</p>
+<ul>
+<li>处理特权级切换：用户态通过<code>ecall</code>指令触发“陷阱”，进入内核态；</li>
+<li>保存&#x2F;恢复上下文：将用户态寄存器保存到<code>trapframe</code>，内核处理完后恢复寄存器并返回用户态。</li>
+</ul>
+</li>
+<li><p><strong>启动模块</strong>（<code>entry.S</code>、<code>start.c</code>）</p>
+<ul>
+<li>硬件启动后，先执行汇编代码<code>entry.S</code>（初始化CPU状态、跳转到C代码）；</li>
+<li><code>start.c</code>完成内核初始化（内存、进程、文件系统），最终启动第一个用户程序（shell）。</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-用户态（user目录）：应用程序与接口"><a href="#2-用户态（user目录）：应用程序与接口" class="headerlink" title="2. 用户态（user目录）：应用程序与接口"></a>2. 用户态（user目录）：应用程序与接口</h4><p>用户态是xv6的“服务使用者”，包含以下部分（对应<code>user/</code>下的文件）：</p>
+<ul>
+<li><p><strong>用户程序</strong>（如<code>cat.c</code>、<code>echo.c</code>、<code>sysinfotest.c</code>）</p>
+<ul>
+<li>实现具体功能的应用程序，通过系统调用请求内核服务（如<code>echo</code>调用<code>write</code>输出内容）。</li>
+</ul>
+</li>
+<li><p><strong>系统调用封装</strong>（<code>usys.S</code>、<code>user.h</code>）</p>
+<ul>
+<li><code>usys.S</code>：由<code>usys.pl</code>生成的汇编存根，将系统调用封装为用户态函数（如<code>sysinfo</code>对应汇编指令<code>ecall</code>）；</li>
+<li><code>user.h</code>：声明用户态可调用的系统调用接口（如<code>int sysinfo(struct sysinfo *si)</code>）。</li>
+</ul>
+</li>
+<li><p><strong>Shell（<code>sh.c</code>）</strong></p>
+<ul>
+<li>命令解释器：解析用户输入的命令，启动对应的用户程序（如输入<code>ls</code>则启动<code>ls</code>程序）；</li>
+<li>本身是一个用户程序，通过系统调用与内核交互（如<code>fork</code>创建子进程、<code>exec</code>执行命令）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="三、xv6的核心运行逻辑（用户态→内核态交互）"><a href="#三、xv6的核心运行逻辑（用户态→内核态交互）" class="headerlink" title="三、xv6的核心运行逻辑（用户态→内核态交互）"></a>三、xv6的核心运行逻辑（用户态→内核态交互）</h3><p>xv6的核心流程是“<strong>用户程序发起系统调用→内核处理请求→返回用户态</strong>”，以<code>sysinfo</code>为例：</p>
+<ol>
+<li>用户程序调用<code>sysinfo(&amp;si)</code>（<code>user.h</code>中声明的接口）；</li>
+<li>执行<code>usys.S</code>中的汇编存根：将系统调用号<code>SYS_sysinfo</code>存入<code>a7</code>，执行<code>ecall</code>陷入内核；</li>
+<li>内核<code>trap</code>处理程序保存用户态寄存器到<code>trapframe</code>，调用<code>syscall()</code>；</li>
+<li><code>syscall()</code>通过<code>syscalls</code>数组找到<code>sys_sysinfo</code>函数，执行内存&#x2F;进程统计；</li>
+<li>内核通过<code>copyout</code>将结果拷贝到用户态指针<code>&amp;si</code>；</li>
+<li>执行<code>sret</code>返回用户态，用户程序获取结果并继续运行。</li>
+</ol>
+<h3 id="四、xv6架构的特点（教学定位）"><a href="#四、xv6架构的特点（教学定位）" class="headerlink" title="四、xv6架构的特点（教学定位）"></a>四、xv6架构的特点（教学定位）</h3><p>xv6作为教学操作系统，架构设计<strong>简洁且覆盖核心原理</strong>：</p>
+<ul>
+<li>单内核架构：所有内核功能在同一地址空间，简化了模块间的交互（适合教学）；</li>
+<li>功能精简：仅保留Unix的核心机制（进程、内存、文件系统、系统调用），去除了复杂特性（如网络、多CPU）；</li>
+<li>接口与Unix兼容：用户态接口（系统调用、文件系统）与Unix一致，便于理解实际OS的工作方式。</li>
+</ul>
+<p>总结来说，xv6的架构是“<strong>内核态提供核心服务模块，用户态通过统一的系统调用接口请求服务</strong>”，其目录结构（<code>kernel</code>&#x2F;<code>user</code>）直接对应了“内核-用户”的分层逻辑。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/">xv6内核架构</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页"></a></p>
+        <p><span>发布时间:</span>2025-12-22, 17:45:42</p>
+        <p><span>最后更新:</span>2025-12-22, 19:20:29</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/" title="xv6内核架构">https://hellonnnnn.github.io/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://hellonnnnn.github.io/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/　　作者: " title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">
+                    shell的运行过程
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/">
+                    添加系统调用的过程
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81xv6%E7%9A%84%E6%A0%B8%E5%BF%83%E7%9B%AE%E5%BD%95%E4%B8%8E%E6%96%87%E4%BB%B6%E5%8A%9F%E8%83%BD%EF%BC%88%E5%AF%B9%E5%BA%94%E4%BD%A0%E7%9A%84%E6%88%AA%E5%9B%BE%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">一、xv6的核心目录与文件功能（对应你的截图）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81xv6%E7%9A%84%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%EF%BC%88%E5%88%86%E6%A8%A1%E5%9D%97%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">二、xv6的系统架构（分模块）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E5%86%85%E6%A0%B8%E6%80%81%EF%BC%88kernel%E7%9B%AE%E5%BD%95%EF%BC%89%EF%BC%9A%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD"><span class="toc-number">2.1.</span> <span class="toc-text">1. 内核态（kernel目录）：操作系统核心功能</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E7%94%A8%E6%88%B7%E6%80%81%EF%BC%88user%E7%9B%AE%E5%BD%95%EF%BC%89%EF%BC%9A%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E4%B8%8E%E6%8E%A5%E5%8F%A3"><span class="toc-number">2.2.</span> <span class="toc-text">2. 用户态（user目录）：应用程序与接口</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81xv6%E7%9A%84%E6%A0%B8%E5%BF%83%E8%BF%90%E8%A1%8C%E9%80%BB%E8%BE%91%EF%BC%88%E7%94%A8%E6%88%B7%E6%80%81%E2%86%92%E5%86%85%E6%A0%B8%E6%80%81%E4%BA%A4%E4%BA%92%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">三、xv6的核心运行逻辑（用户态→内核态交互）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81xv6%E6%9E%B6%E6%9E%84%E7%9A%84%E7%89%B9%E7%82%B9%EF%BC%88%E6%95%99%E5%AD%A6%E5%AE%9A%E4%BD%8D%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">四、xv6架构的特点（教学定位）</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"xv6内核架构　| Ivan's Tech Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/" title="上一篇: shell的运行过程">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/" title="下一篇: 添加系统调用的过程">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/01/22/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E4%B8%80%E5%A4%A9/">算法训练营第一天</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/01/21/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E8%B9%A6%E5%BA%8A%E9%A1%B5/">蹦床页</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/01/21/unbuntu%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%82%A8%E4%B8%8D%E8%B6%B3/">unbuntu系统存储不足</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/trap-c%E8%AF%A6%E8%A7%A3/">trap.c详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8%EF%BC%9Axv6-%E6%9E%81%E7%AE%80%E5%A4%84%E7%90%86-vs-%E7%9C%9F%E5%AE%9E-OS-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/">页面错误异常：xv6 极简处理 vs 真实 OS 的高级应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从内核空间陷入</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0/">xv6 系统调用参数处理：提取、校验与安全传输</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E4%B8%AD-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF/">xv6 中 exec 系统调用的完整调用链路</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/RISC-V%E9%99%B7%E5%85%A5%E6%9C%BA%E5%88%B6/">陷阱指令和系统调用 核心解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 exec 系统调用核心逻辑总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-sbrk-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%88%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E6%89%A9%E7%BC%A9%E5%AE%B9%EF%BC%89%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 sbrk 系统调用（进程内存扩缩容）核心逻辑总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 进程地址空间总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E9%87%8A%E6%94%BE%E6%9C%BA%E5%88%B6%E6%80%BB%E7%BB%93/">xv6 物理内存分配与释放机制总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E5%86%85%E6%A0%B8%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 内核地址空间总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/satp/">satp</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/copyin-copyout%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/">copyin/copyout详细介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3/">系统调用正确理解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/">xv6内核架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/">添加系统调用的过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/21/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0/">第二章</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">git使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2026 Ivan-FYF
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

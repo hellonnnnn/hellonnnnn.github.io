@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Ivan-FYF" />
+
+
+
+<meta name="description" content="fork + exec：Unix &#x2F; Linux（xv6）执行程序的核心模式12345678910111213141516171819# fork + exec：Unix &#x2F; xv6 执行程序的核心模型先明确一个核心概念：**fork + exec 是 Unix &#x2F; Linux（包括 xv6）执行程序的经典模式**。你给出的代码片段中，&#96;exec&#96; 会用目标程序（如 &#96;&#x2F;bin&#x2F;echo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xv6-labs-2020 lab1">
+<meta property="og:url" content="https://hellonnnnn.github.io/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:site_name" content="Ivan&#39;s Tech Blog">
+<meta property="og:description" content="fork + exec：Unix &#x2F; Linux（xv6）执行程序的核心模式12345678910111213141516171819# fork + exec：Unix &#x2F; xv6 执行程序的核心模型先明确一个核心概念：**fork + exec 是 Unix &#x2F; Linux（包括 xv6）执行程序的经典模式**。你给出的代码片段中，&#96;exec&#96; 会用目标程序（如 &#96;&#x2F;bin&#x2F;echo">
+<meta property="og:locale">
+<meta property="article:published_time" content="2025-12-18T12:27:43.000Z">
+<meta property="article:modified_time" content="2025-12-18T12:55:11.457Z">
+<meta property="article:author" content="Ivan-FYF">
+<meta name="twitter:card" content="summary">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Ivan&#39;s Tech Blog" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>xv6-labs-2020 lab1 | Ivan&#39;s Tech Blog</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: 
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/"></a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-第一章/fork+exec执行程序的核心模型" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/" class="article-date">
+      <time datetime="2025-12-18T12:27:43.000Z" itemprop="datePublished">2025-12-18</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      xv6-labs-2020 lab1
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="fork-exec：Unix-Linux（xv6）执行程序的核心模式"><a href="#fork-exec：Unix-Linux（xv6）执行程序的核心模式" class="headerlink" title="fork + exec：Unix &#x2F; Linux（xv6）执行程序的核心模式"></a>fork + exec：Unix &#x2F; Linux（xv6）执行程序的核心模式</h1><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># fork + exec：Unix / xv6 执行程序的核心模型</span></span><br><span class="line"></span><br><span class="line">先明确一个核心概念：<span class="strong">**fork + exec 是 Unix / Linux（包括 xv6）执行程序的经典模式**</span>。</span><br><span class="line"></span><br><span class="line">你给出的代码片段中，<span class="code">`exec`</span> 会用目标程序（如 <span class="code">`/bin/echo`</span>）<span class="strong">**替换当前进程的代码和数据**</span>，但需要特别注意的是：</span><br><span class="line"></span><br><span class="line"><span class="quote">&gt; <span class="strong">**exec 本身不会创建新进程**</span></span></span><br><span class="line"></span><br><span class="line">因此，实际使用中必须先通过 <span class="code">`fork`</span> 创建子进程，再在子进程中调用 <span class="code">`exec`</span>。  </span><br><span class="line">这样既能保留父进程（shell），又能让子进程执行新程序，这正是 <span class="strong">**xv6 shell 的核心逻辑**</span>。</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line"><span class="section">## xv6 shell 执行 `echo hello` 的完整流程（结合源码）</span></span><br><span class="line"></span><br><span class="line">下面以用户在 xv6 shell 中输入：</span><br><span class="line"></span><br><span class="line"><span class="code">```text</span></span><br><span class="line"><span class="code">echo hello</span></span><br></pre></td></tr></table></figure>
+
+<p>为例，结合 <code>user/sh.c</code> 的关键位置，拆解整个执行过程。</p>
+<hr>
+<h2 id="步骤-1：shell-主循环等待用户输入"><a href="#步骤-1：shell-主循环等待用户输入" class="headerlink" title="步骤 1：shell 主循环等待用户输入"></a>步骤 1：shell 主循环等待用户输入</h2><p><strong>位置：<code>main()</code>（<code>user/sh.c:145</code>）</strong></p>
+<p>xv6 的 shell 运行在一个无限循环中，主要完成两件事：</p>
+<ol>
+<li>打印命令提示符（如 <code>$ </code>）</li>
+<li>调用 <code>getcmd()</code> 读取用户输入的一行命令</li>
+</ol>
+<p>此时：</p>
+<ul>
+<li>shell 是<strong>父进程</strong></li>
+<li>处于前台运行状态</li>
+<li>等待用户输入命令</li>
+</ul>
+<hr>
+<h2 id="步骤-2：创建子进程（fork）"><a href="#步骤-2：创建子进程（fork）" class="headerlink" title="步骤 2：创建子进程（fork）"></a>步骤 2：创建子进程（<code>fork</code>）</h2><p>当用户输入 <code>echo hello</code> 并回车后，shell 调用：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> pid = fork();</span><br></pre></td></tr></table></figure>
+
+<p><code>fork()</code> 会创建一个与当前进程几乎完全相同的子进程：</p>
+<ul>
+<li><p><strong>父进程（shell）</strong></p>
+<ul>
+<li><code>fork()</code> 返回子进程的 PID</li>
+<li>随后调用 <code>wait()</code> 或 <code>waitpid()</code>，进入阻塞状态</li>
+</ul>
+</li>
+<li><p><strong>子进程</strong></p>
+<ul>
+<li><code>fork()</code> 返回 <code>0</code></li>
+<li>继续执行后续的命令处理逻辑</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>关键点：</strong></p>
+<ul>
+<li><code>fork</code> 是“复制”，不是重新创建</li>
+<li>子进程在 <code>exec</code> 之前与父进程共享相同的代码和数据</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="步骤-3：子进程调用-runcmd-处理命令"><a href="#步骤-3：子进程调用-runcmd-处理命令" class="headerlink" title="步骤 3：子进程调用 runcmd 处理命令"></a>步骤 3：子进程调用 <code>runcmd</code> 处理命令</h2><p><strong>位置：<code>runcmd()</code>（<code>user/sh.c:58</code>）</strong></p>
+<p>子进程会解析用户输入的命令：</p>
+<ul>
+<li>命令名：<code>echo</code></li>
+<li>参数：<code>hello</code></li>
+</ul>
+<p>并构造参数数组 <code>argv</code>：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span> *argv[<span class="number">3</span>];</span><br><span class="line">argv[<span class="number">0</span>] = <span class="string">&quot;echo&quot;</span>;   <span class="comment">// 程序名</span></span><br><span class="line">argv[<span class="number">1</span>] = <span class="string">&quot;hello&quot;</span>; <span class="comment">// 参数</span></span><br><span class="line">argv[<span class="number">2</span>] = <span class="number">0</span>;       <span class="comment">// 参数数组必须以 NULL 结尾</span></span><br></pre></td></tr></table></figure>
+
+<p>同时，<code>runcmd</code> 会确定可执行文件路径，例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/bin/echo</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="步骤-4：子进程调用-exec-替换程序"><a href="#步骤-4：子进程调用-exec-替换程序" class="headerlink" title="步骤 4：子进程调用 exec 替换程序"></a>步骤 4：子进程调用 <code>exec</code> 替换程序</h2><p><strong>位置：<code>user/sh.c:78</code></strong></p>
+<p>子进程调用：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec(<span class="string">&quot;/bin/echo&quot;</span>, argv);</span><br></pre></td></tr></table></figure>
+
+<p><code>exec</code> 的行为是：</p>
+<ul>
+<li>丢弃当前子进程的代码和数据</li>
+<li>加载 <code>/bin/echo</code> 的代码和数据</li>
+<li>从 <code>echo</code> 程序的 <code>main</code> 函数开始执行</li>
+</ul>
+<blockquote>
+<p>如果 <code>exec</code> 调用成功：</p>
+<ul>
+<li>当前进程将不再是 shell 的副本</li>
+<li>之前的 <code>runcmd</code> 代码不会再执行</li>
+<li><code>printf(&quot;exec error\n&quot;)</code> 不会被执行</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="步骤-5：echo-程序执行并调用-exit"><a href="#步骤-5：echo-程序执行并调用-exit" class="headerlink" title="步骤 5：echo 程序执行并调用 exit"></a>步骤 5：<code>echo</code> 程序执行并调用 <code>exit</code></h2><p><code>echo</code> 程序运行后：</p>
+<ol>
+<li><p>向标准输出打印：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello</span><br></pre></td></tr></table></figure></li>
+<li><p>调用：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">exit</span>(<span class="number">0</span>);</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>子进程终止，并通知父进程。</p>
+<hr>
+<h2 id="步骤-6：父进程（shell）从-wait-返回"><a href="#步骤-6：父进程（shell）从-wait-返回" class="headerlink" title="步骤 6：父进程（shell）从 wait 返回"></a>步骤 6：父进程（shell）从 <code>wait</code> 返回</h2><p>父进程中的：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wait(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>返回后：</p>
+<ul>
+<li>shell 回收子进程资源</li>
+<li>清除僵尸进程</li>
+<li>重新回到主循环</li>
+<li>再次打印提示符，等待下一条命令</li>
+</ul>
+<hr>
+<h2 id="exec-失败时会发生什么？"><a href="#exec-失败时会发生什么？" class="headerlink" title="exec 失败时会发生什么？"></a>exec 失败时会发生什么？</h2><p>如果：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec(<span class="string">&quot;/bin/echo&quot;</span>, argv);</span><br></pre></td></tr></table></figure>
+
+<p>执行失败（如文件不存在），则：</p>
+<ul>
+<li>当前进程不会被替换</li>
+<li>会继续执行后续代码：</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;exec error\n&quot;</span>);</span><br><span class="line"><span class="built_in">exit</span>(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+
+<p>随后子进程退出，父进程依然会从 <code>wait()</code> 返回。</p>
+<hr>
+<h2 id="为什么-argv-0-是程序名？"><a href="#为什么-argv-0-是程序名？" class="headerlink" title="为什么 argv[0] 是程序名？"></a>为什么 <code>argv[0]</code> 是程序名？</h2><p>原因包括：</p>
+<ol>
+<li><p><strong>Unix 规范约定</strong></p>
+<ul>
+<li><code>argv[0]</code> 表示程序名</li>
+<li><code>argv[1]</code> 及以后才是实际参数</li>
+</ul>
+</li>
+<li><p><strong>程序自身可能使用 <code>argv[0]</code></strong></p>
+<ul>
+<li>同一个程序根据启动名执行不同逻辑（如 <code>busybox</code>）</li>
+</ul>
+</li>
+<li><p><strong>xv6 的简化实现</strong></p>
+<ul>
+<li>多数 xv6 程序忽略 <code>argv[0]</code></li>
+<li>但依然遵循该参数规范</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="核心结论"><a href="#核心结论" class="headerlink" title="核心结论"></a>核心结论</h3><ul>
+<li><strong>fork + exec 是 Unix &#x2F; xv6 执行程序的标准模式</strong></li>
+<li><code>fork</code> 负责创建进程</li>
+<li><code>exec</code> 负责加载并运行新程序</li>
+<li>shell 通过 <code>wait</code> 保持自身持续运行</li>
+</ul>
+<h3 id="echo-hello-的完整链路"><a href="#echo-hello-的完整链路" class="headerlink" title="echo hello 的完整链路"></a><code>echo hello</code> 的完整链路</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">shell 读取命令</span><br><span class="line">→ fork 创建子进程</span><br><span class="line">→ 子进程解析命令</span><br><span class="line">→ exec 加载 /bin/echo</span><br><span class="line">→ echo 输出 hello 并 exit</span><br><span class="line">→ 父进程 wait 返回</span><br><span class="line">→ shell 继续等待输入</span><br></pre></td></tr></table></figure>
+
+<p>这一设计实现了 <strong>进程创建与程序执行的解耦</strong>，也是 Unix shell 能持续工作的根本原因。</p>
+<p>以下是runcmd函数的代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span></span><br><span class="line"><span class="title function_">runcmd</span><span class="params">(<span class="keyword">struct</span> cmd *cmd)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> p[<span class="number">2</span>];</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">backcmd</span> *<span class="title">bcmd</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">execcmd</span> *<span class="title">ecmd</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">listcmd</span> *<span class="title">lcmd</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">pipecmd</span> *<span class="title">pcmd</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">redircmd</span> *<span class="title">rcmd</span>;</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span>(cmd == <span class="number">0</span>)</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">switch</span>(cmd-&gt;type)&#123;</span><br><span class="line">  <span class="keyword">default</span>:</span><br><span class="line">    panic(<span class="string">&quot;runcmd&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">case</span> EXEC:</span><br><span class="line">    ecmd = (<span class="keyword">struct</span> execcmd*)cmd;</span><br><span class="line">    <span class="keyword">if</span>(ecmd-&gt;argv[<span class="number">0</span>] == <span class="number">0</span>)</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    exec(ecmd-&gt;argv[<span class="number">0</span>], ecmd-&gt;argv);</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="number">2</span>, <span class="string">&quot;exec %s failed\n&quot;</span>, ecmd-&gt;argv[<span class="number">0</span>]);</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">case</span> REDIR:</span><br><span class="line">    rcmd = (<span class="keyword">struct</span> redircmd*)cmd;</span><br><span class="line">    close(rcmd-&gt;fd);</span><br><span class="line">    <span class="keyword">if</span>(open(rcmd-&gt;file, rcmd-&gt;mode) &lt; <span class="number">0</span>)&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(<span class="number">2</span>, <span class="string">&quot;open %s failed\n&quot;</span>, rcmd-&gt;file);</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    runcmd(rcmd-&gt;cmd);</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">case</span> LIST:</span><br><span class="line">    lcmd = (<span class="keyword">struct</span> listcmd*)cmd;</span><br><span class="line">    <span class="keyword">if</span>(fork1() == <span class="number">0</span>)</span><br><span class="line">      runcmd(lcmd-&gt;left);</span><br><span class="line">    wait(<span class="number">0</span>);</span><br><span class="line">    runcmd(lcmd-&gt;right);</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">case</span> PIPE:</span><br><span class="line">    pcmd = (<span class="keyword">struct</span> pipecmd*)cmd;</span><br><span class="line">    <span class="keyword">if</span>(pipe(p) &lt; <span class="number">0</span>)</span><br><span class="line">      panic(<span class="string">&quot;pipe&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span>(fork1() == <span class="number">0</span>)&#123;</span><br><span class="line">      close(<span class="number">1</span>);</span><br><span class="line">      dup(p[<span class="number">1</span>]);</span><br><span class="line">      close(p[<span class="number">0</span>]);</span><br><span class="line">      close(p[<span class="number">1</span>]);</span><br><span class="line">      runcmd(pcmd-&gt;left);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(fork1() == <span class="number">0</span>)&#123;</span><br><span class="line">      close(<span class="number">0</span>);</span><br><span class="line">      dup(p[<span class="number">0</span>]);</span><br><span class="line">      close(p[<span class="number">0</span>]);</span><br><span class="line">      close(p[<span class="number">1</span>]);</span><br><span class="line">      runcmd(pcmd-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">    close(p[<span class="number">0</span>]);</span><br><span class="line">    close(p[<span class="number">1</span>]);</span><br><span class="line">    wait(<span class="number">0</span>);</span><br><span class="line">    wait(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">case</span> BACK:</span><br><span class="line">    bcmd = (<span class="keyword">struct</span> backcmd*)cmd;</span><br><span class="line">    <span class="keyword">if</span>(fork1() == <span class="number">0</span>)</span><br><span class="line">      runcmd(bcmd-&gt;cmd);</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="一、函数整体功能总结"><a href="#一、函数整体功能总结" class="headerlink" title="一、函数整体功能总结"></a>一、函数整体功能总结</h3><p><code>runcmd</code>是一个递归函数，它接收一个<code>struct cmd</code>类型的命令节点（这个节点是shell解析用户输入后生成的抽象语法树节点），通过<code>switch</code>判断命令的类型（<code>EXEC</code>&#x2F;<code>REDIR</code>&#x2F;<code>LIST</code>&#x2F;<code>PIPE</code>&#x2F;<code>BACK</code>），然后执行对应的逻辑。核心依赖<code>fork1</code>（xv6的<code>fork</code>封装）、<code>exec</code>、<code>pipe</code>、<code>dup</code>、<code>wait</code>等系统调用，实现了Unix shell的核心功能。</p>
+<h3 id="二、关键数据结构说明"><a href="#二、关键数据结构说明" class="headerlink" title="二、关键数据结构说明"></a>二、关键数据结构说明</h3><p>代码中出现的<code>struct cmd</code>及其子结构体是xv6对不同命令的封装，每个子结构体对应一种命令类型：</p>
+<ul>
+<li><code>struct execcmd</code>：普通执行命令（如<code>echo hello</code>），包含命令参数数组<code>argv</code>；</li>
+<li><code>struct redircmd</code>：重定向命令（如<code>echo hello &gt; file.txt</code>），包含重定向的文件描述符<code>fd</code>、文件名<code>file</code>、打开模式<code>mode</code>，以及被重定向的子命令<code>cmd</code>；</li>
+<li><code>struct listcmd</code>：顺序执行命令（如<code>echo hello ; ls</code>），包含左命令<code>left</code>和右命令<code>right</code>；</li>
+<li><code>struct pipecmd</code>：管道命令（如<code>ls | grep txt</code>），包含左命令<code>left</code>（管道写端）和右命令<code>right</code>（管道读端）；</li>
+<li><code>struct backcmd</code>：后台运行命令（如<code>sleep 10 &amp;</code>），包含后台执行的子命令<code>cmd</code>；</li>
+<li><code>cmd-&gt;type</code>：标识命令类型的枚举（<code>EXEC</code>&#x2F;<code>REDIR</code>等）。</li>
+</ul>
+<h3 id="三、逐模块解析代码逻辑"><a href="#三、逐模块解析代码逻辑" class="headerlink" title="三、逐模块解析代码逻辑"></a>三、逐模块解析代码逻辑</h3><h4 id="1-基础判断：空命令直接退出"><a href="#1-基础判断：空命令直接退出" class="headerlink" title="1. 基础判断：空命令直接退出"></a>1. 基础判断：空命令直接退出</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(cmd == <span class="number">0</span>)</span><br><span class="line">  <span class="built_in">exit</span>(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+<p>如果命令节点为空（解析失败），子进程直接退出，返回错误状态。</p>
+<hr>
+<h4 id="2-EXEC：执行普通程序（核心分支，如echo-hello）"><a href="#2-EXEC：执行普通程序（核心分支，如echo-hello）" class="headerlink" title="2. EXEC：执行普通程序（核心分支，如echo hello）"></a>2. EXEC：执行普通程序（核心分支，如<code>echo hello</code>）</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> EXEC:</span><br><span class="line">  ecmd = (<span class="keyword">struct</span> execcmd*)cmd;</span><br><span class="line">  <span class="keyword">if</span>(ecmd-&gt;argv[<span class="number">0</span>] == <span class="number">0</span>)</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">  exec(ecmd-&gt;argv[<span class="number">0</span>], ecmd-&gt;argv);</span><br><span class="line">  <span class="built_in">fprintf</span>(<span class="number">2</span>, <span class="string">&quot;exec %s failed\n&quot;</span>, ecmd-&gt;argv[<span class="number">0</span>]);</span><br><span class="line">  <span class="keyword">break</span>;</span><br></pre></td></tr></table></figure>
+<p><strong>逻辑拆解</strong>：</p>
+<ul>
+<li>将<code>cmd</code>强转为<code>execcmd</code>（普通执行命令结构体），获取参数数组<code>argv</code>；</li>
+<li>如果<code>argv[0]</code>为空（无命令名），直接退出；</li>
+<li>调用<code>exec</code>系统调用，加载并执行<code>argv[0]</code>对应的程序（如<code>/bin/echo</code>），参数为<code>argv</code>；</li>
+<li><strong>如果<code>exec</code>返回，说明执行失败</strong>（因为成功的<code>exec</code>会替换进程代码，不会返回），此时打印错误信息；</li>
+<li>注意：这里的<code>exec</code>是xv6的封装，对应你之前看到的<code>exec(&quot;/bin/echo&quot;, argv)</code>逻辑。</li>
+</ul>
+<hr>
+<h4 id="3-REDIR：处理输入输出重定向（如echo-hello-file-txt）"><a href="#3-REDIR：处理输入输出重定向（如echo-hello-file-txt）" class="headerlink" title="3. REDIR：处理输入输出重定向（如echo hello &gt; file.txt）"></a>3. REDIR：处理输入输出重定向（如<code>echo hello &gt; file.txt</code>）</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> REDIR:</span><br><span class="line">  rcmd = (<span class="keyword">struct</span> redircmd*)cmd;</span><br><span class="line">  close(rcmd-&gt;fd);</span><br><span class="line">  <span class="keyword">if</span>(open(rcmd-&gt;file, rcmd-&gt;mode) &lt; <span class="number">0</span>)&#123;</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="number">2</span>, <span class="string">&quot;open %s failed\n&quot;</span>, rcmd-&gt;file);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  runcmd(rcmd-&gt;cmd);</span><br><span class="line">  <span class="keyword">break</span>;</span><br></pre></td></tr></table></figure>
+<p><strong>逻辑拆解（以<code>echo hello &gt; file.txt</code>为例）</strong>：</p>
+<ul>
+<li><code>rcmd-&gt;fd</code>：要重定向的文件描述符（如stdout是1，stdin是0，stderr是2）；</li>
+<li><code>close(rcmd-&gt;fd)</code>：关闭原来的文件描述符（比如关闭stdout（1））；</li>
+<li><code>open(rcmd-&gt;file, rcmd-&gt;mode)</code>：打开目标文件（如<code>file.txt</code>，写模式），此时系统会分配<strong>最小的可用文件描述符</strong>（也就是刚才关闭的1）；</li>
+<li>递归调用<code>runcmd(rcmd-&gt;cmd)</code>：执行被重定向的命令（如<code>echo hello</code>），此时命令的输出（原本写向stdout（1））会被重定向到<code>file.txt</code>；</li>
+<li><strong>核心原理</strong>：利用Unix文件描述符的“最小可用”规则，通过<code>close</code>+<code>open</code>实现重定向（xv6也支持<code>dup</code>实现，逻辑一致）。</li>
+</ul>
+<hr>
+<h4 id="4-LIST：处理顺序执行命令（如echo-hello-ls）"><a href="#4-LIST：处理顺序执行命令（如echo-hello-ls）" class="headerlink" title="4. LIST：处理顺序执行命令（如echo hello ; ls）"></a>4. LIST：处理顺序执行命令（如<code>echo hello ; ls</code>）</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> LIST:</span><br><span class="line">  lcmd = (<span class="keyword">struct</span> listcmd*)cmd;</span><br><span class="line">  <span class="keyword">if</span>(fork1() == <span class="number">0</span>)</span><br><span class="line">    runcmd(lcmd-&gt;left);</span><br><span class="line">  wait(<span class="number">0</span>);</span><br><span class="line">  runcmd(lcmd-&gt;right);</span><br><span class="line">  <span class="keyword">break</span>;</span><br></pre></td></tr></table></figure>
+<p><strong>逻辑拆解</strong>：</p>
+<ul>
+<li><code>lcmd-&gt;left</code>：左边的命令（如<code>echo hello</code>），<code>lcmd-&gt;right</code>：右边的命令（如<code>ls</code>）；</li>
+<li><code>fork1()</code>创建子进程，子进程执行左命令；</li>
+<li>父进程调用<code>wait(0)</code>，阻塞等待左命令执行完毕；</li>
+<li>左命令执行完后，父进程再执行右命令；</li>
+<li>特点：<strong>顺序执行</strong>，左命令完成后才会执行右命令。</li>
+</ul>
+<hr>
+<h4 id="5-PIPE：处理管道命令（如ls-grep-txt）"><a href="#5-PIPE：处理管道命令（如ls-grep-txt）" class="headerlink" title="5. PIPE：处理管道命令（如ls | grep txt）"></a>5. PIPE：处理管道命令（如<code>ls | grep txt</code>）</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> PIPE:</span><br><span class="line">  pcmd = (<span class="keyword">struct</span> pipecmd*)cmd;</span><br><span class="line">  <span class="keyword">if</span>(pipe(p) &lt; <span class="number">0</span>)</span><br><span class="line">    panic(<span class="string">&quot;pipe&quot;</span>);</span><br><span class="line">  <span class="keyword">if</span>(fork1() == <span class="number">0</span>)&#123;</span><br><span class="line">    close(<span class="number">1</span>);</span><br><span class="line">    dup(p[<span class="number">1</span>]);</span><br><span class="line">    close(p[<span class="number">0</span>]);</span><br><span class="line">    close(p[<span class="number">1</span>]);</span><br><span class="line">    runcmd(pcmd-&gt;left);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span>(fork1() == <span class="number">0</span>)&#123;</span><br><span class="line">    close(<span class="number">0</span>);</span><br><span class="line">    dup(p[<span class="number">0</span>]);</span><br><span class="line">    close(p[<span class="number">0</span>]);</span><br><span class="line">    close(p[<span class="number">1</span>]);</span><br><span class="line">    runcmd(pcmd-&gt;right);</span><br><span class="line">  &#125;</span><br><span class="line">  close(p[<span class="number">0</span>]);</span><br><span class="line">  close(p[<span class="number">1</span>]);</span><br><span class="line">  wait(<span class="number">0</span>);</span><br><span class="line">  wait(<span class="number">0</span>);</span><br><span class="line">  <span class="keyword">break</span>;</span><br></pre></td></tr></table></figure>
+<p>这是最复杂的分支，<strong>核心是利用<code>pipe</code>创建管道，将左命令的输出作为右命令的输入</strong>。</p>
+<p><strong>逻辑拆解（以<code>ls | grep txt</code>为例）</strong>：</p>
+<ol>
+<li><strong>创建管道</strong>：<code>pipe(p)</code>创建一个管道，<code>p[0]</code>是<strong>读端</strong>，<code>p[1]</code>是<strong>写端</strong>；</li>
+<li><strong>处理左命令（<code>ls</code>，管道写端）</strong>：<ul>
+<li><code>fork1()</code>创建子进程1；</li>
+<li><code>close(1)</code>：关闭子进程1的stdout（1）；</li>
+<li><code>dup(p[1])</code>：复制管道写端<code>p[1]</code>到stdout（1）（因为1是最小可用描述符）；</li>
+<li><code>close(p[0])</code>和<code>close(p[1])</code>：关闭多余的管道描述符（只保留重定向后的stdout）；</li>
+<li>执行左命令<code>ls</code>，此时<code>ls</code>的输出会写入管道写端<code>p[1]</code>；</li>
+</ul>
+</li>
+<li><strong>处理右命令（<code>grep txt</code>，管道读端）</strong>：<ul>
+<li><code>fork1()</code>创建子进程2；</li>
+<li><code>close(0)</code>：关闭子进程2的stdin（0）；</li>
+<li><code>dup(p[0])</code>：复制管道读端<code>p[0]</code>到stdin（0）；</li>
+<li><code>close(p[0])</code>和<code>close(p[1])</code>：关闭多余的管道描述符；</li>
+<li>执行右命令<code>grep txt</code>，此时<code>grep</code>会从管道读端<code>p[0]</code>读取<code>ls</code>的输出；</li>
+</ul>
+</li>
+<li><strong>父进程处理</strong>：<ul>
+<li><code>close(p[0])</code>和<code>close(p[1])</code>：父进程关闭管道描述符（否则子进程退出后管道不会被释放）；</li>
+<li><code>wait(0)</code>两次：等待两个子进程都执行完毕；</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><strong>核心原理</strong>：管道是单向的，左进程写管道，右进程读管道，通过<code>dup</code>将管道描述符重定向到标准输入&#x2F;输出。</li>
+</ul>
+<hr>
+<h4 id="6-BACK：处理后台运行命令（如sleep-10-）"><a href="#6-BACK：处理后台运行命令（如sleep-10-）" class="headerlink" title="6. BACK：处理后台运行命令（如sleep 10 &amp;）"></a>6. BACK：处理后台运行命令（如<code>sleep 10 &amp;</code>）</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> BACK:</span><br><span class="line">  bcmd = (<span class="keyword">struct</span> backcmd*)cmd;</span><br><span class="line">  <span class="keyword">if</span>(fork1() == <span class="number">0</span>)</span><br><span class="line">    runcmd(bcmd-&gt;cmd);</span><br><span class="line">  <span class="keyword">break</span>;</span><br></pre></td></tr></table></figure>
+<p><strong>逻辑拆解</strong>：</p>
+<ul>
+<li><code>fork1()</code>创建子进程，子进程执行后台命令（如<code>sleep 10</code>）；</li>
+<li><strong>父进程不调用<code>wait(0)</code></strong>：这是和普通命令的关键区别，父进程（shell）不会阻塞，直接返回继续处理下一条命令；</li>
+<li>特点：命令在后台运行，shell无需等待，用户可以立即输入新命令；</li>
+<li>注意：xv6的后台处理比较简化，没有处理僵尸进程（实际Unix shell会用信号处理）。</li>
+</ul>
+<hr>
+<h4 id="7-函数末尾：退出进程"><a href="#7-函数末尾：退出进程" class="headerlink" title="7. 函数末尾：退出进程"></a>7. 函数末尾：退出进程</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">exit</span>(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<p>无论哪种命令类型执行完毕（除了<code>exec</code>成功的情况，因为<code>exec</code>会替换代码，不会走到这里），子进程都会调用<code>exit(0)</code>退出。</p>
+<h3 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h3><h3 id="关键点回顾"><a href="#关键点回顾" class="headerlink" title="关键点回顾"></a>关键点回顾</h3><ol>
+<li><strong>核心逻辑</strong>：<code>runcmd</code>通过<strong>类型判断+递归调用</strong>，处理xv6 shell的所有命令类型，依赖<code>fork</code>+<code>exec</code>实现程序执行，依赖<code>pipe</code>+<code>dup</code>实现管道，依赖<code>close</code>+<code>open</code>实现重定向。</li>
+<li><strong>各命令类型的核心差异</strong>：<ul>
+<li><code>EXEC</code>：直接<code>exec</code>执行程序，失败则打印错误；</li>
+<li><code>REDIR</code>：先重定向文件描述符，再递归执行命令；</li>
+<li><code>LIST</code>：<code>fork</code>执行左命令，<code>wait</code>后执行右命令；</li>
+<li><code>PIPE</code>：创建管道，两个子进程分别处理左右命令，实现数据传递；</li>
+<li><code>BACK</code>：<code>fork</code>执行命令，父进程不<code>wait</code>，后台运行；</li>
+</ul>
+</li>
+<li><strong>xv6的简化处理</strong>：相比实际Unix shell，xv6的<code>runcmd</code>省略了信号处理（如后台进程的僵尸回收）、通配符解析、环境变量等功能，但保留了shell的核心骨架。</li>
+</ol>
+<p>这个函数是xv6 shell的“心脏”，理解它的逻辑就能掌握xv6如何处理用户命令的本质。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页"></a></p>
+        <p><span>发布时间:</span>2025-12-18, 20:27:43</p>
+        <p><span>最后更新:</span>2025-12-18, 20:55:11</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/" title="xv6-labs-2020 lab1">https://hellonnnnn.github.io/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://hellonnnnn.github.io/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/　　作者: " title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">
+                    Unix/Linux 管道的工作原理
+                </a>
+            </div>
+        
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#fork-exec%EF%BC%9AUnix-Linux%EF%BC%88xv6%EF%BC%89%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">fork + exec：Unix &#x2F; Linux（xv6）执行程序的核心模式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-1%EF%BC%9Ashell-%E4%B8%BB%E5%BE%AA%E7%8E%AF%E7%AD%89%E5%BE%85%E7%94%A8%E6%88%B7%E8%BE%93%E5%85%A5"><span class="toc-number">1.1.</span> <span class="toc-text">步骤 1：shell 主循环等待用户输入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-2%EF%BC%9A%E5%88%9B%E5%BB%BA%E5%AD%90%E8%BF%9B%E7%A8%8B%EF%BC%88fork%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">步骤 2：创建子进程（fork）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-3%EF%BC%9A%E5%AD%90%E8%BF%9B%E7%A8%8B%E8%B0%83%E7%94%A8-runcmd-%E5%A4%84%E7%90%86%E5%91%BD%E4%BB%A4"><span class="toc-number">1.3.</span> <span class="toc-text">步骤 3：子进程调用 runcmd 处理命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-4%EF%BC%9A%E5%AD%90%E8%BF%9B%E7%A8%8B%E8%B0%83%E7%94%A8-exec-%E6%9B%BF%E6%8D%A2%E7%A8%8B%E5%BA%8F"><span class="toc-number">1.4.</span> <span class="toc-text">步骤 4：子进程调用 exec 替换程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-5%EF%BC%9Aecho-%E7%A8%8B%E5%BA%8F%E6%89%A7%E8%A1%8C%E5%B9%B6%E8%B0%83%E7%94%A8-exit"><span class="toc-number">1.5.</span> <span class="toc-text">步骤 5：echo 程序执行并调用 exit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-6%EF%BC%9A%E7%88%B6%E8%BF%9B%E7%A8%8B%EF%BC%88shell%EF%BC%89%E4%BB%8E-wait-%E8%BF%94%E5%9B%9E"><span class="toc-number">1.6.</span> <span class="toc-text">步骤 6：父进程（shell）从 wait 返回</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#exec-%E5%A4%B1%E8%B4%A5%E6%97%B6%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.7.</span> <span class="toc-text">exec 失败时会发生什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88-argv-0-%E6%98%AF%E7%A8%8B%E5%BA%8F%E5%90%8D%EF%BC%9F"><span class="toc-number">1.8.</span> <span class="toc-text">为什么 argv[0] 是程序名？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.9.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E7%BB%93%E8%AE%BA"><span class="toc-number">1.9.1.</span> <span class="toc-text">核心结论</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#echo-hello-%E7%9A%84%E5%AE%8C%E6%95%B4%E9%93%BE%E8%B7%AF"><span class="toc-number">1.9.2.</span> <span class="toc-text">echo hello 的完整链路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%87%BD%E6%95%B0%E6%95%B4%E4%BD%93%E5%8A%9F%E8%83%BD%E6%80%BB%E7%BB%93"><span class="toc-number">1.9.3.</span> <span class="toc-text">一、函数整体功能总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%85%B3%E9%94%AE%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AF%B4%E6%98%8E"><span class="toc-number">1.9.4.</span> <span class="toc-text">二、关键数据结构说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E9%80%90%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90%E4%BB%A3%E7%A0%81%E9%80%BB%E8%BE%91"><span class="toc-number">1.9.5.</span> <span class="toc-text">三、逐模块解析代码逻辑</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E5%9F%BA%E7%A1%80%E5%88%A4%E6%96%AD%EF%BC%9A%E7%A9%BA%E5%91%BD%E4%BB%A4%E7%9B%B4%E6%8E%A5%E9%80%80%E5%87%BA"><span class="toc-number">1.9.5.1.</span> <span class="toc-text">1. 基础判断：空命令直接退出</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-EXEC%EF%BC%9A%E6%89%A7%E8%A1%8C%E6%99%AE%E9%80%9A%E7%A8%8B%E5%BA%8F%EF%BC%88%E6%A0%B8%E5%BF%83%E5%88%86%E6%94%AF%EF%BC%8C%E5%A6%82echo-hello%EF%BC%89"><span class="toc-number">1.9.5.2.</span> <span class="toc-text">2. EXEC：执行普通程序（核心分支，如echo hello）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-REDIR%EF%BC%9A%E5%A4%84%E7%90%86%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91%EF%BC%88%E5%A6%82echo-hello-file-txt%EF%BC%89"><span class="toc-number">1.9.5.3.</span> <span class="toc-text">3. REDIR：处理输入输出重定向（如echo hello &gt; file.txt）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-LIST%EF%BC%9A%E5%A4%84%E7%90%86%E9%A1%BA%E5%BA%8F%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%EF%BC%88%E5%A6%82echo-hello-ls%EF%BC%89"><span class="toc-number">1.9.5.4.</span> <span class="toc-text">4. LIST：处理顺序执行命令（如echo hello ; ls）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-PIPE%EF%BC%9A%E5%A4%84%E7%90%86%E7%AE%A1%E9%81%93%E5%91%BD%E4%BB%A4%EF%BC%88%E5%A6%82ls-grep-txt%EF%BC%89"><span class="toc-number">1.9.5.5.</span> <span class="toc-text">5. PIPE：处理管道命令（如ls | grep txt）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-BACK%EF%BC%9A%E5%A4%84%E7%90%86%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8C%E5%91%BD%E4%BB%A4%EF%BC%88%E5%A6%82sleep-10-%EF%BC%89"><span class="toc-number">1.9.5.6.</span> <span class="toc-text">6. BACK：处理后台运行命令（如sleep 10 &amp;）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-%E5%87%BD%E6%95%B0%E6%9C%AB%E5%B0%BE%EF%BC%9A%E9%80%80%E5%87%BA%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.9.5.7.</span> <span class="toc-text">7. 函数末尾：退出进程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%80%BB%E7%BB%93"><span class="toc-number">1.9.6.</span> <span class="toc-text">四、总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E7%82%B9%E5%9B%9E%E9%A1%BE"><span class="toc-number">1.9.7.</span> <span class="toc-text">关键点回顾</span></a></li></ol></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"xv6-labs-2020 lab1　| Ivan's Tech Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="上一篇: Unix/Linux 管道的工作原理">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/01/22/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E4%B8%80%E5%A4%A9/">算法训练营第一天</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/01/21/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E8%B9%A6%E5%BA%8A%E9%A1%B5/">蹦床页</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/01/21/unbuntu%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%82%A8%E4%B8%8D%E8%B6%B3/">unbuntu系统存储不足</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/trap-c%E8%AF%A6%E8%A7%A3/">trap.c详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8%EF%BC%9Axv6-%E6%9E%81%E7%AE%80%E5%A4%84%E7%90%86-vs-%E7%9C%9F%E5%AE%9E-OS-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/">页面错误异常：xv6 极简处理 vs 真实 OS 的高级应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从内核空间陷入</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0/">xv6 系统调用参数处理：提取、校验与安全传输</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E4%B8%AD-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF/">xv6 中 exec 系统调用的完整调用链路</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/RISC-V%E9%99%B7%E5%85%A5%E6%9C%BA%E5%88%B6/">陷阱指令和系统调用 核心解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 exec 系统调用核心逻辑总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-sbrk-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%88%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E6%89%A9%E7%BC%A9%E5%AE%B9%EF%BC%89%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 sbrk 系统调用（进程内存扩缩容）核心逻辑总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 进程地址空间总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E9%87%8A%E6%94%BE%E6%9C%BA%E5%88%B6%E6%80%BB%E7%BB%93/">xv6 物理内存分配与释放机制总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E5%86%85%E6%A0%B8%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 内核地址空间总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/satp/">satp</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/copyin-copyout%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/">copyin/copyout详细介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3/">系统调用正确理解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/">xv6内核架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/">添加系统调用的过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/21/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0/">第二章</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">git使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2026 Ivan-FYF
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Ivan-FYF" />
+
+
+
+<meta name="description" content="一、核心工具与环境：实验的基础保障这部分是实验的“前置技能”，也是工程化开发的基础，你提到的git和xv6架构都属于这一类：  Git的使用（版本控制核心） 核心操作：clone（克隆xv6源码）、commit（保存实验修改）、branch（创建分支隔离实验）、reset（回滚错误修改）、diff（查看代码变更）。 实验意义：避免代码改乱后无法恢复，便于跟踪实验的修改记录（比如新增系统调用时的代码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前两章总结">
+<meta property="og:url" content="https://hellonnnnn.github.io/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="Ivan&#39;s Tech Blog">
+<meta property="og:description" content="一、核心工具与环境：实验的基础保障这部分是实验的“前置技能”，也是工程化开发的基础，你提到的git和xv6架构都属于这一类：  Git的使用（版本控制核心） 核心操作：clone（克隆xv6源码）、commit（保存实验修改）、branch（创建分支隔离实验）、reset（回滚错误修改）、diff（查看代码变更）。 实验意义：避免代码改乱后无法恢复，便于跟踪实验的修改记录（比如新增系统调用时的代码">
+<meta property="og:locale">
+<meta property="article:published_time" content="2025-12-22T11:35:14.000Z">
+<meta property="article:modified_time" content="2025-12-22T11:35:33.933Z">
+<meta property="article:author" content="Ivan-FYF">
+<meta name="twitter:card" content="summary">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Ivan&#39;s Tech Blog" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>前两章总结 | Ivan&#39;s Tech Blog</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: 
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/"></a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-第二章/前两章总结" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/" class="article-date">
+      <time datetime="2025-12-22T11:35:14.000Z" itemprop="datePublished">2025-12-22</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      前两章总结
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h3 id="一、核心工具与环境：实验的基础保障"><a href="#一、核心工具与环境：实验的基础保障" class="headerlink" title="一、核心工具与环境：实验的基础保障"></a>一、核心工具与环境：实验的基础保障</h3><p>这部分是实验的“前置技能”，也是工程化开发的基础，你提到的<code>git</code>和<code>xv6架构</code>都属于这一类：</p>
+<ol>
+<li><strong>Git的使用（版本控制核心）</strong><ul>
+<li>核心操作：<code>clone</code>（克隆xv6源码）、<code>commit</code>（保存实验修改）、<code>branch</code>（创建分支隔离实验）、<code>reset</code>（回滚错误修改）、<code>diff</code>（查看代码变更）。</li>
+<li>实验意义：避免代码改乱后无法恢复，便于跟踪实验的修改记录（比如新增系统调用时的代码变更）。</li>
+</ul>
+</li>
+<li><strong>xv6的系统架构（理解实验的底层逻辑）</strong><ul>
+<li>核心分层：<strong>用户态（user&#x2F;）</strong>（用户程序、Shell、系统调用封装）和<strong>内核态（kernel&#x2F;）</strong>（进程、内存、文件系统、系统调用核心逻辑），两者通过<strong>特权级切换</strong>（<code>ecall</code>&#x2F;<code>sret</code>）交互。</li>
+<li>核心模块：进程管理（proc.c）、内存管理（kalloc.c）、系统调用（syscall.c）、陷阱处理（trap.c）是实验中最常用的模块，其他模块（如磁盘、串口驱动）可暂时忽略。</li>
+</ul>
+</li>
+</ol>
+<h3 id="二、操作系统核心概念：实验的理论支撑"><a href="#二、操作系统核心概念：实验的理论支撑" class="headerlink" title="二、操作系统核心概念：实验的理论支撑"></a>二、操作系统核心概念：实验的理论支撑</h3><p>这部分是实验的“灵魂”，你提到的<strong>系统调用是什么流程</strong>、<strong>操作系统的本质</strong>都属于这一类，需要结合实验场景深化：</p>
+<ol>
+<li><strong>系统调用的本质与完整流程</strong><ul>
+<li>本质：<strong>内核暴露给用户态的“安全服务接口”</strong>——用户态程序无法直接访问硬件&#x2F;内核资源，必须通过系统调用请求内核代为处理（这是OS“隔离与封装”的核心体现）。</li>
+<li>完整流程（RISC-V架构xv6）：<br>① 用户态调用系统调用封装函数（如<code>trace()</code>）→ ② 汇编存根将<strong>系统调用号</strong>存入<code>a7</code>、参数存入<code>a0~a5</code>→ ③ 执行<code>ecall</code>陷入内核态 → ④ 内核<code>trap</code>处理程序保存用户态寄存器到<code>trapframe</code> → ⑤ <code>syscall()</code>函数通过系统调用号查<code>syscalls</code>数组，执行对应内核函数（如<code>sys_trace()</code>）→ ⑥ 内核函数处理逻辑后，将返回值存入<code>trapframe-&gt;a0</code> → ⑦ 执行<code>sret</code>返回用户态。</li>
+<li>关键细节：系统调用号是内核识别不同系统调用的<strong>唯一标识</strong>，<code>trapframe</code>是用户态&#x2F;内核态的“上下文桥梁”。</li>
+</ul>
+</li>
+<li><strong>操作系统的本质（实验中的具体体现）</strong><ul>
+<li>核心：<strong>管理硬件资源，并为用户程序提供抽象、安全、高效的服务</strong>。</li>
+<li>实验中的体现：<ul>
+<li>资源管理：<code>sysinfo</code>实验中统计空闲内存（内存资源）、遍历进程（进程资源），体现OS的资源管理能力；</li>
+<li>抽象服务：系统调用将“硬件操作”（如终端输出、内存分配）抽象为简单的函数接口（如<code>write</code>、<code>sbrk</code>），用户程序无需关心硬件细节；</li>
+<li>安全隔离：内核通过<code>copyout</code>&#x2F;<code>copyin</code>验证用户态地址合法性，禁止用户态直接访问内核内存，体现OS的安全保护。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="三、Shell与指令：实验的用户态交互层"><a href="#三、Shell与指令：实验的用户态交互层" class="headerlink" title="三、Shell与指令：实验的用户态交互层"></a>三、Shell与指令：实验的用户态交互层</h3><p>你提到的<strong>shell是怎么运行的</strong>、<strong>如何增添指令</strong>属于这一类，需要结合实验中的<code>trace</code>&#x2F;<code>sysinfotest</code>指令补充实操细节：</p>
+<ol>
+<li><strong>Shell的运行逻辑（核心是“进程管理+命令解析”）</strong><ul>
+<li>启动：内核初始化完成后，第一个用户进程就是Shell（<code>sh</code>），是用户与系统的交互入口。</li>
+<li>核心循环：<strong>读取命令行 → 解析命令与参数 → 执行命令（内置&#x2F;外部） → 等待结束</strong>。</li>
+<li>关键区别：<ul>
+<li>内置命令（如<code>cd</code>、<code>exit</code>）：直接在Shell进程中执行（依赖<code>chdir</code>等系统调用），因为涉及Shell自身状态修改；</li>
+<li>外部命令（如<code>trace</code>、<code>sysinfotest</code>）：通过<code>fork+exec+wait</code>创建子进程执行，不影响Shell进程。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>如何新增Shell指令（实验实操步骤）</strong><ul>
+<li>步骤1：编写指令的C代码（如<code>trace.c</code>、<code>sysinfotest.c</code>），处理参数并调用系统调用；</li>
+<li>步骤2：修改根目录<code>Makefile</code>，将指令添加到<code>UPROGS</code>列表中（如<code>_trace</code>、<code>_sysinfotest</code>）；</li>
+<li>步骤3：编译xv6后，在Shell中直接输入指令名即可执行。</li>
+<li>关键细节：指令的参数处理遵循<code>argc/argv</code>约定（<code>argv[0]</code>是指令名，<code>argv[1...]</code>是参数）。</li>
+</ul>
+</li>
+</ol>
+<h3 id="四、系统调用实验核心实操：新增系统调用-实验专属知识点"><a href="#四、系统调用实验核心实操：新增系统调用-实验专属知识点" class="headerlink" title="四、系统调用实验核心实操：新增系统调用+实验专属知识点"></a>四、系统调用实验核心实操：新增系统调用+实验专属知识点</h3><p>这部分是实验的“核心实操”，你提到的<strong>如何增加系统调用</strong>需要补充关键步骤和坑点，同时加入<code>trace</code>&#x2F;<code>sysinfo</code>实验的专属知识点（这是面试高频考点）：</p>
+<ol>
+<li><strong>如何新增系统调用（xv6的固定流程，机械性但关键）</strong><ul>
+<li>步骤1：在<code>kernel/syscall.h</code>中定义系统调用号（如<code>SYS_trace</code>、<code>SYS_sysinfo</code>）；</li>
+<li>步骤2：在<code>kernel/syscall.c</code>中声明内核函数、添加到<code>syscalls</code>映射数组；</li>
+<li>步骤3：编写内核函数（如<code>sys_trace()</code>、<code>sys_sysinfo()</code>），处理逻辑并返回结果；</li>
+<li>步骤4：修改<code>user/usys.pl</code>，添加汇编存根（如<code>entry(&quot;trace&quot;)</code>），生成<code>usys.S</code>；</li>
+<li>步骤5：在<code>user/user.h</code>中声明用户态函数接口（如<code>int trace(int)</code>）；</li>
+<li>步骤6：修改<code>kernel/Makefile</code>，添加内核函数的编译项（如<code>sys_trace.o</code>）。</li>
+<li>核心坑点：新增系统调用时，<strong>系统调用号必须全局唯一且所有位置保持一致</strong>（否则内核无法识别）。</li>
+</ul>
+</li>
+<li><strong><code>trace</code>实验专属知识点（系统调用跟踪的核心逻辑）</strong><ul>
+<li>核心需求：跟踪指定进程的指定系统调用，输出调用信息。</li>
+<li>关键实现：<br>① 给进程结构体<code>struct proc</code>添加掩码字段（如<code>trace_mask</code>），存储需要跟踪的系统调用号；<br>② <code>sys_trace()</code>函数将用户态传入的掩码存入当前进程的<code>trace_mask</code>；<br>③ 在<code>syscall()</code>函数中，执行系统调用后，判断进程的<code>trace_mask</code>是否包含该系统调用号，若是则打印信息；</li>
+<li>关键概念：进程的<strong>私有数据</strong>（掩码字段）是实现进程专属跟踪的基础。</li>
+</ul>
+</li>
+<li><strong><code>sysinfo</code>实验专属知识点（内核与用户态数据交互+资源统计）</strong><ul>
+<li>核心需求：统计空闲内存和非UNUSED进程数，写入用户态的<code>struct sysinfo</code>结构体。</li>
+<li>关键实现：<br>① 统计空闲内存：遍历内核的<code>freelist</code>空闲页链表，乘以<code>PGSIZE</code>得到字节数（需加锁防止并发问题）；<br>② 统计进程数：遍历<code>proc</code>数组，统计<code>state != UNUSED</code>的进程数（需加锁）；<br>③ 内核向用户态传数据：必须使用<code>copyout</code>函数（不能直接赋值），验证用户态地址合法性；</li>
+<li>关键概念：<strong>用户态&#x2F;内核态地址隔离</strong>（<code>copyout</code>是安全屏障）、<strong>共享资源的并发保护</strong>（加锁<code>kalloc_lock</code>&#x2F;<code>pid_lock</code>）。</li>
+</ul>
+</li>
+</ol>
+<h3 id="关键点回顾（核心记忆点）"><a href="#关键点回顾（核心记忆点）" class="headerlink" title="关键点回顾（核心记忆点）"></a>关键点回顾（核心记忆点）</h3><ol>
+<li>系统调用的核心是<strong>特权级切换+系统调用号查表</strong>，<code>trapframe</code>是上下文桥梁，<code>copyout</code>是用户态&#x2F;内核态数据交互的安全函数。</li>
+<li>新增系统调用有<strong>固定6步流程</strong>，系统调用号的一致性是关键；新增Shell指令只需编写代码+修改Makefile。</li>
+<li>Shell的核心是<strong>fork+exec+wait</strong>处理外部命令，内置命令需在Shell进程中执行（如<code>cd</code>）。</li>
+<li><code>trace</code>实验的核心是<strong>进程掩码字段</strong>，<code>sysinfo</code>实验的核心是<strong>资源统计+加锁+copyout传数据</strong>。</li>
+</ol>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页"></a></p>
+        <p><span>发布时间:</span>2025-12-22, 19:35:14</p>
+        <p><span>最后更新:</span>2025-12-22, 19:35:33</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/" title="前两章总结">https://hellonnnnn.github.io/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://hellonnnnn.github.io/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/　　作者: " title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3/">
+                    系统调用正确理解
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">
+                    第二章面经
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%A0%B8%E5%BF%83%E5%B7%A5%E5%85%B7%E4%B8%8E%E7%8E%AF%E5%A2%83%EF%BC%9A%E5%AE%9E%E9%AA%8C%E7%9A%84%E5%9F%BA%E7%A1%80%E4%BF%9D%E9%9A%9C"><span class="toc-number">1.</span> <span class="toc-text">一、核心工具与环境：实验的基础保障</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%EF%BC%9A%E5%AE%9E%E9%AA%8C%E7%9A%84%E7%90%86%E8%AE%BA%E6%94%AF%E6%92%91"><span class="toc-number">2.</span> <span class="toc-text">二、操作系统核心概念：实验的理论支撑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81Shell%E4%B8%8E%E6%8C%87%E4%BB%A4%EF%BC%9A%E5%AE%9E%E9%AA%8C%E7%9A%84%E7%94%A8%E6%88%B7%E6%80%81%E4%BA%A4%E4%BA%92%E5%B1%82"><span class="toc-number">3.</span> <span class="toc-text">三、Shell与指令：实验的用户态交互层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%AE%9E%E9%AA%8C%E6%A0%B8%E5%BF%83%E5%AE%9E%E6%93%8D%EF%BC%9A%E6%96%B0%E5%A2%9E%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8-%E5%AE%9E%E9%AA%8C%E4%B8%93%E5%B1%9E%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">4.</span> <span class="toc-text">四、系统调用实验核心实操：新增系统调用+实验专属知识点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E7%82%B9%E5%9B%9E%E9%A1%BE%EF%BC%88%E6%A0%B8%E5%BF%83%E8%AE%B0%E5%BF%86%E7%82%B9%EF%BC%89"><span class="toc-number">5.</span> <span class="toc-text">关键点回顾（核心记忆点）</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"前两章总结　| Ivan's Tech Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3/" title="上一篇: 系统调用正确理解">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/" title="下一篇: 第二章面经">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/01/22/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E4%B8%80%E5%A4%A9/">算法训练营第一天</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/01/21/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E8%B9%A6%E5%BA%8A%E9%A1%B5/">蹦床页</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/01/21/unbuntu%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%82%A8%E4%B8%8D%E8%B6%B3/">unbuntu系统存储不足</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/trap-c%E8%AF%A6%E8%A7%A3/">trap.c详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8%EF%BC%9Axv6-%E6%9E%81%E7%AE%80%E5%A4%84%E7%90%86-vs-%E7%9C%9F%E5%AE%9E-OS-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/">页面错误异常：xv6 极简处理 vs 真实 OS 的高级应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从内核空间陷入</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0/">xv6 系统调用参数处理：提取、校验与安全传输</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E4%B8%AD-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF/">xv6 中 exec 系统调用的完整调用链路</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/RISC-V%E9%99%B7%E5%85%A5%E6%9C%BA%E5%88%B6/">陷阱指令和系统调用 核心解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 exec 系统调用核心逻辑总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-sbrk-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%88%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E6%89%A9%E7%BC%A9%E5%AE%B9%EF%BC%89%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 sbrk 系统调用（进程内存扩缩容）核心逻辑总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 进程地址空间总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E9%87%8A%E6%94%BE%E6%9C%BA%E5%88%B6%E6%80%BB%E7%BB%93/">xv6 物理内存分配与释放机制总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E5%86%85%E6%A0%B8%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 内核地址空间总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/satp/">satp</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/copyin-copyout%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/">copyin/copyout详细介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3/">系统调用正确理解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/">xv6内核架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/">添加系统调用的过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/21/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0/">第二章</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">git使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2026 Ivan-FYF
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

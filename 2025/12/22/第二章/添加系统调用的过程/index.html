@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Ivan-FYF" />
+
+
+
+<meta name="description" content="详细介绍添加一个新系统调用的完整流程（我们仍以之前的trace系统调用为例，这样能和你之前的代码、问题紧密结合，更易理解）。 前置说明xv6是一个简化的类Unix内核，添加系统调用的核心是打通用户态程序到内核态函数的调用链路，整个过程需要修改内核的多个文件和用户态代码，且系统调用编号的一致性、内核&#x2F;用户态的接口匹配是关键。 以下步骤基于xv6-riscv（xv6-x86流程几乎一致，仅汇">
+<meta property="og:type" content="article">
+<meta property="og:title" content="添加系统调用的过程">
+<meta property="og:url" content="https://hellonnnnn.github.io/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Ivan&#39;s Tech Blog">
+<meta property="og:description" content="详细介绍添加一个新系统调用的完整流程（我们仍以之前的trace系统调用为例，这样能和你之前的代码、问题紧密结合，更易理解）。 前置说明xv6是一个简化的类Unix内核，添加系统调用的核心是打通用户态程序到内核态函数的调用链路，整个过程需要修改内核的多个文件和用户态代码，且系统调用编号的一致性、内核&#x2F;用户态的接口匹配是关键。 以下步骤基于xv6-riscv（xv6-x86流程几乎一致，仅汇">
+<meta property="og:locale">
+<meta property="article:published_time" content="2025-12-22T08:07:09.000Z">
+<meta property="article:modified_time" content="2025-12-22T09:25:29.568Z">
+<meta property="article:author" content="Ivan-FYF">
+<meta name="twitter:card" content="summary">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Ivan&#39;s Tech Blog" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>添加系统调用的过程 | Ivan&#39;s Tech Blog</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: 
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/"></a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-第二章/添加系统调用的过程" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/" class="article-date">
+      <time datetime="2025-12-22T08:07:09.000Z" itemprop="datePublished">2025-12-22</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      添加系统调用的过程
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p><strong>详细介绍添加一个新系统调用的完整流程</strong>（我们仍以之前的<code>trace</code>系统调用为例，这样能和你之前的代码、问题紧密结合，更易理解）。</p>
+<h3 id="前置说明"><a href="#前置说明" class="headerlink" title="前置说明"></a>前置说明</h3><p>xv6是一个简化的类Unix内核，添加系统调用的核心是打通<strong>用户态程序</strong>到<strong>内核态函数</strong>的调用链路，整个过程需要修改内核的多个文件和用户态代码，且<strong>系统调用编号的一致性</strong>、<strong>内核&#x2F;用户态的接口匹配</strong>是关键。</p>
+<p>以下步骤基于<strong>xv6-riscv</strong>（xv6-x86流程几乎一致，仅汇编语法略有差异）展开。</p>
+<hr>
+<h2 id="一、添加系统调用的完整步骤（以trace为例）"><a href="#一、添加系统调用的完整步骤（以trace为例）" class="headerlink" title="一、添加系统调用的完整步骤（以trace为例）"></a>一、添加系统调用的完整步骤（以<code>trace</code>为例）</h2><p>我们将整个过程分为<strong>8个核心步骤</strong>，每个步骤明确修改的文件、代码和原因：</p>
+<h3 id="步骤1：定义系统调用编号（关键：全局唯一）"><a href="#步骤1：定义系统调用编号（关键：全局唯一）" class="headerlink" title="步骤1：定义系统调用编号（关键：全局唯一）"></a>步骤1：定义系统调用编号（关键：全局唯一）</h3><p>系统调用编号是内核识别不同系统调用的“身份证”，需要在公共头文件中定义，确保内核和用户态都能访问。</p>
+<p><strong>修改文件</strong>：<code>kernel/syscall.h</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 首先看原有系统调用的编号，在最后添加新的编号（比如SYS_trace=22）</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SYS_fork    1</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SYS_exit    2</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SYS_wait    3</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SYS_pipe    4</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SYS_read    5</span></span><br><span class="line"><span class="comment">// ... 省略原有其他系统调用编号</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SYS_close   21</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SYS_trace   22  <span class="comment">// 新增：trace系统调用的编号（必须连续/唯一，不能重复）</span></span></span><br></pre></td></tr></table></figure>
+<p><strong>说明</strong>：xv6的系统调用编号从1开始（部分版本从0开始），需紧跟原有编号的最后一位，避免空缺或重复。</p>
+<h3 id="步骤2：修改进程结构体（按需：存储系统调用的上下文数据）"><a href="#步骤2：修改进程结构体（按需：存储系统调用的上下文数据）" class="headerlink" title="步骤2：修改进程结构体（按需：存储系统调用的上下文数据）"></a>步骤2：修改进程结构体（按需：存储系统调用的上下文数据）</h3><p><code>trace</code>系统调用需要将<strong>跟踪掩码</strong>存储到进程的结构体中，因此需要扩展<code>struct proc</code>。</p>
+<p><strong>修改文件</strong>：<code>kernel/proc.h</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">proc</span> &#123;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">thread_context</span> <span class="title">context</span>;</span>  <span class="comment">// 线程上下文（原有）</span></span><br><span class="line">  uint64 kstack;                  <span class="comment">// 内核栈地址（原有）</span></span><br><span class="line">  <span class="class"><span class="keyword">enum</span> <span class="title">procstate</span> <span class="title">state</span>;</span>           <span class="comment">// 进程状态（原有）</span></span><br><span class="line">  <span class="comment">// ... 省略其他原有成员</span></span><br><span class="line"></span><br><span class="line">  <span class="type">char</span> name[<span class="number">16</span>];                  <span class="comment">// 进程名（原有）</span></span><br><span class="line">  <span class="comment">// 新增：存储trace的位掩码（名称和你之前的kama_syscall_trace一致即可）</span></span><br><span class="line">  uint64 kama_syscall_trace;      </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><strong>说明</strong>：如果新系统调用不需要存储进程相关的持久数据（比如<code>getpid</code>只返回pid，无需存储），此步骤可跳过。</p>
+<h3 id="步骤3：声明系统调用函数原型（内核内的函数接口）"><a href="#步骤3：声明系统调用函数原型（内核内的函数接口）" class="headerlink" title="步骤3：声明系统调用函数原型（内核内的函数接口）"></a>步骤3：声明系统调用函数原型（内核内的函数接口）</h3><p>需要在头文件中声明内核态的系统调用实现函数，确保其他内核文件能调用。</p>
+<p><strong>修改文件</strong>：<code>kernel/syscall.h</code>（或新建<code>kernel/sys_trace.h</code>，推荐前者更简洁）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在syscall.h的末尾添加函数原型</span></span><br><span class="line">uint64 <span class="title function_">sys_trace</span><span class="params">(<span class="type">void</span>)</span>;  <span class="comment">// 声明sys_trace函数（返回值为uint64，无参数）</span></span><br></pre></td></tr></table></figure>
+<p><strong>说明</strong>：xv6的系统调用函数统一返回<code>uint64</code>类型，参数通过寄存器传递（而非函数参数）。</p>
+<h3 id="步骤4：实现内核态的系统调用函数（核心逻辑）"><a href="#步骤4：实现内核态的系统调用函数（核心逻辑）" class="headerlink" title="步骤4：实现内核态的系统调用函数（核心逻辑）"></a>步骤4：实现内核态的系统调用函数（核心逻辑）</h3><p>这是系统调用的<strong>功能实现部分</strong>，需要处理用户态传入的参数，并完成核心逻辑（比如<code>trace</code>的逻辑是获取掩码并设置到进程结构体中）。</p>
+<h4 id="子步骤4-1：创建-编写系统调用实现代码"><a href="#子步骤4-1：创建-编写系统调用实现代码" class="headerlink" title="子步骤4.1：创建&#x2F;编写系统调用实现代码"></a>子步骤4.1：创建&#x2F;编写系统调用实现代码</h4><p><strong>新建文件</strong>：<code>kernel/sys_trace.c</code>（也可写在<code>kernel/sysfile.c</code>等现有文件中，推荐单独文件更清晰）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 包含必要的头文件</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;types.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;proc.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;syscall.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;sysdefs.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 实现sys_trace函数：获取用户态传入的掩码，设置到当前进程的kama_syscall_trace</span></span><br><span class="line">uint64 <span class="title function_">sys_trace</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">  uint64 mask;  <span class="comment">// 存储用户态传入的掩码值</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 关键：从用户态获取参数（xv6提供了argint/argaddr等函数处理参数）</span></span><br><span class="line">  <span class="comment">// argaddr(0, &amp;mask)：获取第0个参数（用户态传入的第一个参数），存储到mask中</span></span><br><span class="line">  <span class="comment">// 如果参数获取失败，返回-1（错误码）</span></span><br><span class="line">  <span class="keyword">if</span> (argaddr(<span class="number">0</span>, &amp;mask) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 获取当前进程的结构体指针</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">proc</span> *<span class="title">p</span> =</span> myproc();</span><br><span class="line">  <span class="comment">// 将掩码设置到进程的kama_syscall_trace成员中</span></span><br><span class="line">  p-&gt;kama_syscall_trace = mask;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 返回0表示成功</span></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>关键函数说明</strong>：</p>
+<ul>
+<li><code>myproc()</code>：xv6提供的函数，返回当前正在执行的进程结构体指针。</li>
+<li><code>argaddr(n, &amp;val)</code>&#x2F;<code>argint(n, &amp;val)</code>：获取用户态传入的第<code>n</code>个参数（<code>argint</code>用于int类型，<code>argaddr</code>用于64位地址&#x2F;数值类型），失败返回-1。</li>
+</ul>
+<h4 id="子步骤4-2：修改Makefile（编译新的内核文件）"><a href="#子步骤4-2：修改Makefile（编译新的内核文件）" class="headerlink" title="子步骤4.2：修改Makefile（编译新的内核文件）"></a>子步骤4.2：修改Makefile（编译新的内核文件）</h4><p>如果新建了<code>sys_trace.c</code>，需要将其添加到内核编译列表中，否则编译器会忽略该文件。</p>
+<p><strong>修改文件</strong>：<code>kernel/Makefile</code></p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 找到OBJ变量，添加sys_trace.o</span></span><br><span class="line">OBJ = \</span><br><span class="line">  entry.o \</span><br><span class="line">  start.o \</span><br><span class="line">  main.o \</span><br><span class="line">  <span class="comment"># ... 省略其他原有.o文件</span></span><br><span class="line">  sys_trace.o \  <span class="comment"># 新增：添加sys_trace的目标文件</span></span><br><span class="line">  <span class="comment"># ... 其他文件</span></span><br></pre></td></tr></table></figure>
+<p><strong>说明</strong>：如果系统调用函数写在现有文件中（比如sysfile.c），此子步骤可跳过。</p>
+<h3 id="步骤5：更新系统调用表（内核的“系统调用映射表”）"><a href="#步骤5：更新系统调用表（内核的“系统调用映射表”）" class="headerlink" title="步骤5：更新系统调用表（内核的“系统调用映射表”）"></a>步骤5：更新系统调用表（内核的“系统调用映射表”）</h3><p>xv6通过一个函数指针数组<code>syscalls</code>来映射系统调用编号和对应的实现函数，必须将新系统调用添加到这个数组中，否则内核无法找到函数实现。</p>
+<p><strong>修改文件</strong>：<code>kernel/syscall.c</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 首先声明syscalls数组和sys_trace函数（如果未包含头文件，需手动声明）</span></span><br><span class="line"><span class="keyword">extern</span> <span class="title function_">uint64</span> <span class="params">(*syscalls[])</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"><span class="keyword">extern</span> uint64 <span class="title function_">sys_trace</span><span class="params">(<span class="type">void</span>)</span>;  <span class="comment">// 声明sys_trace函数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 定义系统调用函数指针数组（关键：编号要和syscall.h中的一致）</span></span><br><span class="line"><span class="type">static</span> <span class="title function_">uint64</span> <span class="params">(*syscalls[])</span><span class="params">(<span class="type">void</span>)</span> = &#123;</span><br><span class="line">  [SYS_fork]    sys_fork,</span><br><span class="line">  [SYS_exit]    sys_exit,</span><br><span class="line">  [SYS_wait]    sys_wait,</span><br><span class="line">  <span class="comment">// ... 省略其他原有系统调用的映射</span></span><br><span class="line">  [SYS_close]   sys_close,</span><br><span class="line">  [SYS_trace]   sys_trace,  <span class="comment">// 新增：映射SYS_trace到sys_trace函数</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. （可选，结合你之前的需求）更新系统调用名称数组（用于打印）</span></span><br><span class="line"><span class="type">const</span> <span class="type">char</span> *kama_syscall_names[] = &#123;</span><br><span class="line">  [SYS_fork]    <span class="string">&quot;fork&quot;</span>,</span><br><span class="line">  [SYS_exit]    <span class="string">&quot;exit&quot;</span>,</span><br><span class="line">  <span class="comment">// ... 省略其他原有名称</span></span><br><span class="line">  [SYS_close]   <span class="string">&quot;close&quot;</span>,</span><br><span class="line">  [SYS_trace]   <span class="string">&quot;trace&quot;</span>,  <span class="comment">// 新增：添加trace的名称</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><strong>说明</strong>：数组的下标必须和<code>syscall.h</code>中定义的系统调用编号完全一致，否则内核会调用错误的函数。</p>
+<h3 id="步骤6：添加用户态的系统调用封装（用户程序的调用接口）"><a href="#步骤6：添加用户态的系统调用封装（用户程序的调用接口）" class="headerlink" title="步骤6：添加用户态的系统调用封装（用户程序的调用接口）"></a>步骤6：添加用户态的系统调用封装（用户程序的调用接口）</h3><p>用户态程序无法直接调用内核态函数，需要通过<strong>汇编指令</strong>触发系统调用（ecall），xv6提供了<code>usys.S</code>文件来封装这些汇编逻辑，同时在<code>user.h</code>中提供C语言的函数声明，让用户程序可以像调用普通函数一样调用系统调用。</p>
+<h4 id="子步骤6-1：添加汇编封装（触发系统调用）"><a href="#子步骤6-1：添加汇编封装（触发系统调用）" class="headerlink" title="子步骤6.1：添加汇编封装（触发系统调用）"></a>子步骤6.1：添加汇编封装（触发系统调用）</h4><p><strong>修改文件</strong>：<code>user/usys.S</code>（xv6-riscv）或<code>user/usys.pl</code>（xv6-x86）, 本实验修改usys.pl的entry</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># xv6-riscv的usys.S语法：通过ecall指令触发系统调用</span><br><span class="line"># 格式：</span><br><span class="line"># global 函数名</span><br><span class="line"># 函数名:</span><br><span class="line">#   li a7, 系统调用编号</span><br><span class="line">#   ecall</span><br><span class="line">#   ret</span><br><span class="line"></span><br><span class="line"># 新增：trace的汇编封装</span><br><span class="line">global trace</span><br><span class="line">trace:</span><br><span class="line">  li a7, SYS_trace  # 将SYS_trace编号加载到a7寄存器（xv6约定用a7存储系统调用编号）</span><br><span class="line">  ecall             # 触发系统调用，进入内核态</span><br><span class="line">  ret               # 返回用户态</span><br></pre></td></tr></table></figure>
+<p><strong>说明</strong>：</p>
+<ul>
+<li>xv6约定：系统调用编号存储在<code>a7</code>寄存器（riscv）&#x2F;<code>eax</code>寄存器（x86），参数存储在<code>a0-a5</code>寄存器。</li>
+<li><code>ecall</code>（riscv）&#x2F;<code>int 0x80</code>（x86）是触发系统调用的指令，会从用户态切换到内核态。</li>
+</ul>
+<h4 id="子步骤6-2：添加用户态函数声明"><a href="#子步骤6-2：添加用户态函数声明" class="headerlink" title="子步骤6.2：添加用户态函数声明"></a>子步骤6.2：添加用户态函数声明</h4><p><strong>修改文件</strong>：<code>user/user.h</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在user.h中添加trace函数的声明，让用户程序可以调用</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">trace</span><span class="params">(<span class="type">int</span>)</span>;  <span class="comment">// 声明trace函数（参数为掩码，返回值为0表示成功，-1表示失败）</span></span><br></pre></td></tr></table></figure>
+<p><strong>说明</strong>：函数的参数和返回值类型要和内核态的实现逻辑匹配（比如<code>trace</code>的参数是掩码，类型为int&#x2F;uint64）。</p>
+<h3 id="步骤7：实现用户态的应用程序（测试新系统调用）"><a href="#步骤7：实现用户态的应用程序（测试新系统调用）" class="headerlink" title="步骤7：实现用户态的应用程序（测试新系统调用）"></a>步骤7：实现用户态的应用程序（测试新系统调用）</h3><p>编写一个用户态程序（比如<code>trace.c</code>），调用新的<code>trace</code>系统调用，完成功能测试。</p>
+<p><strong>新建文件</strong>：<code>user/trace.c</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;kernel/types.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;kernel/stat.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;user/user.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span> &#123;</span><br><span class="line">  <span class="type">int</span> mask;</span><br><span class="line">  <span class="type">char</span> *cmd;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 检查参数：trace mask command [args...]</span></span><br><span class="line">  <span class="keyword">if</span> (argc &lt; <span class="number">3</span>) &#123;</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="number">2</span>, <span class="string">&quot;usage: trace mask command [args...]\n&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 解析掩码参数（将字符串转换为整数）</span></span><br><span class="line">  mask = atoi(argv[<span class="number">1</span>]);</span><br><span class="line">  cmd = argv[<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 调用trace系统调用，设置掩码</span></span><br><span class="line">  trace(mask);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 执行指定的命令（比如grep hello README）</span></span><br><span class="line">  exec(cmd, &amp;argv[<span class="number">2</span>]);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 如果exec失败，打印错误信息</span></span><br><span class="line">  <span class="built_in">fprintf</span>(<span class="number">2</span>, <span class="string">&quot;trace: exec %s failed\n&quot;</span>, cmd);</span><br><span class="line">  <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>说明</strong>：</p>
+<ul>
+<li><code>exec(cmd, &amp;argv[2])</code>：执行指定的命令，是xv6中执行外部程序的核心函数。</li>
+<li><code>fprintf(2, ...)</code>：向标准错误输出打印信息（2是标准错误的文件描述符）。</li>
+</ul>
+<h3 id="步骤8：修改Makefile（编译用户态程序）"><a href="#步骤8：修改Makefile（编译用户态程序）" class="headerlink" title="步骤8：修改Makefile（编译用户态程序）"></a>步骤8：修改Makefile（编译用户态程序）</h3><p>将新的用户态程序<code>trace</code>添加到编译列表中，确保xv6启动时能加载该程序。</p>
+<p><strong>修改文件</strong>：<code>Makefile</code>（根目录的Makefile）</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 找到UPROGS变量，添加_trace（前缀下划线是xv6的约定）</span></span><br><span class="line">UPROGS = \</span><br><span class="line">  _cat \</span><br><span class="line">  _echo \</span><br><span class="line">  _grep \</span><br><span class="line">  <span class="comment"># ... 省略其他原有用户程序</span></span><br><span class="line">  _trace \  <span class="comment"># 新增：添加trace程序</span></span><br><span class="line">  <span class="comment"># ... 其他程序</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="二、编译并测试新系统调用"><a href="#二、编译并测试新系统调用" class="headerlink" title="二、编译并测试新系统调用"></a>二、编译并测试新系统调用</h2><p>完成以上步骤后，执行以下命令编译并运行xv6：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 清理旧的编译文件</span></span><br><span class="line">make clean</span><br><span class="line"><span class="comment"># 编译并运行xv6（qemu模拟器）</span></span><br><span class="line">make qemu</span><br></pre></td></tr></table></figure>
+<p>在xv6的终端中执行测试命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># trace 32 grep hello README（32=1&lt;&lt;5，对应SYS_kill的编号）</span></span><br><span class="line">trace 32 grep hello README</span><br></pre></td></tr></table></figure>
+<p>此时，内核会跟踪<code>grep</code>进程的<code>kill</code>系统调用，并打印对应的信息，不再出现之前的乱码和编译错误。</p>
+<hr>
+<h3 id="xv6系统调用的完整流程（以trace为例）"><a href="#xv6系统调用的完整流程（以trace为例）" class="headerlink" title="xv6系统调用的完整流程（以trace为例）"></a>xv6系统调用的完整流程（以<code>trace</code>为例）</h3><ol>
+<li><p><strong>用户程序调用系统调用封装函数</strong><br>用户程序（如<code>trace</code>）中调用<code>trace(mask)</code>——这个函数是<code>user.h</code>中声明的接口，实际对应<code>usys.S</code>里的<strong>汇编存根</strong>（由<code>usys.pl</code>自动生成）。</p>
+</li>
+<li><p><strong>汇编存根触发特权级切换（陷入内核）</strong><br>汇编存根中执行两个关键操作：</p>
+<ul>
+<li>将系统调用编号（如<code>SYS_trace</code>）存入<code>a7</code>寄存器；</li>
+<li>执行<code>ecall</code>指令——这是RISC-V的“环境调用”指令，会直接触发<strong>特权级切换</strong>（从用户态切换到内核态），同时跳转到内核预设的异常处理入口。</li>
+</ul>
+</li>
+<li><p><strong>内核trap处理程序接管</strong><br>内核的<code>trap</code>处理函数（<code>kernel/trap.c</code>中的<code>trap()</code>）会：</p>
+<ul>
+<li>将用户态的所有寄存器（包括<code>a0~a7</code>，即参数和系统调用号）保存到当前进程的<strong>trapframe</strong>（进程结构体的成员）中；</li>
+<li>判断陷阱类型为“系统调用”后，调用<code>syscall()</code>函数处理。</li>
+</ul>
+</li>
+<li><p><strong>通过syscalls数组查表，执行系统调用函数</strong><br><code>syscall()</code>函数的核心逻辑：</p>
+<ul>
+<li>从trapframe中读取<code>a7</code>寄存器的值（即系统调用编号）；</li>
+<li>以编号为下标，在<code>syscalls</code>数组（内核维护的“系统调用号→函数指针”映射表）中找到对应的内核函数（如<code>SYS_trace</code>对应<code>sys_trace()</code>）；</li>
+<li>调用该内核函数，同时通过<code>arg</code>系列函数（如<code>argaddr()</code>）从trapframe的<code>a0~a5</code>中提取用户态参数。</li>
+</ul>
+</li>
+<li><p><strong>执行内核函数，返回结果</strong><br>内核函数（如<code>sys_trace()</code>）完成逻辑后，将返回值存入trapframe的<code>a0</code>寄存器（用户态的返回值寄存器）。</p>
+</li>
+<li><p><strong>恢复用户态上下文，返回用户程序</strong><br>内核<code>trap</code>处理程序恢复trapframe中保存的用户态寄存器，执行<code>sret</code>指令（RISC-V的“从异常返回”指令），回到用户程序的汇编存根；汇编存根执行<code>ret</code>指令，回到用户程序的调用点，用户程序从<code>a0</code>中读取返回值，继续执行。</p>
+</li>
+</ol>
+<h3 id="总结：系统调用的核心链路"><a href="#总结：系统调用的核心链路" class="headerlink" title="总结：系统调用的核心链路"></a>总结：系统调用的核心链路</h3><p><code>用户程序调用系统调用接口 → 汇编存根执行ecall → 陷入内核（trap处理） → syscalls查表执行内核函数 → 保存返回值 → sret回到用户态 → 用户程序获取返回值</code></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/">添加系统调用的过程</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页"></a></p>
+        <p><span>发布时间:</span>2025-12-22, 16:07:09</p>
+        <p><span>最后更新:</span>2025-12-22, 17:25:29</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/" title="添加系统调用的过程">https://hellonnnnn.github.io/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://hellonnnnn.github.io/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/　　作者: " title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/">
+                    xv6内核架构
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2025/12/21/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0/">
+                    第二章
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E8%AF%B4%E6%98%8E"><span class="toc-number">1.</span> <span class="toc-text">前置说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E6%AD%A5%E9%AA%A4%EF%BC%88%E4%BB%A5trace%E4%B8%BA%E4%BE%8B%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">一、添加系统调用的完整步骤（以trace为例）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A41%EF%BC%9A%E5%AE%9A%E4%B9%89%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%BC%96%E5%8F%B7%EF%BC%88%E5%85%B3%E9%94%AE%EF%BC%9A%E5%85%A8%E5%B1%80%E5%94%AF%E4%B8%80%EF%BC%89"><span class="toc-number">2.1.</span> <span class="toc-text">步骤1：定义系统调用编号（关键：全局唯一）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A42%EF%BC%9A%E4%BF%AE%E6%94%B9%E8%BF%9B%E7%A8%8B%E7%BB%93%E6%9E%84%E4%BD%93%EF%BC%88%E6%8C%89%E9%9C%80%EF%BC%9A%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E6%95%B0%E6%8D%AE%EF%BC%89"><span class="toc-number">2.2.</span> <span class="toc-text">步骤2：修改进程结构体（按需：存储系统调用的上下文数据）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A43%EF%BC%9A%E5%A3%B0%E6%98%8E%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B%EF%BC%88%E5%86%85%E6%A0%B8%E5%86%85%E7%9A%84%E5%87%BD%E6%95%B0%E6%8E%A5%E5%8F%A3%EF%BC%89"><span class="toc-number">2.3.</span> <span class="toc-text">步骤3：声明系统调用函数原型（内核内的函数接口）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A44%EF%BC%9A%E5%AE%9E%E7%8E%B0%E5%86%85%E6%A0%B8%E6%80%81%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%87%BD%E6%95%B0%EF%BC%88%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%EF%BC%89"><span class="toc-number">2.4.</span> <span class="toc-text">步骤4：实现内核态的系统调用函数（核心逻辑）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%90%E6%AD%A5%E9%AA%A44-1%EF%BC%9A%E5%88%9B%E5%BB%BA-%E7%BC%96%E5%86%99%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%AE%9E%E7%8E%B0%E4%BB%A3%E7%A0%81"><span class="toc-number">2.4.1.</span> <span class="toc-text">子步骤4.1：创建&#x2F;编写系统调用实现代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%90%E6%AD%A5%E9%AA%A44-2%EF%BC%9A%E4%BF%AE%E6%94%B9Makefile%EF%BC%88%E7%BC%96%E8%AF%91%E6%96%B0%E7%9A%84%E5%86%85%E6%A0%B8%E6%96%87%E4%BB%B6%EF%BC%89"><span class="toc-number">2.4.2.</span> <span class="toc-text">子步骤4.2：修改Makefile（编译新的内核文件）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A45%EF%BC%9A%E6%9B%B4%E6%96%B0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E8%A1%A8%EF%BC%88%E5%86%85%E6%A0%B8%E7%9A%84%E2%80%9C%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%98%A0%E5%B0%84%E8%A1%A8%E2%80%9D%EF%BC%89"><span class="toc-number">2.5.</span> <span class="toc-text">步骤5：更新系统调用表（内核的“系统调用映射表”）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A46%EF%BC%9A%E6%B7%BB%E5%8A%A0%E7%94%A8%E6%88%B7%E6%80%81%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%B0%81%E8%A3%85%EF%BC%88%E7%94%A8%E6%88%B7%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%B0%83%E7%94%A8%E6%8E%A5%E5%8F%A3%EF%BC%89"><span class="toc-number">2.6.</span> <span class="toc-text">步骤6：添加用户态的系统调用封装（用户程序的调用接口）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%90%E6%AD%A5%E9%AA%A46-1%EF%BC%9A%E6%B7%BB%E5%8A%A0%E6%B1%87%E7%BC%96%E5%B0%81%E8%A3%85%EF%BC%88%E8%A7%A6%E5%8F%91%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%89"><span class="toc-number">2.6.1.</span> <span class="toc-text">子步骤6.1：添加汇编封装（触发系统调用）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%90%E6%AD%A5%E9%AA%A46-2%EF%BC%9A%E6%B7%BB%E5%8A%A0%E7%94%A8%E6%88%B7%E6%80%81%E5%87%BD%E6%95%B0%E5%A3%B0%E6%98%8E"><span class="toc-number">2.6.2.</span> <span class="toc-text">子步骤6.2：添加用户态函数声明</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A47%EF%BC%9A%E5%AE%9E%E7%8E%B0%E7%94%A8%E6%88%B7%E6%80%81%E7%9A%84%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%EF%BC%88%E6%B5%8B%E8%AF%95%E6%96%B0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%89"><span class="toc-number">2.7.</span> <span class="toc-text">步骤7：实现用户态的应用程序（测试新系统调用）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A48%EF%BC%9A%E4%BF%AE%E6%94%B9Makefile%EF%BC%88%E7%BC%96%E8%AF%91%E7%94%A8%E6%88%B7%E6%80%81%E7%A8%8B%E5%BA%8F%EF%BC%89"><span class="toc-number">2.8.</span> <span class="toc-text">步骤8：修改Makefile（编译用户态程序）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%BC%96%E8%AF%91%E5%B9%B6%E6%B5%8B%E8%AF%95%E6%96%B0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">二、编译并测试新系统调用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#xv6%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BB%A5trace%E4%B8%BA%E4%BE%8B%EF%BC%89"><span class="toc-number">3.1.</span> <span class="toc-text">xv6系统调用的完整流程（以trace为例）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E6%A0%B8%E5%BF%83%E9%93%BE%E8%B7%AF"><span class="toc-number">3.2.</span> <span class="toc-text">总结：系统调用的核心链路</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"添加系统调用的过程　| Ivan's Tech Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/" title="上一篇: xv6内核架构">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2025/12/21/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0/" title="下一篇: 第二章">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/01/22/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E4%B8%80%E5%A4%A9/">算法训练营第一天</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/01/21/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E8%B9%A6%E5%BA%8A%E9%A1%B5/">蹦床页</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/01/21/unbuntu%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%82%A8%E4%B8%8D%E8%B6%B3/">unbuntu系统存储不足</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/trap-c%E8%AF%A6%E8%A7%A3/">trap.c详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8%EF%BC%9Axv6-%E6%9E%81%E7%AE%80%E5%A4%84%E7%90%86-vs-%E7%9C%9F%E5%AE%9E-OS-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/">页面错误异常：xv6 极简处理 vs 真实 OS 的高级应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从内核空间陷入</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0/">xv6 系统调用参数处理：提取、校验与安全传输</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E4%B8%AD-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF/">xv6 中 exec 系统调用的完整调用链路</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/RISC-V%E9%99%B7%E5%85%A5%E6%9C%BA%E5%88%B6/">陷阱指令和系统调用 核心解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 exec 系统调用核心逻辑总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-sbrk-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%88%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E6%89%A9%E7%BC%A9%E5%AE%B9%EF%BC%89%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 sbrk 系统调用（进程内存扩缩容）核心逻辑总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 进程地址空间总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E9%87%8A%E6%94%BE%E6%9C%BA%E5%88%B6%E6%80%BB%E7%BB%93/">xv6 物理内存分配与释放机制总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E5%86%85%E6%A0%B8%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 内核地址空间总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/satp/">satp</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/copyin-copyout%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/">copyin/copyout详细介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3/">系统调用正确理解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/">xv6内核架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/">添加系统调用的过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/21/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0/">第二章</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">git使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2026 Ivan-FYF
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Ivan-FYF" />
+
+
+
+<meta name="description" content="内容总结这段聊天围绕“系统调用的匹配机制”展开：  用户iris分享了腾讯一面的问题：系统调用如何确定对应关系、是否仅依赖系统调用号； 用户“焕、心”回应：内核通过维护系统调用号表实现匹配，并给出系统调用的核心流程（用户态调用库函数→切换至内核态（保存用户态状态）→通过系统调用号查表调用对应函数→返回用户态），同时邀请加入操作系统内核答疑群。  面试问题的深层细节解析该面试问题的核心是“系统调用的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第二章面经">
+<meta property="og:url" content="https://hellonnnnn.github.io/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/index.html">
+<meta property="og:site_name" content="Ivan&#39;s Tech Blog">
+<meta property="og:description" content="内容总结这段聊天围绕“系统调用的匹配机制”展开：  用户iris分享了腾讯一面的问题：系统调用如何确定对应关系、是否仅依赖系统调用号； 用户“焕、心”回应：内核通过维护系统调用号表实现匹配，并给出系统调用的核心流程（用户态调用库函数→切换至内核态（保存用户态状态）→通过系统调用号查表调用对应函数→返回用户态），同时邀请加入操作系统内核答疑群。  面试问题的深层细节解析该面试问题的核心是“系统调用的">
+<meta property="og:locale">
+<meta property="article:published_time" content="2025-12-22T11:20:08.000Z">
+<meta property="article:modified_time" content="2025-12-22T13:50:03.090Z">
+<meta property="article:author" content="Ivan-FYF">
+<meta name="twitter:card" content="summary">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Ivan&#39;s Tech Blog" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>第二章面经 | Ivan&#39;s Tech Blog</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: 
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/"></a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-第二章/第二章面经" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/" class="article-date">
+      <time datetime="2025-12-22T11:20:08.000Z" itemprop="datePublished">2025-12-22</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      第二章面经
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h3 id="内容总结"><a href="#内容总结" class="headerlink" title="内容总结"></a>内容总结</h3><p>这段聊天围绕“系统调用的匹配机制”展开：</p>
+<ul>
+<li>用户iris分享了腾讯一面的问题：系统调用如何确定对应关系、是否仅依赖系统调用号；</li>
+<li>用户“焕、心”回应：内核通过维护系统调用号表实现匹配，并给出系统调用的核心流程（用户态调用库函数→切换至内核态（保存用户态状态）→通过系统调用号查表调用对应函数→返回用户态），同时邀请加入操作系统内核答疑群。</li>
+</ul>
+<h3 id="面试问题的深层细节解析"><a href="#面试问题的深层细节解析" class="headerlink" title="面试问题的深层细节解析"></a>面试问题的深层细节解析</h3><p>该面试问题的核心是“系统调用的匹配并非仅依赖系统调用号，而是‘号+映射表+特权链路+合法性校验’的组合机制”，以xv6（你之前讨论的系统）为例：</p>
+<ol>
+<li><strong>核心标识：系统调用号</strong><br>系统调用号是唯一标识（如xv6中<code>SYS_trace</code>对应编号22），是匹配的基础。</li>
+<li><strong>映射载体：系统调用号表</strong><br>内核维护“系统调用号-函数指针”映射表（如xv6的<code>syscalls</code>数组），号作为数组下标直接映射到对应处理函数（如<code>SYS_trace</code>对应<code>sys_trace</code>函数）。</li>
+<li><strong>特权链路保障匹配有效性</strong><br>用户态无法直接访问内核函数，需通过汇编存根（如xv6的<code>usys.S</code>）触发<code>ecall</code>指令切换至内核态；内核的trap处理程序会读取寄存器（如RISC-V的<code>a7</code>）中的系统调用号，再通过号表查表匹配。</li>
+<li><strong>合法性校验避免错误</strong><br>内核会校验系统调用号的合法性（如xv6中检查<code>num &lt; NELEM(syscalls)</code>），防止非法编号导致的内存越界或错误调用。</li>
+</ol>
+<hr>
+<p>其实针对<strong>xv6系统调用</strong>以及<strong>操作系统中系统调用的核心考点</strong>，我们已经覆盖了<strong>绝大部分面试高频问题</strong>（尤其是校招&#x2F;初级内核岗、嵌入式岗的面试）。不过面试中还会有一些**更偏向“综合对比”“底层原理延伸”“场景分析”**的问题，我帮你梳理一下：</p>
+<h3 id="一、已经完全覆盖的面试高频考点（对应我们聊过的内容）"><a href="#一、已经完全覆盖的面试高频考点（对应我们聊过的内容）" class="headerlink" title="一、已经完全覆盖的面试高频考点（对应我们聊过的内容）"></a>一、已经完全覆盖的面试高频考点（对应我们聊过的内容）</h3><p>这些都是面试中大概率会问到的，且我们已经掰开揉碎聊过了：</p>
+<table>
+<thead>
+<tr>
+<th>面试高频问题</th>
+<th>对应我们聊过的内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>xv6中系统调用的完整流程？</td>
+<td>用户态封装（usys.pl生成的汇编存根）→ecall→内核trap处理→syscall()分发→sys_xxx→核心函数→返回</td>
+</tr>
+<tr>
+<td>sys_xxx和xxx（如sys_exec和exec）的区别？</td>
+<td>分层结构：sys_xxx是入口（参数解析），xxx是核心逻辑（功能实现），sys_xxx调用xxx</td>
+</tr>
+<tr>
+<td>用户态如何传递参数给内核？</td>
+<td>RISC-V寄存器（a0-a5传参数，a7传系统调用号）+copyin&#x2F;copyout（数据拷贝）+argint&#x2F;argstr等封装</td>
+</tr>
+<tr>
+<td>为什么需要copyin&#x2F;copyout？</td>
+<td>地址空间隔离，内核不能直接访问用户态地址，且校验地址合法性，防止内核崩溃&#x2F;安全漏洞</td>
+</tr>
+<tr>
+<td>你如何在xv6中添加一个系统调用（如trace&#x2F;sysinfo）？</td>
+<td>四步：usys.pl加entry→定义系统调用号→实现sys_xxx→添加到分发表</td>
+</tr>
+<tr>
+<td>trace系统调用的实现思路？</td>
+<td>进程级掩码（proc结构体加字段）+sys_trace设置掩码+syscall()函数后置检查掩码并打印日志</td>
+</tr>
+<tr>
+<td>系统调用和中断的区别？</td>
+<td>系统调用是用户态主动触发的trap（ecall），中断是硬件被动触发的（如时钟）</td>
+</tr>
+<tr>
+<td>usys.pl的作用是什么？</td>
+<td>自动生成用户态系统调用的汇编存根，避免手动编写重复的ecall指令代码</td>
+</tr>
+<tr>
+<td>系统调用的返回值如何传递？</td>
+<td>内核写入trapframe的a0寄存器，用户态从a0获取</td>
+</tr>
+</tbody></table>
+<h3 id="二、面试中还可能问到的补充考点（偏延伸-综合，我们聊过但未展开）"><a href="#二、面试中还可能问到的补充考点（偏延伸-综合，我们聊过但未展开）" class="headerlink" title="二、面试中还可能问到的补充考点（偏延伸&#x2F;综合，我们聊过但未展开）"></a>二、面试中还可能问到的<strong>补充考点</strong>（偏延伸&#x2F;综合，我们聊过但未展开）</h3><p>这些问题是面试中“拔高”的点，需要结合原理做简要回答：</p>
+<h4 id="1-xv6中系统调用的陷阱（Trap）处理细节？（高频延伸题）"><a href="#1-xv6中系统调用的陷阱（Trap）处理细节？（高频延伸题）" class="headerlink" title="1. xv6中系统调用的陷阱（Trap）处理细节？（高频延伸题）"></a>1. <strong>xv6中系统调用的陷阱（Trap）处理细节？</strong>（高频延伸题）</h4><p><strong>核心回答思路</strong>（我们之前提到过trap，但未展开流程）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1. 用户态执行ecall指令，CPU自动切换到内核态（S-mode），并跳转到内核预设的陷阱入口（trapvec，在kernel/trampoline.S中）；</span><br><span class="line">2. 保存用户态的寄存器到进程的trapframe（包括a0-a7、epc等）；</span><br><span class="line">3. 调用kernel/trap.c中的trap()函数，判断陷阱类型：</span><br><span class="line">   - 如果是ecall（系统调用），则调用syscall()函数处理；</span><br><span class="line">   - 如果是页故障/非法指令，則处理异常；</span><br><span class="line">4. 处理完成后，恢复用户态寄存器，执行sret指令回到用户态，从epc指向的下一条指令继续执行。</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-系统调用和普通函数调用的本质区别？（通用OS面试题）"><a href="#2-系统调用和普通函数调用的本质区别？（通用OS面试题）" class="headerlink" title="2. 系统调用和普通函数调用的本质区别？（通用OS面试题）"></a>2. <strong>系统调用和普通函数调用的本质区别？</strong>（通用OS面试题）</h4><p><strong>核心回答思路</strong>：</p>
+<ul>
+<li><strong>执行权限</strong>：普通函数调用在用户态执行，系统调用会切换到内核态（特权级提升）；</li>
+<li><strong>调用方式</strong>：普通函数调用是call指令（跳转到函数地址），系统调用是ecall指令（触发陷阱）；</li>
+<li><strong>地址空间</strong>：普通函数调用在同一地址空间，系统调用涉及用户&#x2F;内核地址空间切换；</li>
+<li><strong>开销</strong>：系统调用有上下文切换、地址转换的开销，比普通函数调用慢1-2个数量级。</li>
+</ul>
+<h4 id="3-xv6中如果用户传入非法的系统调用号，内核会如何处理？（场景题）"><a href="#3-xv6中如果用户传入非法的系统调用号，内核会如何处理？（场景题）" class="headerlink" title="3. xv6中如果用户传入非法的系统调用号，内核会如何处理？（场景题）"></a>3. <strong>xv6中如果用户传入非法的系统调用号，内核会如何处理？</strong>（场景题）</h4><p><strong>核心回答思路</strong>（对应我们聊过的syscall()函数逻辑）：</p>
+<ul>
+<li>内核在syscall()函数中会检查：<code>num &gt; 0 &amp;&amp; num &lt; NELEM(syscalls) &amp;&amp; syscalls[num]</code>；</li>
+<li>如果不满足（非法号），则打印错误日志（<code>unknown sys call</code>），并将trapframe-&gt;a0设为-1返回；</li>
+<li>这样用户态会收到-1的返回值，知道系统调用失败。</li>
+</ul>
+<h4 id="4-xv6中系统调用的进程上下文是什么？（内核岗高频题）"><a href="#4-xv6中系统调用的进程上下文是什么？（内核岗高频题）" class="headerlink" title="4. xv6中系统调用的进程上下文是什么？（内核岗高频题）"></a>4. <strong>xv6中系统调用的进程上下文是什么？</strong>（内核岗高频题）</h4><p><strong>核心回答思路</strong>：</p>
+<ul>
+<li>系统调用执行时，内核处于<strong>当前进程的上下文</strong>中：可以访问当前进程的proc结构体、trapframe、用户页表；</li>
+<li>因此sys_getpid能直接返回myproc()-&gt;pid，sys_trace能直接修改当前进程的掩码字段；</li>
+<li>内核不能直接访问其他进程的资源，除非通过进程表遍历（如sys_kill）。</li>
+</ul>
+<h4 id="5-为什么xv6的系统调用参数最多6个？（架构相关题）"><a href="#5-为什么xv6的系统调用参数最多6个？（架构相关题）" class="headerlink" title="5. 为什么xv6的系统调用参数最多6个？（架构相关题）"></a>5. <strong>为什么xv6的系统调用参数最多6个？</strong>（架构相关题）</h4><p><strong>核心回答思路</strong>：</p>
+<ul>
+<li>因为RISC-V架构规定，系统调用的参数通过a0-a5寄存器传递（共6个）；</li>
+<li>如果需要传递更多参数，需要将参数打包成结构体，通过指针传递（如sys_exec的argv），再用copyin解析。</li>
+</ul>
+<h3 id="三、面试中还可能问到的通用OS系统调用考点（超出xv6，但面试常问）"><a href="#三、面试中还可能问到的通用OS系统调用考点（超出xv6，但面试常问）" class="headerlink" title="三、面试中还可能问到的通用OS系统调用考点（超出xv6，但面试常问）"></a>三、面试中还可能问到的<strong>通用OS系统调用考点</strong>（超出xv6，但面试常问）</h3><p>如果面试涉及Linux等主流系统，还会问这些（可以简单了解思路）：</p>
+<ol>
+<li><strong>Linux中的系统调用是如何实现的？</strong>（和xv6的区别：x86用int 0x80&#x2F;syscall指令，RISC-V用ecall；Linux有vDSO优化）</li>
+<li><strong>什么是vDSO？为什么要引入？</strong>（虚拟动态共享对象，把部分系统调用（如gettimeofday）放到用户态执行，减少上下文切换开销，xv6没有但面试常问）</li>
+<li><strong>系统调用的性能优化手段有哪些？</strong>（批量操作（如write缓冲）、vDSO、减少拷贝（如零拷贝sendfile））</li>
+<li><strong>Linux中系统调用的返回值为什么通常是-1表示失败，而不是0？</strong>（因为0是合法的返回值（如write返回写入的字节数），用-1表示失败，再通过errno存错误码）</li>
+</ol>
+<h3 id="四、面试答题小技巧（结合我们聊的xv6）"><a href="#四、面试答题小技巧（结合我们聊的xv6）" class="headerlink" title="四、面试答题小技巧（结合我们聊的xv6）"></a>四、面试答题小技巧（结合我们聊的xv6）</h3><p>面试中回答问题时，<strong>尽量结合xv6的实际实现举例</strong>，会比泛泛而谈更有说服力：</p>
+<ul>
+<li>比如被问“用户态和内核态如何交互数据”，不要只说“用copyin&#x2F;copyout”，还要补充“比如我在实现sys_sysinfo时，就是先填充内核态的sysinfo结构体，再用copyout拷贝到用户态地址”；</li>
+<li>被问“如何添加系统调用”，可以说“我在xv6中实现trace系统调用时，分了四步：首先在usys.pl中添加entry，然后定义SYS_trace，实现sys_trace函数，最后添加到syscalls数组”。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>如果面试的是<strong>xv6相关的操作系统岗、嵌入式岗、校招OS方向</strong>，我们聊过的内容已经<strong>完全覆盖了核心考点</strong>，甚至超出了基础要求（比如copyin的逐页转换、trace的进程级掩码）；如果是面试<strong>Linux内核岗</strong>，只需要补充上述几个通用考点即可。</p>
+<p>你可以放心，现在你对xv6系统调用的理解深度，应对面试已经足够了～</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页"></a></p>
+        <p><span>发布时间:</span>2025-12-22, 19:20:08</p>
+        <p><span>最后更新:</span>2025-12-22, 21:50:03</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/" title="第二章面经">https://hellonnnnn.github.io/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://hellonnnnn.github.io/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/　　作者: " title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">
+                    前两章总结
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">
+                    shell的运行过程
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AE%B9%E6%80%BB%E7%BB%93"><span class="toc-number">1.</span> <span class="toc-text">内容总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%A2%E8%AF%95%E9%97%AE%E9%A2%98%E7%9A%84%E6%B7%B1%E5%B1%82%E7%BB%86%E8%8A%82%E8%A7%A3%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">面试问题的深层细节解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%B7%B2%E7%BB%8F%E5%AE%8C%E5%85%A8%E8%A6%86%E7%9B%96%E7%9A%84%E9%9D%A2%E8%AF%95%E9%AB%98%E9%A2%91%E8%80%83%E7%82%B9%EF%BC%88%E5%AF%B9%E5%BA%94%E6%88%91%E4%BB%AC%E8%81%8A%E8%BF%87%E7%9A%84%E5%86%85%E5%AE%B9%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">一、已经完全覆盖的面试高频考点（对应我们聊过的内容）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E9%9D%A2%E8%AF%95%E4%B8%AD%E8%BF%98%E5%8F%AF%E8%83%BD%E9%97%AE%E5%88%B0%E7%9A%84%E8%A1%A5%E5%85%85%E8%80%83%E7%82%B9%EF%BC%88%E5%81%8F%E5%BB%B6%E4%BC%B8-%E7%BB%BC%E5%90%88%EF%BC%8C%E6%88%91%E4%BB%AC%E8%81%8A%E8%BF%87%E4%BD%86%E6%9C%AA%E5%B1%95%E5%BC%80%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">二、面试中还可能问到的补充考点（偏延伸&#x2F;综合，我们聊过但未展开）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-xv6%E4%B8%AD%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E9%99%B7%E9%98%B1%EF%BC%88Trap%EF%BC%89%E5%A4%84%E7%90%86%E7%BB%86%E8%8A%82%EF%BC%9F%EF%BC%88%E9%AB%98%E9%A2%91%E5%BB%B6%E4%BC%B8%E9%A2%98%EF%BC%89"><span class="toc-number">4.1.</span> <span class="toc-text">1. xv6中系统调用的陷阱（Trap）处理细节？（高频延伸题）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%92%8C%E6%99%AE%E9%80%9A%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E7%9A%84%E6%9C%AC%E8%B4%A8%E5%8C%BA%E5%88%AB%EF%BC%9F%EF%BC%88%E9%80%9A%E7%94%A8OS%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%89"><span class="toc-number">4.2.</span> <span class="toc-text">2. 系统调用和普通函数调用的本质区别？（通用OS面试题）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-xv6%E4%B8%AD%E5%A6%82%E6%9E%9C%E7%94%A8%E6%88%B7%E4%BC%A0%E5%85%A5%E9%9D%9E%E6%B3%95%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%B7%EF%BC%8C%E5%86%85%E6%A0%B8%E4%BC%9A%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%EF%BC%9F%EF%BC%88%E5%9C%BA%E6%99%AF%E9%A2%98%EF%BC%89"><span class="toc-number">4.3.</span> <span class="toc-text">3. xv6中如果用户传入非法的系统调用号，内核会如何处理？（场景题）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-xv6%E4%B8%AD%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%9B%E7%A8%8B%E4%B8%8A%E4%B8%8B%E6%96%87%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%EF%BC%88%E5%86%85%E6%A0%B8%E5%B2%97%E9%AB%98%E9%A2%91%E9%A2%98%EF%BC%89"><span class="toc-number">4.4.</span> <span class="toc-text">4. xv6中系统调用的进程上下文是什么？（内核岗高频题）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E4%B8%BA%E4%BB%80%E4%B9%88xv6%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0%E6%9C%80%E5%A4%9A6%E4%B8%AA%EF%BC%9F%EF%BC%88%E6%9E%B6%E6%9E%84%E7%9B%B8%E5%85%B3%E9%A2%98%EF%BC%89"><span class="toc-number">4.5.</span> <span class="toc-text">5. 为什么xv6的系统调用参数最多6个？（架构相关题）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E9%9D%A2%E8%AF%95%E4%B8%AD%E8%BF%98%E5%8F%AF%E8%83%BD%E9%97%AE%E5%88%B0%E7%9A%84%E9%80%9A%E7%94%A8OS%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E8%80%83%E7%82%B9%EF%BC%88%E8%B6%85%E5%87%BAxv6%EF%BC%8C%E4%BD%86%E9%9D%A2%E8%AF%95%E5%B8%B8%E9%97%AE%EF%BC%89"><span class="toc-number">5.</span> <span class="toc-text">三、面试中还可能问到的通用OS系统调用考点（超出xv6，但面试常问）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E9%9D%A2%E8%AF%95%E7%AD%94%E9%A2%98%E5%B0%8F%E6%8A%80%E5%B7%A7%EF%BC%88%E7%BB%93%E5%90%88%E6%88%91%E4%BB%AC%E8%81%8A%E7%9A%84xv6%EF%BC%89"><span class="toc-number">6.</span> <span class="toc-text">四、面试答题小技巧（结合我们聊的xv6）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text">总结</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"第二章面经　| Ivan's Tech Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/" title="上一篇: 前两章总结">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/" title="下一篇: shell的运行过程">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/01/22/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E4%B8%80%E5%A4%A9/">算法训练营第一天</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/01/21/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E8%B9%A6%E5%BA%8A%E9%A1%B5/">蹦床页</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/01/21/unbuntu%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%82%A8%E4%B8%8D%E8%B6%B3/">unbuntu系统存储不足</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/trap-c%E8%AF%A6%E8%A7%A3/">trap.c详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8%EF%BC%9Axv6-%E6%9E%81%E7%AE%80%E5%A4%84%E7%90%86-vs-%E7%9C%9F%E5%AE%9E-OS-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/">页面错误异常：xv6 极简处理 vs 真实 OS 的高级应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从内核空间陷入</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0/">xv6 系统调用参数处理：提取、校验与安全传输</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E4%B8%AD-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF/">xv6 中 exec 系统调用的完整调用链路</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/RISC-V%E9%99%B7%E5%85%A5%E6%9C%BA%E5%88%B6/">陷阱指令和系统调用 核心解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 exec 系统调用核心逻辑总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-sbrk-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%88%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E6%89%A9%E7%BC%A9%E5%AE%B9%EF%BC%89%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 sbrk 系统调用（进程内存扩缩容）核心逻辑总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 进程地址空间总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E9%87%8A%E6%94%BE%E6%9C%BA%E5%88%B6%E6%80%BB%E7%BB%93/">xv6 物理内存分配与释放机制总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E5%86%85%E6%A0%B8%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 内核地址空间总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/satp/">satp</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/copyin-copyout%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/">copyin/copyout详细介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3/">系统调用正确理解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/">xv6内核架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/">添加系统调用的过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/21/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0/">第二章</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">git使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2026 Ivan-FYF
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
