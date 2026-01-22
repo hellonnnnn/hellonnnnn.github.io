@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="author" content="Ivan-FYF">
+    
+    <meta name="description" content="记录 C++、Linux、系统方向学习与项目">
+    
+
+    <!-- favicon -->
+   <link rel="icon" href="/favicon.ico" type="image/x-icon">
+   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+
+    
+    
+    
+    
+    
+    <title>页面错误异常：xv6 极简处理 vs 真实 OS 的高级应用 | Ivan&#39;s Tech Blog</title>
+    <link href="https://hellonnnnn.github.io" rel="prefetch" />
+
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/aos.css">
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery.min.js"></script>
+
+    
+<script src="/js/bootstrap.min.js"></script>
+
+    
+<script src="/js/aos.js"></script>
+
+    
+<script src="/js/highslide/highslide-full.min.js"></script>
+
+    
+<link rel="stylesheet" href="/js/highslide/highslide.css">
+
+    <style type="text/css">
+        @media (max-width: 768px) {
+            body {
+                background-color: #f0f0f0;
+                background: url('/imgs/xsbg.gif');
+                background-attachment: fixed;
+            }
+        }
+    </style>
+    
+    <!--<script type="text/javascript">
+      if (document.images) {
+        var avatar = new Image();
+        avatar.src = '/imgs/avatar.jpg'
+        var previews = 'preview1.jpg,preview2.jpg,preview3.jpg,preview4.jpg'.split(',')
+        var previewsPreLoad = []
+        for(var i = 0; i < length; i++) {
+          previewsPreLoad.push(new Image())
+          previewsPreLoad[previewsPreLoad.length - 1].src = '/imgs/preview' + previews[i]
+        }
+      }
+    </script>-->
+<meta name="generator" content="Hexo 8.1.1"></head>
+<body>
+    <!-- 背景轮播图功能 -->
+    <section class="hidden-xs">
+    <ul class="cb-slideshow">
+        <li><span>天若</span></li>
+        <li><span>有情</span></li>
+        <li><span>天亦老</span></li>
+        <li><span>我为</span></li>
+        <li><span>长者</span></li>
+        <li><span>续一秒</span></li>
+    </ul>
+</section>
+    <!-- 欧尼酱功能, 谁用谁知道 -->
+    
+    <header class="navbar navbar-inverse" id="gal-header">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target=".bs-navbar-collapse"
+                    aria-expanded="false">
+                <span class="fa fa-lg fa-reorder"></span>
+            </button>
+            <a href="https://hellonnnnn.github.io">
+                
+                <style>
+                    #gal-header .navbar-brand {
+                        height: 54px;
+                        line-height: 24px;
+                        font-size: 28px;
+                        opacity: 1;
+                        background-color: rgba(0,0,0,0);
+                        text-shadow: 0 0 5px #fff,0 0 10px #fff,0 0 15px #fff,0 0 20px #228DFF,0 0 35px #228DFF,0 0 40px #228DFF,0 0 50px #228DFF,0 0 75px #228DFF;
+                    }
+                </style>
+                <!-- 这里使用文字(navbar_text or config.title) -->
+                <div class="navbar-brand">Ivan&#39;s Tech Blog</div>
+                
+            </a>
+        </div>
+        <div class="collapse navbar-collapse bs-navbar-collapse">
+            <ul class="nav navbar-nav" id="menu-gal">
+                
+                
+                <li class="">
+                    <a href="/">
+                        <i class="fa fa-home"></i>首页
+                    </a>
+                </li>
+                
+                
+                
+                <li class="">
+                    <a href="/archives">
+                        <i class="fa fa-archive"></i>归档
+                    </a>
+                </li>
+                
+                
+                
+                
+                <li class="">
+                    <a href="/categories">
+                        <i class="fa fa-list"></i>分类
+                    </a>
+                </li>
+                
+                
+                
+                
+                
+                <li class="">
+                    <a href="/tags">
+                        <i class="fa fa-tags"></i>标签
+                    </a>
+                </li>
+                
+                
+                
+                
+                <li class="">
+                    <a href="/about">
+                        <i class="fa fa-user"></i>关于我
+                    </a>
+                </li>
+                
+                
+            </ul>
+        </div>
+    </div>
+</header>
+    <div id="gal-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 gal-right" id="mainstay">
+                    
+<article class="article well article-body" id="article">
+    <div class="breadcrumb">
+        <i class="fa fa-home"></i>
+        <a href="https://hellonnnnn.github.io">Ivan&#39;s Tech Blog</a>
+        >
+        <span>页面错误异常：xv6 极简处理 vs 真实 OS 的高级应用</span>
+    </div>
+    <!-- 大型设备详细文章 -->
+    <div class="hidden-xs">
+        <div class="title-article">
+            <h1>
+                <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8%EF%BC%9Axv6-%E6%9E%81%E7%AE%80%E5%A4%84%E7%90%86-vs-%E7%9C%9F%E5%AE%9E-OS-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/">页面错误异常：xv6 极简处理 vs 真实 OS 的高级应用</a>
+            </h1>
+        </div>
+        <div class="tag-article">
+            
+            <span class="label label-gal">
+                <i class="fa fa-calendar"></i> 2025-12-29
+            </span>
+            
+        </div>
+    </div>
+    <!-- 小型设备详细文章 -->
+    <div class="visible-xs">
+        <center>
+            <div class="title-article">
+                <h4>
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8%EF%BC%9Axv6-%E6%9E%81%E7%AE%80%E5%A4%84%E7%90%86-vs-%E7%9C%9F%E5%AE%9E-OS-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/">页面错误异常：xv6 极简处理 vs 真实 OS 的高级应用</a>
+                </h4>
+            </div>
+            <p>
+                <i class="fa fa-calendar"></i> 2025-12-29
+            </p>
+            <p>
+                
+                
+            </p>
+        </center>
+    </div>
+    <div class="content-article">
+        <h1 id="页面错误异常：xv6-极简处理-vs-真实OS的高级应用"><a href="#页面错误异常：xv6-极简处理-vs-真实OS的高级应用" class="headerlink" title="页面错误异常：xv6 极简处理 vs 真实OS的高级应用"></a>页面错误异常：xv6 极简处理 vs 真实OS的高级应用</h1><p>页面错误（Page Fault）是CPU在尝试访问虚拟地址时，因「地址无效、权限不足、无物理映射」等原因触发的异常。xv6对页面错误的处理极其简单（用户态终止进程、内核态panic），但真实操作系统基于页面错误实现了<strong>写时拷贝Fork、惰性分配、磁盘分页</strong>等核心优化，这些机制的核心价值是「透明性（无需修改应用）+ 高效性（按需分配&#x2F;共享资源）」。以下从架构基础到具体特性详细解析：</p>
+<h2 id="一、页面错误异常的基础（RISC-V架构层面）"><a href="#一、页面错误异常的基础（RISC-V架构层面）" class="headerlink" title="一、页面错误异常的基础（RISC-V架构层面）"></a>一、页面错误异常的基础（RISC-V架构层面）</h2><h3 id="1-触发条件"><a href="#1-触发条件" class="headerlink" title="1. 触发条件"></a>1. 触发条件</h3><p>CPU执行内存访问指令（加载&#x2F;存储&#x2F;取指）时，若虚拟地址（VA）无法完成「虚拟→物理」转换，触发页面错误异常，常见原因：</p>
+<ul>
+<li>PTE（页表项）无效（PTE_V位为0）；</li>
+<li>访问权限不匹配（如写只读页面、用户态访问内核页）；</li>
+<li>虚拟地址超出进程地址空间上限（如用户态访问≥MAXVA的地址）；</li>
+<li>物理页被换出到磁盘（无物理映射）。</li>
+</ul>
+<h3 id="2-RISC-V的页面错误类型"><a href="#2-RISC-V的页面错误类型" class="headerlink" title="2. RISC-V的页面错误类型"></a>2. RISC-V的页面错误类型</h3><p>RISC-V通过<code>scause</code>寄存器标记页面错误的具体类型（最高位为0表示异常，低位数表示具体类型）：</p>
+<table>
+<thead>
+<tr>
+<th>错误类型</th>
+<th>scause值</th>
+<th>触发场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>加载页面错误（Load PF）</td>
+<td>13</td>
+<td>lw&#x2F;ld等加载指令访问无效地址</td>
+</tr>
+<tr>
+<td>存储页面错误（Store PF）</td>
+<td>15</td>
+<td>sw&#x2F;sd等存储指令访问无效地址</td>
+</tr>
+<tr>
+<td>指令页面错误（Instruction PF）</td>
+<td>12</td>
+<td>取指时地址无效（如执行不存在的代码页）</td>
+</tr>
+</tbody></table>
+<h3 id="3-关键寄存器"><a href="#3-关键寄存器" class="headerlink" title="3. 关键寄存器"></a>3. 关键寄存器</h3><ul>
+<li><code>stval</code>：存储<strong>触发错误的虚拟地址</strong>（内核可通过该值定位故障地址）；</li>
+<li><code>sepc</code>：存储触发错误的指令地址（异常处理完成后，内核需恢复该地址继续执行）。</li>
+</ul>
+<h3 id="4-xv6-vs-真实OS的处理差异"><a href="#4-xv6-vs-真实OS的处理差异" class="headerlink" title="4. xv6 vs 真实OS的处理差异"></a>4. xv6 vs 真实OS的处理差异</h3><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>xv6 处理方式</th>
+<th>真实OS 处理方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>用户态PF</td>
+<td>直接标记进程为killed，终止执行</td>
+<td>分析错误原因：<br>- 合法需求（如COW&#x2F;惰性分配）→ 修复页表后恢复执行；<br>- 非法访问（如野指针）→ 终止进程。</td>
+</tr>
+<tr>
+<td>内核态PF</td>
+<td>调用panic，系统崩溃</td>
+<td>仅致命错误（如内核代码bug）才崩溃；合法场景（如换入页面）→ 修复后恢复。</td>
+</tr>
+</tbody></table>
+<h2 id="二、核心应用1：写时拷贝（COW）Fork"><a href="#二、核心应用1：写时拷贝（COW）Fork" class="headerlink" title="二、核心应用1：写时拷贝（COW）Fork"></a>二、核心应用1：写时拷贝（COW）Fork</h2><p>COW（Copy-on-Write）是对xv6原生fork的核心优化，解决「全量拷贝物理页效率低」的问题。</p>
+<h3 id="1-xv6原生fork的痛点"><a href="#1-xv6原生fork的痛点" class="headerlink" title="1. xv6原生fork的痛点"></a>1. xv6原生fork的痛点</h3><p>xv6的<code>fork()</code>通过<code>uvmcopy()</code>函数<strong>全量拷贝父进程的所有物理页</strong>到子进程：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// kernel/vm.c: uvmcopy 核心逻辑</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">uvmcopy</span><span class="params">(<span class="type">pagetable_t</span> old, <span class="type">pagetable_t</span> new, uint64 sz)</span> &#123;</span><br><span class="line">  <span class="comment">// 遍历父进程所有页，为子进程分配新物理页，逐页拷贝数据</span></span><br><span class="line">  <span class="keyword">for</span> (uint64 i = <span class="number">0</span>; i &lt; sz; i += PGSIZE) &#123;</span><br><span class="line">    <span class="keyword">if</span> ((pa = walkaddr(old, i)) == <span class="number">0</span>) panic(<span class="string">&quot;uvmcopy: walkaddr&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> ((mem = kalloc()) == <span class="number">0</span>) <span class="keyword">goto</span> err;</span><br><span class="line">    memmove(mem, (<span class="type">char</span>*)pa, PGSIZE); <span class="comment">// 全量拷贝数据</span></span><br><span class="line">    <span class="keyword">if</span> (mappages(new, i, PGSIZE, (uint64)mem, PTE_W|PTE_X|PTE_R|PTE_U) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="comment">// ... 错误处理</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>问题1：拷贝耗时，尤其父进程内存大时；</li>
+<li>问题2：浪费物理内存（子进程通常fork后立即exec，拷贝的页从未被使用）；</li>
+<li>问题3：父子进程无共享，无法利用只读数据的复用性。</li>
+</ul>
+<h3 id="2-COW-Fork的核心原理"><a href="#2-COW-Fork的核心原理" class="headerlink" title="2. COW Fork的核心原理"></a>2. COW Fork的核心原理</h3><p><strong>核心思路</strong>：父子进程共享物理页，仅将页表项（PTE）标记为「只读」；当任意进程执行写操作时，触发「存储页面错误」，内核为该进程拷贝一份物理页，并重映射为可写。</p>
+<h3 id="3-COW-Fork的实现步骤"><a href="#3-COW-Fork的实现步骤" class="headerlink" title="3. COW Fork的实现步骤"></a>3. COW Fork的实现步骤</h3><h4 id="步骤1：fork时的页表初始化（替代uvmcopy）"><a href="#步骤1：fork时的页表初始化（替代uvmcopy）" class="headerlink" title="步骤1：fork时的页表初始化（替代uvmcopy）"></a>步骤1：fork时的页表初始化（替代uvmcopy）</h4><ul>
+<li>遍历父进程的所有PTE，为子进程创建相同的PTE；</li>
+<li>清除父子进程PTE的<code>PTE_W</code>（可写位），保留<code>PTE_R</code>（只读）、<code>PTE_U</code>（用户可访问）；</li>
+<li>为每个共享物理页维护「引用计数」（初始为2，父子各引用一次）；</li>
+<li>子进程页表指向父进程的物理页，无需分配新页&#x2F;拷贝数据。</li>
+</ul>
+<h4 id="步骤2：处理存储页面错误"><a href="#步骤2：处理存储页面错误" class="headerlink" title="步骤2：处理存储页面错误"></a>步骤2：处理存储页面错误</h4><p>当父子进程任一方向共享页写数据时，触发存储页面错误，内核执行：</p>
+<ol>
+<li>检查<code>stval</code>（故障地址）对应的物理页是否为COW共享页；</li>
+<li>若引用计数&gt;1：<ul>
+<li>分配新物理页，拷贝原页数据；</li>
+<li>将当前进程的PTE映射到新物理页，并恢复<code>PTE_W</code>（可写）；</li>
+<li>原物理页的引用计数-1；</li>
+</ul>
+</li>
+<li>若引用计数&#x3D;1（仅当前进程引用）：<ul>
+<li>直接恢复该进程PTE的<code>PTE_W</code>（无需拷贝，独占页）；</li>
+</ul>
+</li>
+<li>恢复<code>sepc</code>为触发错误的指令地址，重新执行该指令（此时写操作合法）。</li>
+</ol>
+<h3 id="4-COW-Fork的优势"><a href="#4-COW-Fork的优势" class="headerlink" title="4. COW Fork的优势"></a>4. COW Fork的优势</h3><ul>
+<li><strong>效率提升</strong>：避免无意义的全量拷贝，仅在真正写数据时拷贝；</li>
+<li><strong>内存节省</strong>：只读数据（如代码段）可永久共享，无需拷贝；</li>
+<li><strong>透明性</strong>：应用无需修改任何代码，感知不到COW的存在；</li>
+<li><strong>适配exec场景</strong>：子进程fork后exec，直接丢弃共享页，完全避免拷贝。</li>
+</ul>
+<h2 id="三、核心应用2：惰性分配（Lazy-Allocation）"><a href="#三、核心应用2：惰性分配（Lazy-Allocation）" class="headerlink" title="三、核心应用2：惰性分配（Lazy Allocation）"></a>三、核心应用2：惰性分配（Lazy Allocation）</h2><p>惰性分配解决「应用申请内存但未必立即使用，提前分配物理页浪费资源」的问题（如应用调用<code>sbrk(100MB)</code>申请大内存，但仅使用前1MB）。</p>
+<h3 id="1-原生内存分配的痛点"><a href="#1-原生内存分配的痛点" class="headerlink" title="1. 原生内存分配的痛点"></a>1. 原生内存分配的痛点</h3><p>xv6中<code>sys_sbrk()</code>会立即调用<code>growproc()</code>分配物理页，并映射到用户地址空间：</p>
+<ul>
+<li>物理内存被提前占用，即使应用未使用；</li>
+<li>大内存申请可能因物理页不足失败，即使应用仅需小部分。</li>
+</ul>
+<h3 id="2-惰性分配的核心原理"><a href="#2-惰性分配的核心原理" class="headerlink" title="2. 惰性分配的核心原理"></a>2. 惰性分配的核心原理</h3><p><strong>核心思路</strong>：应用申请内存时，内核仅「扩展地址空间」（修改进程<code>sz</code>），但不分配物理页、不创建有效PTE；当应用访问新地址触发页面错误时，内核再按需分配物理页并映射。</p>
+<h3 id="3-惰性分配的实现步骤"><a href="#3-惰性分配的实现步骤" class="headerlink" title="3. 惰性分配的实现步骤"></a>3. 惰性分配的实现步骤</h3><h4 id="步骤1：处理sys-sbrk（仅扩地址空间）"><a href="#步骤1：处理sys-sbrk（仅扩地址空间）" class="headerlink" title="步骤1：处理sys_sbrk（仅扩地址空间）"></a>步骤1：处理sys_sbrk（仅扩地址空间）</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 惰性分配的sys_sbrk简化逻辑</span></span><br><span class="line">uint64 <span class="title function_">sys_sbrk</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">  <span class="type">int</span> n;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">proc</span> *<span class="title">p</span> =</span> myproc();</span><br><span class="line">  argint(<span class="number">0</span>, &amp;n);</span><br><span class="line">  uint64 oldsz = p-&gt;sz;</span><br><span class="line">  <span class="keyword">if</span>(n &lt; <span class="number">0</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">  <span class="comment">// 仅扩展地址空间，不分配物理页、不创建PTE</span></span><br><span class="line">  p-&gt;sz += n;</span><br><span class="line">  <span class="keyword">return</span> oldsz;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>新扩展的地址区间的PTE仍为「无效（PTE_V&#x3D;0）」；</li>
+<li>物理页分配被推迟到「首次访问该地址」时。</li>
+</ul>
+<h4 id="步骤2：处理加载-存储页面错误"><a href="#步骤2：处理加载-存储页面错误" class="headerlink" title="步骤2：处理加载&#x2F;存储页面错误"></a>步骤2：处理加载&#x2F;存储页面错误</h4><p>当应用访问新扩展的地址触发页面错误时，内核执行：</p>
+<ol>
+<li>检查<code>stval</code>（故障地址）是否在进程合法地址空间（oldsz ≤ stval &lt; p-&gt;sz）；</li>
+<li>若合法：<ul>
+<li>分配新物理页（<code>kalloc()</code>）；</li>
+<li>创建PTE，映射该物理页到故障地址，并设置正确权限（如可写）；</li>
+</ul>
+</li>
+<li>若非法（如野指针）：终止进程；</li>
+<li>恢复<code>sepc</code>，重新执行访问指令（此时地址有效）。</li>
+</ol>
+<h3 id="4-惰性分配的优势"><a href="#4-惰性分配的优势" class="headerlink" title="4. 惰性分配的优势"></a>4. 惰性分配的优势</h3><ul>
+<li><strong>按需分配</strong>：仅为应用实际使用的地址分配物理页，节省内存；</li>
+<li><strong>降低申请失败概率</strong>：大内存申请仅扩地址空间，无需立即分配物理页；</li>
+<li><strong>透明性</strong>：应用无需修改代码，感知不到分配时机的变化。</li>
+</ul>
+<h2 id="四、核心应用3：磁盘分页（Paging-to-Disk-交换分区）"><a href="#四、核心应用3：磁盘分页（Paging-to-Disk-交换分区）" class="headerlink" title="四、核心应用3：磁盘分页（Paging to Disk&#x2F;交换分区）"></a>四、核心应用3：磁盘分页（Paging to Disk&#x2F;交换分区）</h2><p>磁盘分页（也称“虚拟内存”）解决「物理内存不足，需将暂时不用的页换出到磁盘，腾出空间」的问题，突破物理内存的限制。</p>
+<h3 id="1-核心背景"><a href="#1-核心背景" class="headerlink" title="1. 核心背景"></a>1. 核心背景</h3><p>真实OS的物理内存远小于所有进程的内存需求之和，需通过「磁盘」作为补充：</p>
+<ul>
+<li>交换分区（Swap Partition）：磁盘上预留的连续空间，专门用于存储换出的页；</li>
+<li>交换文件（Swap File）：普通文件，功能同交换分区。</li>
+</ul>
+<h3 id="2-磁盘分页的核心原理"><a href="#2-磁盘分页的核心原理" class="headerlink" title="2. 磁盘分页的核心原理"></a>2. 磁盘分页的核心原理</h3><p><strong>核心思路</strong>：</p>
+<ul>
+<li>换出（Swap Out）：当物理内存不足时，内核选择「不常用的页」，将其数据写入磁盘，然后置PTE为「无效（PTE_V&#x3D;0）」，释放物理页；</li>
+<li>换入（Swap In）：进程访问被换出的页时触发页面错误，内核分配新物理页，将磁盘中的数据读入，更新PTE为有效，恢复执行。</li>
+</ul>
+<h3 id="3-实现关键步骤"><a href="#3-实现关键步骤" class="headerlink" title="3. 实现关键步骤"></a>3. 实现关键步骤</h3><h4 id="步骤1：页换出（选择-写入磁盘）"><a href="#步骤1：页换出（选择-写入磁盘）" class="headerlink" title="步骤1：页换出（选择+写入磁盘）"></a>步骤1：页换出（选择+写入磁盘）</h4><ol>
+<li><strong>页面选择</strong>：内核需通过「页面替换算法」选换出的页（如LRU（最近最少使用）、Clock算法），优先换出不常用、只读的页；</li>
+<li><strong>记录映射关系</strong>：维护「虚拟地址→磁盘位置」的映射表（如swap table）；</li>
+<li><strong>写入磁盘</strong>：将页数据写入交换分区&#x2F;文件；</li>
+<li><strong>置PTE无效</strong>：清除PTE_V位，释放物理页。</li>
+</ol>
+<h4 id="步骤2：处理页面错误（页换入）"><a href="#步骤2：处理页面错误（页换入）" class="headerlink" title="步骤2：处理页面错误（页换入）"></a>步骤2：处理页面错误（页换入）</h4><p>当进程访问被换出的页触发页面错误时：</p>
+<ol>
+<li>检查swap table，确认该虚拟地址是否有对应的磁盘数据；</li>
+<li>若有：<ul>
+<li>分配空闲物理页；</li>
+<li>从磁盘读取数据到该物理页；</li>
+<li>更新PTE：映射到新物理页，置PTE_V&#x3D;1，恢复权限；</li>
+</ul>
+</li>
+<li>若无（非法地址）：终止进程；</li>
+<li>恢复<code>sepc</code>，重新执行访问指令。</li>
+</ol>
+<h3 id="4-磁盘分页的优势"><a href="#4-磁盘分页的优势" class="headerlink" title="4. 磁盘分页的优势"></a>4. 磁盘分页的优势</h3><ul>
+<li><strong>突破物理内存限制</strong>：进程可使用远超物理内存的地址空间；</li>
+<li><strong>透明性</strong>：应用无需感知磁盘交互，仅需处理普通内存访问；</li>
+<li><strong>资源复用</strong>：物理内存可被多个进程复用，提高整体利用率。</li>
+</ul>
+<h2 id="五、其他基于页面错误的经典特性"><a href="#五、其他基于页面错误的经典特性" class="headerlink" title="五、其他基于页面错误的经典特性"></a>五、其他基于页面错误的经典特性</h2><h3 id="1-自动扩展栈空间"><a href="#1-自动扩展栈空间" class="headerlink" title="1. 自动扩展栈空间"></a>1. 自动扩展栈空间</h3><p>xv6的栈大小是固定的（1页），而真实OS支持栈「自动扩展」：</p>
+<ul>
+<li>内核为栈设置「保护页」（PTE无效），位于栈顶下方；</li>
+<li>应用栈溢出访问保护页时，触发页面错误；</li>
+<li>内核分配新物理页，扩展栈空间，更新页表；</li>
+<li>透明适配应用的栈增长需求，无需应用显式申请。</li>
+</ul>
+<h3 id="2-内存映射文件（mmap）"><a href="#2-内存映射文件（mmap）" class="headerlink" title="2. 内存映射文件（mmap）"></a>2. 内存映射文件（mmap）</h3><p><code>mmap</code>将磁盘文件直接映射到进程虚拟地址空间，替代<code>read/write</code>系统调用：</p>
+<ul>
+<li>映射时：内核仅创建PTE（标记为无效），不读取文件数据到内存；</li>
+<li>首次访问映射地址：触发页面错误，内核从文件读取对应数据到物理页，更新PTE；</li>
+<li>写操作：<ul>
+<li>私有映射（MAP_PRIVATE）：COW机制，修改触发拷贝，不写回文件；</li>
+<li>共享映射（MAP_SHARED）：修改触发页面错误，内核将数据写回文件；</li>
+</ul>
+</li>
+<li>优势：减少数据拷贝（内核→用户），提高文件访问效率。</li>
+</ul>
+<h2 id="六、核心总结：页面错误的价值"><a href="#六、核心总结：页面错误的价值" class="headerlink" title="六、核心总结：页面错误的价值"></a>六、核心总结：页面错误的价值</h2><p>页面错误看似是「异常」，但真实OS将其转化为「资源调度的契机」，核心价值体现在：</p>
+<ol>
+<li><strong>透明性</strong>：所有优化（COW、惰性分配、分页）对应用完全透明，无需修改一行代码；</li>
+<li><strong>高效性</strong>：按需分配&#x2F;共享资源，避免无意义的拷贝、分配，最大化物理内存利用率；</li>
+<li><strong>灵活性</strong>：基于页面错误可扩展出栈自动扩展、mmap等丰富功能，适配复杂应用场景。</li>
+</ol>
+<p>xv6选择极简的页面错误处理，是为了教学简化；而真实操作系统的复杂度，很大程度上源于对页面错误的精细化处理——这也是“虚拟内存”成为现代OS核心的关键原因。</p>
+
+    </div>
+</article>
+
+
+                </div>
+                <aside class="col-md-4 gal-left" id="sidebar">
+    <!-- 此为sidebar的搜索框, 非搜索结果页面 -->
+<aside id="sidebar-search">
+    <div class="search hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <form class="form-inline clearfix" id="search-form" method="get"
+              action="/search/index.html">
+            <input type="text" name="s" class="form-control" id="searchInput" placeholder="搜索文章~" autocomplete="off">
+            <button class="btn btn-danger btn-gal" type="submit">
+                <i class="fa fa-search"></i>
+            </button>
+        </form>
+    </div>
+</aside>
+    <aside id="sidebar-author">
+    <div class="panel panel-gal" data-aos="flip-right" data-aos-duration="3000">
+        <div class="panel-heading" style="text-align: center">
+            <i class="fa fa-quote-left"></i>
+            Ivan-FYF
+            <i class="fa fa-quote-right"></i>
+        </div>
+        <div class="author-panel text-center">
+            <img src="/imgs/avatar.jpg" width="140" height="140"
+                 alt="个人头像" class="author-image">
+            <p class="author-description"><p>记录 C++、Linux、系统方向学习与项目</p>
+</p>
+        </div>
+    </div>
+</aside>
+    
+    <aside id="sidebar-recent_comments">
+    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <div class="panel-heading">
+            <i class="fa fa-comments"></i>
+            最新评论
+            <i class="fa fa-times-circle panel-remove"></i>
+            <i class="fa fa-chevron-circle-up panel-toggle"></i>
+        </div>
+        <ul class="list-group list-group-flush"></ul>
+    </div>
+</aside>
+    
+    <!-- 要配置好leancloud才能开启此小工具 -->
+    
+    
+    <aside id="sidebar-recent_posts">
+    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <div class="panel-heading">
+            <i class="fa fa-refresh"></i>
+            近期文章
+            <i class="fa fa-times-circle panel-remove"></i>
+            <i class="fa fa-chevron-circle-up panel-toggle"></i>
+        </div>
+        <ul class="list-group list-group-flush">
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/01/22/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E4%B8%80%E5%A4%A9/">算法训练营第一天</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/01/21/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E8%B9%A6%E5%BA%8A%E9%A1%B5/">蹦床页</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/01/21/unbuntu%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%82%A8%E4%B8%8D%E8%B6%B3/">unbuntu系统存储不足</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/trap-c%E8%AF%A6%E8%A7%A3/">trap.c详解</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8%EF%BC%9Axv6-%E6%9E%81%E7%AE%80%E5%A4%84%E7%90%86-vs-%E7%9C%9F%E5%AE%9E-OS-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/">页面错误异常：xv6 极简处理 vs 真实 OS 的高级应用</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从内核空间陷入</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0/">xv6 系统调用参数处理：提取、校验与安全传输</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E4%B8%AD-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF/">xv6 中 exec 系统调用的完整调用链路</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/RISC-V%E9%99%B7%E5%85%A5%E6%9C%BA%E5%88%B6/">陷阱指令和系统调用 核心解析</a>
+                </span>
+            </li>
+            
+        </ul>
+    </div>
+</aside>
+    
+    
+    <aside id="sidebar-rand_posts">
+    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <div class="panel-heading">
+            <i class="fa fa-refresh"></i>
+            随机文章
+            <i class="fa fa-times-circle panel-remove"></i>
+            <i class="fa fa-chevron-circle-up panel-toggle"></i>
+        </div>
+        <ul class="list-group list-group-flush">
+            
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 exec 系统调用核心逻辑总结</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3/">系统调用正确理解</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/RISC-V%E9%99%B7%E5%85%A5%E6%9C%BA%E5%88%B6/">陷阱指令和系统调用 核心解析</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/trap-c%E8%AF%A6%E8%A7%A3/">trap.c详解</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0/">xv6 系统调用参数处理：提取、校验与安全传输</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E4%B8%AD-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF/">xv6 中 exec 系统调用的完整调用链路</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/01/21/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E8%B9%A6%E5%BA%8A%E9%A1%B5/">蹦床页</a>
+                </span>
+            </li>
+            
+        </ul>
+    </div>
+</aside>
+    
+    
+    <aside id="gal-sets">
+        <div class="panel panel-gal hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+            <ul class="nav nav-pills pills-gal">
+
+                
+                <li>
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8%EF%BC%9Axv6-%E6%9E%81%E7%AE%80%E5%A4%84%E7%90%86-vs-%E7%9C%9F%E5%AE%9E-OS-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
+                </li>
+                
+                
+                <li>
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8%EF%BC%9Axv6-%E6%9E%81%E7%AE%80%E5%A4%84%E7%90%86-vs-%E7%9C%9F%E5%AE%9E-OS-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
+                </li>
+                
+                
+                <li>
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8%EF%BC%9Axv6-%E6%9E%81%E7%AE%80%E5%A4%84%E7%90%86-vs-%E7%9C%9F%E5%AE%9E-OS-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
+                </li>
+                
+            </ul>
+            <div class="tab-content">
+                
+                <div class="cloud-tags tab-pane nav bs-sidenav fade" id="sidebar-tags">
+    
+</div>
+                
+                
+                <div class="friend-links tab-pane nav bs-sidenav fade" id="sidebar-friend-links">
+    
+    <li>
+        <a href="http://kdays.net/days/" target="_blank">KDays Forum</a>
+    </li>
+    
+    <li>
+        <a href="http://www.gal123.com/" target="_blank">绅士导航♂</a>
+    </li>
+    
+    <li>
+        <a href="http://www.moe123.com/" target="_blank">萌导航</a>
+    </li>
+    
+</div>
+                
+                
+                <div class="links tab-pane nav bs-sidenav fade" id="sidebar-links">
+    
+    <li>
+        <a href="https://github.com/ZEROKISEKI/" target="_blank">Github</a>
+    </li>
+    
+    <li>
+        <a href="https://coding.net/u/SORA1" target="_blank">Coding</a>
+    </li>
+    
+    <li>
+        <a href="https://www.zhihu.com/people/aonosora/activities" target="_blank">知乎</a>
+    </li>
+    
+</div>
+                
+            </div>
+        </div>
+    </aside>
+    
+</aside>
+            </div>
+        </div>
+    </div>
+    <footer id="gal-footer">
+    <div class="container">
+        Copyright © 2018 Ivan-FYF Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>.&nbsp;Theme by <a href="https://github.com/ZEROKISEKI" target="_blank">AONOSORA</a>
+    </div>
+</footer>
+
+<!-- 回到顶端 -->
+<div id="gal-gotop">
+    <i class="fa fa-angle-up"></i>
+</div>
+</body>
+
+<script src="/js/activate-power-mode.js"></script>
+
+<script>
+
+    // 配置highslide
+	hs.graphicsDir = '/js/highslide/graphics/'
+    hs.outlineType = "rounded-white";
+    hs.dimmingOpacity = 0.8;
+    hs.outlineWhileAnimating = true;
+    hs.showCredits = false;
+    hs.captionEval = "this.thumb.alt";
+    hs.numberPosition = "caption";
+    hs.align = "center";
+    hs.transitions = ["expand", "crossfade"];
+    hs.lang.number = '共%2张图, 当前是第%1张';
+    hs.addSlideshow({
+      interval: 5000,
+      repeat: true,
+      useControls: true,
+      fixedControls: "fit",
+      overlayOptions: {
+        opacity: 0.75,
+        position: "bottom center",
+        hideOnMouseOut: true
+      }
+    })
+
+    // 初始化aos
+    AOS.init({
+      duration: 1000,
+      delay: 0,
+      easing: 'ease-out-back'
+    });
+
+</script>
+<script>
+	POWERMODE.colorful = 'true';    // make power mode colorful
+	POWERMODE.shake = 'true';       // turn off shake
+	// TODO 这里根据具体情况修改
+	document.body.addEventListener('input', POWERMODE);
+</script>
+<script>
+    window.slideConfig = {
+      prefix: '/imgs/slide/background',
+      ext: 'jpg',
+      maxCount: '6'
+    }
+</script>
+
+<script src="/js/hs.js"></script>
+<script src="/js/blog.js"></script>
+
+
+
+
+</html>

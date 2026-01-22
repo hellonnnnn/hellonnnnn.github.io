@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="author" content="Ivan-FYF">
+    
+    <meta name="description" content="记录 C++、Linux、系统方向学习与项目">
+    
+
+    <!-- favicon -->
+   <link rel="icon" href="/favicon.ico" type="image/x-icon">
+   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+
+    
+    
+    
+    
+    
+    <title>第二章面经 | Ivan&#39;s Tech Blog</title>
+    <link href="https://hellonnnnn.github.io" rel="prefetch" />
+
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/aos.css">
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery.min.js"></script>
+
+    
+<script src="/js/bootstrap.min.js"></script>
+
+    
+<script src="/js/aos.js"></script>
+
+    
+<script src="/js/highslide/highslide-full.min.js"></script>
+
+    
+<link rel="stylesheet" href="/js/highslide/highslide.css">
+
+    <style type="text/css">
+        @media (max-width: 768px) {
+            body {
+                background-color: #f0f0f0;
+                background: url('/imgs/xsbg.gif');
+                background-attachment: fixed;
+            }
+        }
+    </style>
+    
+    <!--<script type="text/javascript">
+      if (document.images) {
+        var avatar = new Image();
+        avatar.src = '/imgs/avatar.jpg'
+        var previews = 'preview1.jpg,preview2.jpg,preview3.jpg,preview4.jpg'.split(',')
+        var previewsPreLoad = []
+        for(var i = 0; i < length; i++) {
+          previewsPreLoad.push(new Image())
+          previewsPreLoad[previewsPreLoad.length - 1].src = '/imgs/preview' + previews[i]
+        }
+      }
+    </script>-->
+<meta name="generator" content="Hexo 8.1.1"></head>
+<body>
+    <!-- 背景轮播图功能 -->
+    <section class="hidden-xs">
+    <ul class="cb-slideshow">
+        <li><span>天若</span></li>
+        <li><span>有情</span></li>
+        <li><span>天亦老</span></li>
+        <li><span>我为</span></li>
+        <li><span>长者</span></li>
+        <li><span>续一秒</span></li>
+    </ul>
+</section>
+    <!-- 欧尼酱功能, 谁用谁知道 -->
+    
+    <header class="navbar navbar-inverse" id="gal-header">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target=".bs-navbar-collapse"
+                    aria-expanded="false">
+                <span class="fa fa-lg fa-reorder"></span>
+            </button>
+            <a href="https://hellonnnnn.github.io">
+                
+                <style>
+                    #gal-header .navbar-brand {
+                        height: 54px;
+                        line-height: 24px;
+                        font-size: 28px;
+                        opacity: 1;
+                        background-color: rgba(0,0,0,0);
+                        text-shadow: 0 0 5px #fff,0 0 10px #fff,0 0 15px #fff,0 0 20px #228DFF,0 0 35px #228DFF,0 0 40px #228DFF,0 0 50px #228DFF,0 0 75px #228DFF;
+                    }
+                </style>
+                <!-- 这里使用文字(navbar_text or config.title) -->
+                <div class="navbar-brand">Ivan&#39;s Tech Blog</div>
+                
+            </a>
+        </div>
+        <div class="collapse navbar-collapse bs-navbar-collapse">
+            <ul class="nav navbar-nav" id="menu-gal">
+                
+                
+                <li class="">
+                    <a href="/">
+                        <i class="fa fa-home"></i>首页
+                    </a>
+                </li>
+                
+                
+                
+                <li class="">
+                    <a href="/archives">
+                        <i class="fa fa-archive"></i>归档
+                    </a>
+                </li>
+                
+                
+                
+                
+                <li class="">
+                    <a href="/categories">
+                        <i class="fa fa-list"></i>分类
+                    </a>
+                </li>
+                
+                
+                
+                
+                
+                <li class="">
+                    <a href="/tags">
+                        <i class="fa fa-tags"></i>标签
+                    </a>
+                </li>
+                
+                
+                
+                
+                <li class="">
+                    <a href="/about">
+                        <i class="fa fa-user"></i>关于我
+                    </a>
+                </li>
+                
+                
+            </ul>
+        </div>
+    </div>
+</header>
+    <div id="gal-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 gal-right" id="mainstay">
+                    
+<article class="article well article-body" id="article">
+    <div class="breadcrumb">
+        <i class="fa fa-home"></i>
+        <a href="https://hellonnnnn.github.io">Ivan&#39;s Tech Blog</a>
+        >
+        <span>第二章面经</span>
+    </div>
+    <!-- 大型设备详细文章 -->
+    <div class="hidden-xs">
+        <div class="title-article">
+            <h1>
+                <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a>
+            </h1>
+        </div>
+        <div class="tag-article">
+            
+            <span class="label label-gal">
+                <i class="fa fa-calendar"></i> 2025-12-22
+            </span>
+            
+        </div>
+    </div>
+    <!-- 小型设备详细文章 -->
+    <div class="visible-xs">
+        <center>
+            <div class="title-article">
+                <h4>
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a>
+                </h4>
+            </div>
+            <p>
+                <i class="fa fa-calendar"></i> 2025-12-22
+            </p>
+            <p>
+                
+                
+            </p>
+        </center>
+    </div>
+    <div class="content-article">
+        <h3 id="内容总结"><a href="#内容总结" class="headerlink" title="内容总结"></a>内容总结</h3><p>这段聊天围绕“系统调用的匹配机制”展开：</p>
+<ul>
+<li>用户iris分享了腾讯一面的问题：系统调用如何确定对应关系、是否仅依赖系统调用号；</li>
+<li>用户“焕、心”回应：内核通过维护系统调用号表实现匹配，并给出系统调用的核心流程（用户态调用库函数→切换至内核态（保存用户态状态）→通过系统调用号查表调用对应函数→返回用户态），同时邀请加入操作系统内核答疑群。</li>
+</ul>
+<h3 id="面试问题的深层细节解析"><a href="#面试问题的深层细节解析" class="headerlink" title="面试问题的深层细节解析"></a>面试问题的深层细节解析</h3><p>该面试问题的核心是“系统调用的匹配并非仅依赖系统调用号，而是‘号+映射表+特权链路+合法性校验’的组合机制”，以xv6（你之前讨论的系统）为例：</p>
+<ol>
+<li><strong>核心标识：系统调用号</strong><br>系统调用号是唯一标识（如xv6中<code>SYS_trace</code>对应编号22），是匹配的基础。</li>
+<li><strong>映射载体：系统调用号表</strong><br>内核维护“系统调用号-函数指针”映射表（如xv6的<code>syscalls</code>数组），号作为数组下标直接映射到对应处理函数（如<code>SYS_trace</code>对应<code>sys_trace</code>函数）。</li>
+<li><strong>特权链路保障匹配有效性</strong><br>用户态无法直接访问内核函数，需通过汇编存根（如xv6的<code>usys.S</code>）触发<code>ecall</code>指令切换至内核态；内核的trap处理程序会读取寄存器（如RISC-V的<code>a7</code>）中的系统调用号，再通过号表查表匹配。</li>
+<li><strong>合法性校验避免错误</strong><br>内核会校验系统调用号的合法性（如xv6中检查<code>num &lt; NELEM(syscalls)</code>），防止非法编号导致的内存越界或错误调用。</li>
+</ol>
+<hr>
+<p>其实针对<strong>xv6系统调用</strong>以及<strong>操作系统中系统调用的核心考点</strong>，我们已经覆盖了<strong>绝大部分面试高频问题</strong>（尤其是校招&#x2F;初级内核岗、嵌入式岗的面试）。不过面试中还会有一些**更偏向“综合对比”“底层原理延伸”“场景分析”**的问题，我帮你梳理一下：</p>
+<h3 id="一、已经完全覆盖的面试高频考点（对应我们聊过的内容）"><a href="#一、已经完全覆盖的面试高频考点（对应我们聊过的内容）" class="headerlink" title="一、已经完全覆盖的面试高频考点（对应我们聊过的内容）"></a>一、已经完全覆盖的面试高频考点（对应我们聊过的内容）</h3><p>这些都是面试中大概率会问到的，且我们已经掰开揉碎聊过了：</p>
+<table>
+<thead>
+<tr>
+<th>面试高频问题</th>
+<th>对应我们聊过的内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>xv6中系统调用的完整流程？</td>
+<td>用户态封装（usys.pl生成的汇编存根）→ecall→内核trap处理→syscall()分发→sys_xxx→核心函数→返回</td>
+</tr>
+<tr>
+<td>sys_xxx和xxx（如sys_exec和exec）的区别？</td>
+<td>分层结构：sys_xxx是入口（参数解析），xxx是核心逻辑（功能实现），sys_xxx调用xxx</td>
+</tr>
+<tr>
+<td>用户态如何传递参数给内核？</td>
+<td>RISC-V寄存器（a0-a5传参数，a7传系统调用号）+copyin&#x2F;copyout（数据拷贝）+argint&#x2F;argstr等封装</td>
+</tr>
+<tr>
+<td>为什么需要copyin&#x2F;copyout？</td>
+<td>地址空间隔离，内核不能直接访问用户态地址，且校验地址合法性，防止内核崩溃&#x2F;安全漏洞</td>
+</tr>
+<tr>
+<td>你如何在xv6中添加一个系统调用（如trace&#x2F;sysinfo）？</td>
+<td>四步：usys.pl加entry→定义系统调用号→实现sys_xxx→添加到分发表</td>
+</tr>
+<tr>
+<td>trace系统调用的实现思路？</td>
+<td>进程级掩码（proc结构体加字段）+sys_trace设置掩码+syscall()函数后置检查掩码并打印日志</td>
+</tr>
+<tr>
+<td>系统调用和中断的区别？</td>
+<td>系统调用是用户态主动触发的trap（ecall），中断是硬件被动触发的（如时钟）</td>
+</tr>
+<tr>
+<td>usys.pl的作用是什么？</td>
+<td>自动生成用户态系统调用的汇编存根，避免手动编写重复的ecall指令代码</td>
+</tr>
+<tr>
+<td>系统调用的返回值如何传递？</td>
+<td>内核写入trapframe的a0寄存器，用户态从a0获取</td>
+</tr>
+</tbody></table>
+<h3 id="二、面试中还可能问到的补充考点（偏延伸-综合，我们聊过但未展开）"><a href="#二、面试中还可能问到的补充考点（偏延伸-综合，我们聊过但未展开）" class="headerlink" title="二、面试中还可能问到的补充考点（偏延伸&#x2F;综合，我们聊过但未展开）"></a>二、面试中还可能问到的<strong>补充考点</strong>（偏延伸&#x2F;综合，我们聊过但未展开）</h3><p>这些问题是面试中“拔高”的点，需要结合原理做简要回答：</p>
+<h4 id="1-xv6中系统调用的陷阱（Trap）处理细节？（高频延伸题）"><a href="#1-xv6中系统调用的陷阱（Trap）处理细节？（高频延伸题）" class="headerlink" title="1. xv6中系统调用的陷阱（Trap）处理细节？（高频延伸题）"></a>1. <strong>xv6中系统调用的陷阱（Trap）处理细节？</strong>（高频延伸题）</h4><p><strong>核心回答思路</strong>（我们之前提到过trap，但未展开流程）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1. 用户态执行ecall指令，CPU自动切换到内核态（S-mode），并跳转到内核预设的陷阱入口（trapvec，在kernel/trampoline.S中）；</span><br><span class="line">2. 保存用户态的寄存器到进程的trapframe（包括a0-a7、epc等）；</span><br><span class="line">3. 调用kernel/trap.c中的trap()函数，判断陷阱类型：</span><br><span class="line">   - 如果是ecall（系统调用），则调用syscall()函数处理；</span><br><span class="line">   - 如果是页故障/非法指令，則处理异常；</span><br><span class="line">4. 处理完成后，恢复用户态寄存器，执行sret指令回到用户态，从epc指向的下一条指令继续执行。</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-系统调用和普通函数调用的本质区别？（通用OS面试题）"><a href="#2-系统调用和普通函数调用的本质区别？（通用OS面试题）" class="headerlink" title="2. 系统调用和普通函数调用的本质区别？（通用OS面试题）"></a>2. <strong>系统调用和普通函数调用的本质区别？</strong>（通用OS面试题）</h4><p><strong>核心回答思路</strong>：</p>
+<ul>
+<li><strong>执行权限</strong>：普通函数调用在用户态执行，系统调用会切换到内核态（特权级提升）；</li>
+<li><strong>调用方式</strong>：普通函数调用是call指令（跳转到函数地址），系统调用是ecall指令（触发陷阱）；</li>
+<li><strong>地址空间</strong>：普通函数调用在同一地址空间，系统调用涉及用户&#x2F;内核地址空间切换；</li>
+<li><strong>开销</strong>：系统调用有上下文切换、地址转换的开销，比普通函数调用慢1-2个数量级。</li>
+</ul>
+<h4 id="3-xv6中如果用户传入非法的系统调用号，内核会如何处理？（场景题）"><a href="#3-xv6中如果用户传入非法的系统调用号，内核会如何处理？（场景题）" class="headerlink" title="3. xv6中如果用户传入非法的系统调用号，内核会如何处理？（场景题）"></a>3. <strong>xv6中如果用户传入非法的系统调用号，内核会如何处理？</strong>（场景题）</h4><p><strong>核心回答思路</strong>（对应我们聊过的syscall()函数逻辑）：</p>
+<ul>
+<li>内核在syscall()函数中会检查：<code>num &gt; 0 &amp;&amp; num &lt; NELEM(syscalls) &amp;&amp; syscalls[num]</code>；</li>
+<li>如果不满足（非法号），则打印错误日志（<code>unknown sys call</code>），并将trapframe-&gt;a0设为-1返回；</li>
+<li>这样用户态会收到-1的返回值，知道系统调用失败。</li>
+</ul>
+<h4 id="4-xv6中系统调用的进程上下文是什么？（内核岗高频题）"><a href="#4-xv6中系统调用的进程上下文是什么？（内核岗高频题）" class="headerlink" title="4. xv6中系统调用的进程上下文是什么？（内核岗高频题）"></a>4. <strong>xv6中系统调用的进程上下文是什么？</strong>（内核岗高频题）</h4><p><strong>核心回答思路</strong>：</p>
+<ul>
+<li>系统调用执行时，内核处于<strong>当前进程的上下文</strong>中：可以访问当前进程的proc结构体、trapframe、用户页表；</li>
+<li>因此sys_getpid能直接返回myproc()-&gt;pid，sys_trace能直接修改当前进程的掩码字段；</li>
+<li>内核不能直接访问其他进程的资源，除非通过进程表遍历（如sys_kill）。</li>
+</ul>
+<h4 id="5-为什么xv6的系统调用参数最多6个？（架构相关题）"><a href="#5-为什么xv6的系统调用参数最多6个？（架构相关题）" class="headerlink" title="5. 为什么xv6的系统调用参数最多6个？（架构相关题）"></a>5. <strong>为什么xv6的系统调用参数最多6个？</strong>（架构相关题）</h4><p><strong>核心回答思路</strong>：</p>
+<ul>
+<li>因为RISC-V架构规定，系统调用的参数通过a0-a5寄存器传递（共6个）；</li>
+<li>如果需要传递更多参数，需要将参数打包成结构体，通过指针传递（如sys_exec的argv），再用copyin解析。</li>
+</ul>
+<h3 id="三、面试中还可能问到的通用OS系统调用考点（超出xv6，但面试常问）"><a href="#三、面试中还可能问到的通用OS系统调用考点（超出xv6，但面试常问）" class="headerlink" title="三、面试中还可能问到的通用OS系统调用考点（超出xv6，但面试常问）"></a>三、面试中还可能问到的<strong>通用OS系统调用考点</strong>（超出xv6，但面试常问）</h3><p>如果面试涉及Linux等主流系统，还会问这些（可以简单了解思路）：</p>
+<ol>
+<li><strong>Linux中的系统调用是如何实现的？</strong>（和xv6的区别：x86用int 0x80&#x2F;syscall指令，RISC-V用ecall；Linux有vDSO优化）</li>
+<li><strong>什么是vDSO？为什么要引入？</strong>（虚拟动态共享对象，把部分系统调用（如gettimeofday）放到用户态执行，减少上下文切换开销，xv6没有但面试常问）</li>
+<li><strong>系统调用的性能优化手段有哪些？</strong>（批量操作（如write缓冲）、vDSO、减少拷贝（如零拷贝sendfile））</li>
+<li><strong>Linux中系统调用的返回值为什么通常是-1表示失败，而不是0？</strong>（因为0是合法的返回值（如write返回写入的字节数），用-1表示失败，再通过errno存错误码）</li>
+</ol>
+<h3 id="四、面试答题小技巧（结合我们聊的xv6）"><a href="#四、面试答题小技巧（结合我们聊的xv6）" class="headerlink" title="四、面试答题小技巧（结合我们聊的xv6）"></a>四、面试答题小技巧（结合我们聊的xv6）</h3><p>面试中回答问题时，<strong>尽量结合xv6的实际实现举例</strong>，会比泛泛而谈更有说服力：</p>
+<ul>
+<li>比如被问“用户态和内核态如何交互数据”，不要只说“用copyin&#x2F;copyout”，还要补充“比如我在实现sys_sysinfo时，就是先填充内核态的sysinfo结构体，再用copyout拷贝到用户态地址”；</li>
+<li>被问“如何添加系统调用”，可以说“我在xv6中实现trace系统调用时，分了四步：首先在usys.pl中添加entry，然后定义SYS_trace，实现sys_trace函数，最后添加到syscalls数组”。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>如果面试的是<strong>xv6相关的操作系统岗、嵌入式岗、校招OS方向</strong>，我们聊过的内容已经<strong>完全覆盖了核心考点</strong>，甚至超出了基础要求（比如copyin的逐页转换、trace的进程级掩码）；如果是面试<strong>Linux内核岗</strong>，只需要补充上述几个通用考点即可。</p>
+<p>你可以放心，现在你对xv6系统调用的理解深度，应对面试已经足够了～</p>
+
+    </div>
+</article>
+
+
+                </div>
+                <aside class="col-md-4 gal-left" id="sidebar">
+    <!-- 此为sidebar的搜索框, 非搜索结果页面 -->
+<aside id="sidebar-search">
+    <div class="search hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <form class="form-inline clearfix" id="search-form" method="get"
+              action="/search/index.html">
+            <input type="text" name="s" class="form-control" id="searchInput" placeholder="搜索文章~" autocomplete="off">
+            <button class="btn btn-danger btn-gal" type="submit">
+                <i class="fa fa-search"></i>
+            </button>
+        </form>
+    </div>
+</aside>
+    <aside id="sidebar-author">
+    <div class="panel panel-gal" data-aos="flip-right" data-aos-duration="3000">
+        <div class="panel-heading" style="text-align: center">
+            <i class="fa fa-quote-left"></i>
+            Ivan-FYF
+            <i class="fa fa-quote-right"></i>
+        </div>
+        <div class="author-panel text-center">
+            <img src="/imgs/avatar.jpg" width="140" height="140"
+                 alt="个人头像" class="author-image">
+            <p class="author-description"><p>记录 C++、Linux、系统方向学习与项目</p>
+</p>
+        </div>
+    </div>
+</aside>
+    
+    <aside id="sidebar-recent_comments">
+    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <div class="panel-heading">
+            <i class="fa fa-comments"></i>
+            最新评论
+            <i class="fa fa-times-circle panel-remove"></i>
+            <i class="fa fa-chevron-circle-up panel-toggle"></i>
+        </div>
+        <ul class="list-group list-group-flush"></ul>
+    </div>
+</aside>
+    
+    <!-- 要配置好leancloud才能开启此小工具 -->
+    
+    
+    <aside id="sidebar-recent_posts">
+    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <div class="panel-heading">
+            <i class="fa fa-refresh"></i>
+            近期文章
+            <i class="fa fa-times-circle panel-remove"></i>
+            <i class="fa fa-chevron-circle-up panel-toggle"></i>
+        </div>
+        <ul class="list-group list-group-flush">
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/01/22/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E4%B8%80%E5%A4%A9/">算法训练营第一天</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/01/21/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E8%B9%A6%E5%BA%8A%E9%A1%B5/">蹦床页</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/01/21/unbuntu%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%82%A8%E4%B8%8D%E8%B6%B3/">unbuntu系统存储不足</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/trap-c%E8%AF%A6%E8%A7%A3/">trap.c详解</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8%EF%BC%9Axv6-%E6%9E%81%E7%AE%80%E5%A4%84%E7%90%86-vs-%E7%9C%9F%E5%AE%9E-OS-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/">页面错误异常：xv6 极简处理 vs 真实 OS 的高级应用</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从内核空间陷入</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0/">xv6 系统调用参数处理：提取、校验与安全传输</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E4%B8%AD-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF/">xv6 中 exec 系统调用的完整调用链路</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/RISC-V%E9%99%B7%E5%85%A5%E6%9C%BA%E5%88%B6/">陷阱指令和系统调用 核心解析</a>
+                </span>
+            </li>
+            
+        </ul>
+    </div>
+</aside>
+    
+    
+    <aside id="sidebar-rand_posts">
+    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <div class="panel-heading">
+            <i class="fa fa-refresh"></i>
+            随机文章
+            <i class="fa fa-times-circle panel-remove"></i>
+            <i class="fa fa-chevron-circle-up panel-toggle"></i>
+        </div>
+        <ul class="list-group list-group-flush">
+            
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 exec 系统调用核心逻辑总结</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-sbrk-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%88%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E6%89%A9%E7%BC%A9%E5%AE%B9%EF%BC%89%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 sbrk 系统调用（进程内存扩缩容）核心逻辑总结</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E5%86%85%E6%A0%B8%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 内核地址空间总结</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/copyin-copyout%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/">copyin/copyout详细介绍</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/21/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0/">第二章</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3/">系统调用正确理解</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0/">xv6 系统调用参数处理：提取、校验与安全传输</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从内核空间陷入</a>
+                </span>
+            </li>
+            
+        </ul>
+    </div>
+</aside>
+    
+    
+    <aside id="gal-sets">
+        <div class="panel panel-gal hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+            <ul class="nav nav-pills pills-gal">
+
+                
+                <li>
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
+                </li>
+                
+                
+                <li>
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
+                </li>
+                
+                
+                <li>
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
+                </li>
+                
+            </ul>
+            <div class="tab-content">
+                
+                <div class="cloud-tags tab-pane nav bs-sidenav fade" id="sidebar-tags">
+    
+</div>
+                
+                
+                <div class="friend-links tab-pane nav bs-sidenav fade" id="sidebar-friend-links">
+    
+    <li>
+        <a href="http://kdays.net/days/" target="_blank">KDays Forum</a>
+    </li>
+    
+    <li>
+        <a href="http://www.gal123.com/" target="_blank">绅士导航♂</a>
+    </li>
+    
+    <li>
+        <a href="http://www.moe123.com/" target="_blank">萌导航</a>
+    </li>
+    
+</div>
+                
+                
+                <div class="links tab-pane nav bs-sidenav fade" id="sidebar-links">
+    
+    <li>
+        <a href="https://github.com/ZEROKISEKI/" target="_blank">Github</a>
+    </li>
+    
+    <li>
+        <a href="https://coding.net/u/SORA1" target="_blank">Coding</a>
+    </li>
+    
+    <li>
+        <a href="https://www.zhihu.com/people/aonosora/activities" target="_blank">知乎</a>
+    </li>
+    
+</div>
+                
+            </div>
+        </div>
+    </aside>
+    
+</aside>
+            </div>
+        </div>
+    </div>
+    <footer id="gal-footer">
+    <div class="container">
+        Copyright © 2018 Ivan-FYF Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>.&nbsp;Theme by <a href="https://github.com/ZEROKISEKI" target="_blank">AONOSORA</a>
+    </div>
+</footer>
+
+<!-- 回到顶端 -->
+<div id="gal-gotop">
+    <i class="fa fa-angle-up"></i>
+</div>
+</body>
+
+<script src="/js/activate-power-mode.js"></script>
+
+<script>
+
+    // 配置highslide
+	hs.graphicsDir = '/js/highslide/graphics/'
+    hs.outlineType = "rounded-white";
+    hs.dimmingOpacity = 0.8;
+    hs.outlineWhileAnimating = true;
+    hs.showCredits = false;
+    hs.captionEval = "this.thumb.alt";
+    hs.numberPosition = "caption";
+    hs.align = "center";
+    hs.transitions = ["expand", "crossfade"];
+    hs.lang.number = '共%2张图, 当前是第%1张';
+    hs.addSlideshow({
+      interval: 5000,
+      repeat: true,
+      useControls: true,
+      fixedControls: "fit",
+      overlayOptions: {
+        opacity: 0.75,
+        position: "bottom center",
+        hideOnMouseOut: true
+      }
+    })
+
+    // 初始化aos
+    AOS.init({
+      duration: 1000,
+      delay: 0,
+      easing: 'ease-out-back'
+    });
+
+</script>
+<script>
+	POWERMODE.colorful = 'true';    // make power mode colorful
+	POWERMODE.shake = 'true';       // turn off shake
+	// TODO 这里根据具体情况修改
+	document.body.addEventListener('input', POWERMODE);
+</script>
+<script>
+    window.slideConfig = {
+      prefix: '/imgs/slide/background',
+      ext: 'jpg',
+      maxCount: '6'
+    }
+</script>
+
+<script src="/js/hs.js"></script>
+<script src="/js/blog.js"></script>
+
+
+
+
+</html>

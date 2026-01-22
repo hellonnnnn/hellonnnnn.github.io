@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="author" content="Ivan-FYF">
+    
+    <meta name="description" content="记录 C++、Linux、系统方向学习与项目">
+    
+
+    <!-- favicon -->
+   <link rel="icon" href="/favicon.ico" type="image/x-icon">
+   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+
+    
+    
+    
+    
+    
+    <title>xv6 exec 系统调用核心逻辑总结 | Ivan&#39;s Tech Blog</title>
+    <link href="https://hellonnnnn.github.io" rel="prefetch" />
+
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/aos.css">
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery.min.js"></script>
+
+    
+<script src="/js/bootstrap.min.js"></script>
+
+    
+<script src="/js/aos.js"></script>
+
+    
+<script src="/js/highslide/highslide-full.min.js"></script>
+
+    
+<link rel="stylesheet" href="/js/highslide/highslide.css">
+
+    <style type="text/css">
+        @media (max-width: 768px) {
+            body {
+                background-color: #f0f0f0;
+                background: url('/imgs/xsbg.gif');
+                background-attachment: fixed;
+            }
+        }
+    </style>
+    
+    <!--<script type="text/javascript">
+      if (document.images) {
+        var avatar = new Image();
+        avatar.src = '/imgs/avatar.jpg'
+        var previews = 'preview1.jpg,preview2.jpg,preview3.jpg,preview4.jpg'.split(',')
+        var previewsPreLoad = []
+        for(var i = 0; i < length; i++) {
+          previewsPreLoad.push(new Image())
+          previewsPreLoad[previewsPreLoad.length - 1].src = '/imgs/preview' + previews[i]
+        }
+      }
+    </script>-->
+<meta name="generator" content="Hexo 8.1.1"></head>
+<body>
+    <!-- 背景轮播图功能 -->
+    <section class="hidden-xs">
+    <ul class="cb-slideshow">
+        <li><span>天若</span></li>
+        <li><span>有情</span></li>
+        <li><span>天亦老</span></li>
+        <li><span>我为</span></li>
+        <li><span>长者</span></li>
+        <li><span>续一秒</span></li>
+    </ul>
+</section>
+    <!-- 欧尼酱功能, 谁用谁知道 -->
+    
+    <header class="navbar navbar-inverse" id="gal-header">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target=".bs-navbar-collapse"
+                    aria-expanded="false">
+                <span class="fa fa-lg fa-reorder"></span>
+            </button>
+            <a href="https://hellonnnnn.github.io">
+                
+                <style>
+                    #gal-header .navbar-brand {
+                        height: 54px;
+                        line-height: 24px;
+                        font-size: 28px;
+                        opacity: 1;
+                        background-color: rgba(0,0,0,0);
+                        text-shadow: 0 0 5px #fff,0 0 10px #fff,0 0 15px #fff,0 0 20px #228DFF,0 0 35px #228DFF,0 0 40px #228DFF,0 0 50px #228DFF,0 0 75px #228DFF;
+                    }
+                </style>
+                <!-- 这里使用文字(navbar_text or config.title) -->
+                <div class="navbar-brand">Ivan&#39;s Tech Blog</div>
+                
+            </a>
+        </div>
+        <div class="collapse navbar-collapse bs-navbar-collapse">
+            <ul class="nav navbar-nav" id="menu-gal">
+                
+                
+                <li class="">
+                    <a href="/">
+                        <i class="fa fa-home"></i>首页
+                    </a>
+                </li>
+                
+                
+                
+                <li class="">
+                    <a href="/archives">
+                        <i class="fa fa-archive"></i>归档
+                    </a>
+                </li>
+                
+                
+                
+                
+                <li class="">
+                    <a href="/categories">
+                        <i class="fa fa-list"></i>分类
+                    </a>
+                </li>
+                
+                
+                
+                
+                
+                <li class="">
+                    <a href="/tags">
+                        <i class="fa fa-tags"></i>标签
+                    </a>
+                </li>
+                
+                
+                
+                
+                <li class="">
+                    <a href="/about">
+                        <i class="fa fa-user"></i>关于我
+                    </a>
+                </li>
+                
+                
+            </ul>
+        </div>
+    </div>
+</header>
+    <div id="gal-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 gal-right" id="mainstay">
+                    
+<article class="article well article-body" id="article">
+    <div class="breadcrumb">
+        <i class="fa fa-home"></i>
+        <a href="https://hellonnnnn.github.io">Ivan&#39;s Tech Blog</a>
+        >
+        <span>xv6 exec 系统调用核心逻辑总结</span>
+    </div>
+    <!-- 大型设备详细文章 -->
+    <div class="hidden-xs">
+        <div class="title-article">
+            <h1>
+                <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 exec 系统调用核心逻辑总结</a>
+            </h1>
+        </div>
+        <div class="tag-article">
+            
+            <span class="label label-gal">
+                <i class="fa fa-calendar"></i> 2025-12-25
+            </span>
+            
+        </div>
+    </div>
+    <!-- 小型设备详细文章 -->
+    <div class="visible-xs">
+        <center>
+            <div class="title-article">
+                <h4>
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 exec 系统调用核心逻辑总结</a>
+                </h4>
+            </div>
+            <p>
+                <i class="fa fa-calendar"></i> 2025-12-25
+            </p>
+            <p>
+                
+                
+            </p>
+        </center>
+    </div>
+    <div class="content-article">
+        <h1 id="xv6-exec系统调用核心逻辑总结"><a href="#xv6-exec系统调用核心逻辑总结" class="headerlink" title="xv6 exec系统调用核心逻辑总结"></a>xv6 exec系统调用核心逻辑总结</h1><p>exec是xv6中<strong>创建进程用户地址空间</strong>的核心系统调用，通过加载文件系统中的ELF格式二进制文件，初始化进程的用户地址空间，替换原进程的内存映像，核心实现于<code>kernel/exec.c</code>。</p>
+<h2 id="一、核心前置：ELF文件格式基础"><a href="#一、核心前置：ELF文件格式基础" class="headerlink" title="一、核心前置：ELF文件格式基础"></a>一、核心前置：ELF文件格式基础</h2><p>xv6的用户程序以ELF格式存储，核心结构（定义于<code>kernel/elf.h</code>）：</p>
+<table>
+<thead>
+<tr>
+<th>结构名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>elfhdr</code></td>
+<td>ELF头：固定位置，包含幻数（0x7F+”ELF”，即ELF_MAGIC）、程序节头偏移等</td>
+</tr>
+<tr>
+<td><code>proghdr</code></td>
+<td>程序节头：描述需加载到内存的程序段（xv6程序通常仅1个，其他系统可能分指令&#x2F;数据段）</td>
+</tr>
+<tr>
+<td>关键字段</td>
+<td><code>filesz</code>（文件中该段的大小）、<code>memsz</code>（内存中该段的总大小）、<code>vaddr</code>（段的目标虚拟地址）</td>
+</tr>
+</tbody></table>
+<ul>
+<li>核心特性：<code>filesz ≤ memsz</code>，间隙部分需填充0（用于C全局变量初始化），仅<code>filesz</code>部分从文件读取，剩余补0。</li>
+</ul>
+<h2 id="二、exec核心执行流程"><a href="#二、exec核心执行流程" class="headerlink" title="二、exec核心执行流程"></a>二、exec核心执行流程</h2><h3 id="1-前期准备：打开文件-ELF合法性检查"><a href="#1-前期准备：打开文件-ELF合法性检查" class="headerlink" title="1. 前期准备：打开文件+ELF合法性检查"></a>1. 前期准备：打开文件+ELF合法性检查</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec → namei（打开指定二进制文件）→ 读取ELF头 → 检查幻数（ELF_MAGIC）</span><br></pre></td></tr></table></figure>
+<ul>
+<li>仅当ELF头的幻数匹配时，exec才认为二进制格式合法，否则直接报错。</li>
+</ul>
+<h3 id="2-新地址空间创建：分配页表-加载ELF段"><a href="#2-新地址空间创建：分配页表-加载ELF段" class="headerlink" title="2. 新地址空间创建：分配页表+加载ELF段"></a>2. 新地址空间创建：分配页表+加载ELF段</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec → proc_pagetable（分配空用户页表）→ 遍历程序节头 → uvmalloc（分配物理页）→ loadseg（加载段到内存）</span><br></pre></td></tr></table></figure>
+<h4 id="关键步骤："><a href="#关键步骤：" class="headerlink" title="关键步骤："></a>关键步骤：</h4><ol>
+<li><strong>分配空页表</strong>：<code>proc_pagetable</code>创建无用户映射的新页表，与旧页表隔离；</li>
+<li><strong>分配物理页</strong>：<code>uvmalloc</code>为每个ELF段分配足够的物理页（按<code>memsz</code>大小）；</li>
+<li><strong>加载段数据</strong>：<code>loadseg</code>完成核心加载：<ul>
+<li>调用<code>walkaddr</code>找到虚拟地址对应的物理地址；</li>
+<li>调用<code>readi</code>从文件读取<code>filesz</code>字节到物理页；</li>
+<li>对<code>memsz - filesz</code>的间隙填充0；</li>
+<li>向新页表中添加PTE，映射虚拟地址到物理页。</li>
+</ul>
+</li>
+</ol>
+<h4 id="示例（-init程序）："><a href="#示例（-init程序）：" class="headerlink" title="示例（&#x2F;init程序）："></a>示例（&#x2F;init程序）：</h4><ul>
+<li><code>filesz=2112字节</code>（从文件读取），<code>memsz=2136字节</code>（内存总大小）；</li>
+<li><code>uvmalloc</code>分配足够容纳2136字节的物理页，仅读取2112字节，剩余24字节补0。</li>
+</ul>
+<h3 id="3-用户栈初始化：分配栈页-构造调用栈"><a href="#3-用户栈初始化：分配栈页-构造调用栈" class="headerlink" title="3. 用户栈初始化：分配栈页+构造调用栈"></a>3. 用户栈初始化：分配栈页+构造调用栈</h3><p>exec为进程分配<strong>1个栈页</strong> + <strong>1个栈下保护页</strong>，并构造栈初始内容（模拟<code>main(argc, argv)</code>调用）：</p>
+<ol>
+<li><strong>栈保护页</strong>：栈页正下方设置无效页（PTE_V&#x3D;0），检测栈溢出；若参数过大，<code>copyout</code>会检测到无效页并返回-1；</li>
+<li><strong>复制命令行参数</strong>：将参数字符串逐个复制到栈顶，记录指针到栈中；</li>
+<li><strong>构造main调用栈</strong>（栈顶→栈底）：<ul>
+<li>命令行参数字符串 → <code>argv</code>指针数组（末尾置空指针） → 伪返回PC → <code>argc</code> → <code>argv</code>指针；</li>
+<li>伪返回PC值为0xFFFFFFFF，仅占位，模拟<code>main</code>刚被调用的栈状态。</li>
+</ul>
+</li>
+</ol>
+<h3 id="4-错误处理：先创建后替换，避免崩溃"><a href="#4-错误处理：先创建后替换，避免崩溃" class="headerlink" title="4. 错误处理：先创建后替换，避免崩溃"></a>4. 错误处理：先创建后替换，避免崩溃</h3><p>exec遵循“<strong>先创建新映像，成功后替换旧映像</strong>”的原则：</p>
+<ol>
+<li>若创建新映像过程中检测到错误（如无效程序段），跳转到<code>bad</code>标签，释放新映像并返回-1；</li>
+<li>仅当新映像完全构建成功后，才提交新页表（替换进程旧页表），并释放旧页表；</li>
+<li>核心原因：若提前释放旧映像，错误时无法返回-1（旧地址空间已销毁）。</li>
+</ol>
+<h3 id="5-安全检查：防止内核越界-溢出攻击"><a href="#5-安全检查：防止内核越界-溢出攻击" class="headerlink" title="5. 安全检查：防止内核越界&#x2F;溢出攻击"></a>5. 安全检查：防止内核越界&#x2F;溢出攻击</h3><p>exec需严格校验ELF参数，避免用户恶意构造二进制文件突破内核隔离：</p>
+<table>
+<thead>
+<tr>
+<th>检查点</th>
+<th>目的</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ph.vaddr + ph.memsz &lt; ph.vaddr</code></td>
+<td>检测64位整数溢出，避免恶意构造地址溢出到内核地址范围</td>
+</tr>
+<tr>
+<td>独立页表隔离</td>
+<td>RISC-V版xv6中内核有独立页表，loadseg仅加载到进程页表，避免覆盖内核内存</td>
+</tr>
+<tr>
+<td>栈保护页+copyout校验</td>
+<td>防止参数过大&#x2F;栈溢出导致的非法内存访问</td>
+</tr>
+</tbody></table>
+<ul>
+<li>风险提示：现实内核常因省略此类检查引发安全漏洞，xv6虽做基础检查，但仍可能存在未覆盖的风险点（如用户级数据验证不完整）。</li>
+</ul>
+<h2 id="三、核心设计亮点"><a href="#三、核心设计亮点" class="headerlink" title="三、核心设计亮点"></a>三、核心设计亮点</h2><ol>
+<li><strong>地址空间隔离</strong>：新页表与旧页表分离创建，确保错误时旧地址空间不被破坏；</li>
+<li><strong>ELF灵活适配</strong>：支持<code>filesz &lt; memsz</code>的零填充，适配C全局变量初始化需求；</li>
+<li><strong>栈安全防护</strong>：栈下保护页+参数复制校验，检测栈溢出和过大参数；</li>
+<li><strong>最小权限原则</strong>：仅加载ELF指定的段，未使用的虚拟地址PTE_V&#x3D;0，避免无效映射。</li>
+</ol>
+<h2 id="四、核心函数调用链路"><a href="#四、核心函数调用链路" class="headerlink" title="四、核心函数调用链路"></a>四、核心函数调用链路</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">exec (kernel/exec.c:13)</span><br><span class="line">├── namei → 打开二进制文件</span><br><span class="line">├── 读取ELF头 → 校验ELF_MAGIC</span><br><span class="line">├── proc_pagetable → 分配新空页表</span><br><span class="line">├── 遍历proghdr</span><br><span class="line">│   ├── uvmalloc → 分配物理页（按memsz）</span><br><span class="line">│   └── loadseg → 加载段数据（readi读文件+补0）</span><br><span class="line">├── 初始化用户栈</span><br><span class="line">│   ├── 分配栈页+栈下保护页</span><br><span class="line">│   ├── copyout → 复制命令行参数到栈</span><br><span class="line">│   └── 构造main(argc, argv)调用栈</span><br><span class="line">├── 错误处理：失败则释放新映像，返回-1</span><br><span class="line">└── 成功则替换旧页表，释放旧映像</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="xv6-exec系统调用完整执行过程（用户态→内核态→用户态）"><a href="#xv6-exec系统调用完整执行过程（用户态→内核态→用户态）" class="headerlink" title="xv6 exec系统调用完整执行过程（用户态→内核态→用户态）"></a>xv6 exec系统调用完整执行过程（用户态→内核态→用户态）</h1><p>xv6 的 <code>exec</code> 系统调用是<strong>用户态触发→内核态构建新地址空间→返回用户态执行新程序</strong>的全链路过程，核心依赖 RISC-V 架构的系统调用机制（<code>ecall</code> 指令）、蹦床页（trampoline）的上下文切换，以及内核态对页表&#x2F;ELF 的核心处理。以下是从「用户态汇编存根」到「内核态执行」再到「返回用户态」的完整拆解（基于 RISC-V 架构）。</p>
+<h2 id="一、整体流程总览"><a href="#一、整体流程总览" class="headerlink" title="一、整体流程总览"></a>一、整体流程总览</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">用户态C层调用exec → 用户态汇编存根（sys_exec）→ ecall陷入内核 → 内核trap处理 → 系统调用分发→ sys_exec → exec核心逻辑 → 构建新地址空间 → 替换进程页表 → 返回用户态执行新程序</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、分步拆解（含关键代码-寄存器-汇编）"><a href="#二、分步拆解（含关键代码-寄存器-汇编）" class="headerlink" title="二、分步拆解（含关键代码&#x2F;寄存器&#x2F;汇编）"></a>二、分步拆解（含关键代码&#x2F;寄存器&#x2F;汇编）</h2><h3 id="阶段1：用户态-调用exec（C层封装-汇编存根）"><a href="#阶段1：用户态-调用exec（C层封装-汇编存根）" class="headerlink" title="阶段1：用户态 - 调用exec（C层封装 + 汇编存根）"></a>阶段1：用户态 - 调用exec（C层封装 + 汇编存根）</h3><h4 id="1-1-用户态C层exec封装（user-user-h）"><a href="#1-1-用户态C层exec封装（user-user-h）" class="headerlink" title="1.1 用户态C层exec封装（user&#x2F;user.h）"></a>1.1 用户态C层exec封装（user&#x2F;user.h）</h4><p>用户程序调用的 <code>exec</code> 是 C 层封装函数，本质是调用汇编存根触发系统调用：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// user/user.h 中的exec声明（用户态可见）</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">exec</span><span class="params">(<span class="type">char</span> *path, <span class="type">char</span> **argv)</span>;</span><br></pre></td></tr></table></figure>
+<p>用户程序中的调用示例：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span> *argv[] = &#123;<span class="string">&quot;echo&quot;</span>, <span class="string">&quot;hello&quot;</span>, <span class="literal">NULL</span>&#125;;</span><br><span class="line">exec(<span class="string">&quot;/bin/echo&quot;</span>, argv); <span class="comment">// 实际调用汇编存根sys_exec</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="1-2-用户态汇编存根（user-usys-S：sys-exec）"><a href="#1-2-用户态汇编存根（user-usys-S：sys-exec）" class="headerlink" title="1.2 用户态汇编存根（user&#x2F;usys.S：sys_exec）"></a>1.2 用户态汇编存根（user&#x2F;usys.S：sys_exec）</h4><p>xv6 为每个系统调用提供汇编存根（<code>user/usys.S</code>），负责<strong>设置系统调用号、传递参数、触发ecall陷入内核</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># user/usys.S 中的sys_exec汇编存根（RISC-V架构）</span><br><span class="line">.global exec</span><br><span class="line">exec:</span><br><span class="line">    # 1. 设置系统调用号：exec的系统调用号（SYS_exec）存入a7</span><br><span class="line">    li a7, SYS_exec       # SYS_exec定义在kernel/syscall.h，如#define SYS_exec 22</span><br><span class="line">    # 2. 参数传递：RISC-V系统调用约定a0传第一个参数，a1传第二个参数</span><br><span class="line">    #    a0 = path（用户态传入的ELF路径），a1 = argv（参数数组）</span><br><span class="line">    #    注：参数已由C层调用时通过函数调用约定存入a0/a1，此处无需额外处理</span><br><span class="line">    # 3. 触发ecall指令，陷入内核态（CPU模式从U态切到S态）</span><br><span class="line">    ecall</span><br><span class="line">    # 4. 内核返回后：a0存返回值（-1表示失败，成功则不会执行到这里）</span><br><span class="line">    ret                   # 返回到用户态C层（仅失败时执行）</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>关键寄存器约定</strong>（RISC-V系统调用）：<ul>
+<li><code>a7</code>：存放系统调用号（内核据此分发）；</li>
+<li><code>a0-a5</code>：存放系统调用参数（exec仅用a0&#x3D;path，a1&#x3D;argv）；</li>
+<li><code>a0</code>：内核返回值（失败返回-1，成功无返回）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="阶段2：内核态-系统调用陷入与分发"><a href="#阶段2：内核态-系统调用陷入与分发" class="headerlink" title="阶段2：内核态 - 系统调用陷入与分发"></a>阶段2：内核态 - 系统调用陷入与分发</h3><h4 id="2-1-内核trap入口（kernel-trap-c：trap函数）"><a href="#2-1-内核trap入口（kernel-trap-c：trap函数）" class="headerlink" title="2.1 内核trap入口（kernel&#x2F;trap.c：trap函数）"></a>2.1 内核trap入口（kernel&#x2F;trap.c：trap函数）</h4><p><code>ecall</code> 触发后，CPU 跳转到内核的 trap 处理入口（由 <code>stvec</code> 寄存器指定），进入 <code>kernel/trap.c</code> 的 <code>trap</code> 函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// kernel/trap.c</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">trap</span><span class="params">(<span class="keyword">struct</span> trapframe *tf)</span> &#123;</span><br><span class="line">  <span class="keyword">if</span>((tf-&gt;status &amp; SSTATUS_SPP) == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="comment">// 来自用户态的trap（系统调用/中断/异常）</span></span><br><span class="line">    <span class="keyword">if</span>(tf-&gt;scause == <span class="number">8</span>) &#123; <span class="comment">// scause=8 表示ecall触发的系统调用</span></span><br><span class="line">      <span class="comment">// 1. 保存用户态返回地址（tf-&gt;epc += 4，跳过ecall指令）</span></span><br><span class="line">      tf-&gt;epc += <span class="number">4</span>;</span><br><span class="line">      <span class="comment">// 2. 提升权限（确保能访问用户态地址）</span></span><br><span class="line">      intr_on();</span><br><span class="line">      <span class="comment">// 3. 系统调用分发：根据a7的系统调用号调用对应处理函数</span></span><br><span class="line">      syscall();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// ... 其他trap处理（中断/页故障等）</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>trapframe</code>：保存用户态上下文（PC、寄存器、状态字等），位于进程的 trapframe 页（用户地址空间高地址，仅内核可访问）。</li>
+</ul>
+<h4 id="2-2-系统调用分发（kernel-syscall-c：syscall函数）"><a href="#2-2-系统调用分发（kernel-syscall-c：syscall函数）" class="headerlink" title="2.2 系统调用分发（kernel&#x2F;syscall.c：syscall函数）"></a>2.2 系统调用分发（kernel&#x2F;syscall.c：syscall函数）</h4><p><code>syscall</code> 函数根据 <code>a7</code> 中的系统调用号，调用内核态的 <code>sys_exec</code> 函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// kernel/syscall.c</span></span><br><span class="line"><span class="comment">// 系统调用表：索引=系统调用号，值=对应处理函数</span></span><br><span class="line"><span class="type">static</span> <span class="title function_">uint64</span> <span class="params">(*syscalls[])</span><span class="params">(<span class="type">void</span>)</span> = &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  [SYS_exec]   sys_exec,  <span class="comment">// SYS_exec对应sys_exec函数</span></span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">syscall</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">proc</span> *<span class="title">p</span> =</span> myproc();</span><br><span class="line">  uint64 num = p-&gt;trapframe-&gt;a7; <span class="comment">// 取出a7中的系统调用号</span></span><br><span class="line">  <span class="keyword">if</span>(num &lt; NELEM(syscalls) &amp;&amp; syscalls[num]) &#123;</span><br><span class="line">    <span class="comment">// 调用sys_exec，返回值存入a0（用户态可见）</span></span><br><span class="line">    p-&gt;trapframe-&gt;a0 = syscalls[num]();</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 无效系统调用号，返回-1</span></span><br><span class="line">    p-&gt;trapframe-&gt;a0 = <span class="number">-1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="阶段3：内核态-exec核心逻辑（sys-exec-→-exec）"><a href="#阶段3：内核态-exec核心逻辑（sys-exec-→-exec）" class="headerlink" title="阶段3：内核态 - exec核心逻辑（sys_exec → exec）"></a>阶段3：内核态 - exec核心逻辑（sys_exec → exec）</h3><h4 id="3-1-系统调用处理函数sys-exec（kernel-syscall-c）"><a href="#3-1-系统调用处理函数sys-exec（kernel-syscall-c）" class="headerlink" title="3.1 系统调用处理函数sys_exec（kernel&#x2F;syscall.c）"></a>3.1 系统调用处理函数sys_exec（kernel&#x2F;syscall.c）</h4><p><code>sys_exec</code> 是内核态的入口，负责从用户态拷贝参数（path&#x2F;argv），调用 <code>exec</code> 核心函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// kernel/syscall.c</span></span><br><span class="line">uint64 <span class="title function_">sys_exec</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">  <span class="type">char</span> *path;</span><br><span class="line">  <span class="type">char</span> **argv;</span><br><span class="line">  <span class="comment">// 1. 从用户态拷贝path（a0）和argv（a1）到内核态</span></span><br><span class="line">  argstr(<span class="number">0</span>, &amp;path);   <span class="comment">// 从a0拷贝path字符串</span></span><br><span class="line">  argaddr(<span class="number">1</span>, (uint64*)&amp;argv); <span class="comment">// 从a1拷贝argv指针数组地址</span></span><br><span class="line">  <span class="comment">// 2. 调用exec核心函数（kernel/exec.c）</span></span><br><span class="line">  <span class="keyword">return</span> exec(path, argv);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>argstr/argaddr</code>：内核工具函数，负责安全拷贝用户态参数到内核态（防止用户伪造地址）。</li>
+</ul>
+<h4 id="3-2-exec核心实现（kernel-exec-c：exec函数）"><a href="#3-2-exec核心实现（kernel-exec-c：exec函数）" class="headerlink" title="3.2 exec核心实现（kernel&#x2F;exec.c：exec函数）"></a>3.2 exec核心实现（kernel&#x2F;exec.c：exec函数）</h4><p>这是 <code>exec</code> 的核心逻辑，完整构建新的用户地址空间，步骤如下（结合前文核心逻辑，补充上下文切换细节）：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// kernel/exec.c</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">exec</span><span class="params">(<span class="type">char</span> *path, <span class="type">char</span> **argv)</span> &#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">proc</span> *<span class="title">p</span> =</span> myproc();</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">elfhdr</span> <span class="title">elf</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">proghdr</span> <span class="title">ph</span>;</span></span><br><span class="line">  <span class="type">int</span> fd, i;</span><br><span class="line">  uint64 sz = <span class="number">0</span>, sp;</span><br><span class="line">  <span class="type">pagetable_t</span> pagetable = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// === 步骤1：打开ELF文件 + 校验合法性 ===</span></span><br><span class="line">  <span class="keyword">if</span>((fd = open(path, O_RDONLY)) &lt; <span class="number">0</span>) <span class="keyword">goto</span> bad;</span><br><span class="line">  <span class="keyword">if</span>(read(fd, &amp;elf, <span class="keyword">sizeof</span>(elf)) != <span class="keyword">sizeof</span>(elf)) <span class="keyword">goto</span> bad;</span><br><span class="line">  <span class="keyword">if</span>(elf.magic != ELF_MAGIC) <span class="keyword">goto</span> bad; <span class="comment">// 校验ELF幻数</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// === 步骤2：分配新页表（空页表，无用户映射） ===</span></span><br><span class="line">  <span class="keyword">if</span>((pagetable = proc_pagetable(p)) == <span class="number">0</span>) <span class="keyword">goto</span> bad;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// === 步骤3：遍历ELF程序段，加载到新页表 ===</span></span><br><span class="line">  <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;elf.phnum; i++) &#123;</span><br><span class="line">    <span class="keyword">if</span>(read(fd, &amp;ph, <span class="keyword">sizeof</span>(ph)) != <span class="keyword">sizeof</span>(ph)) <span class="keyword">goto</span> bad;</span><br><span class="line">    <span class="keyword">if</span>(ph.type != ELF_PROG_LOAD) <span class="keyword">continue</span>;</span><br><span class="line">    <span class="keyword">if</span>(ph.vaddr + ph.memsz &lt; ph.vaddr) <span class="keyword">goto</span> bad; <span class="comment">// 溢出检查</span></span><br><span class="line">    <span class="comment">// 分配物理页（按memsz）</span></span><br><span class="line">    sz = uvmalloc(pagetable, sz, ph.vaddr + ph.memsz);</span><br><span class="line">    <span class="comment">// 加载段数据到物理页（readi读文件 + 补0）</span></span><br><span class="line">    <span class="keyword">if</span>(loadseg(pagetable, ph.vaddr, fd, ph.off, ph.filesz) &lt; <span class="number">0</span>) <span class="keyword">goto</span> bad;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// === 步骤4：初始化用户栈（1个栈页 + 保护页） ===</span></span><br><span class="line">  sz = PGROUNDUP(sz); <span class="comment">// 栈对齐到页边界</span></span><br><span class="line">  sz += <span class="number">2</span>*PGSIZE;     <span class="comment">// 1个栈页 + 1个保护页</span></span><br><span class="line">  <span class="keyword">if</span>((sz = uvmalloc(pagetable, sz, sz)) == <span class="number">0</span>) <span class="keyword">goto</span> bad;</span><br><span class="line">  sp = sz;            <span class="comment">// 栈顶地址（向下生长）</span></span><br><span class="line">  <span class="comment">// 栈下保护页：置PTE_V=0，防止栈溢出</span></span><br><span class="line">  uvmunmap(pagetable, sp - <span class="number">2</span>*PGSIZE, <span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">  <span class="comment">// 复制命令行参数到栈，构造main(argc, argv)调用栈</span></span><br><span class="line">  sp -= (argc + <span class="number">1</span>) * <span class="keyword">sizeof</span>(uint64); <span class="comment">// argv数组</span></span><br><span class="line">  uint64 *argv_ptr = (uint64*)sp;</span><br><span class="line">  <span class="comment">// ... （参数复制逻辑，最终构造栈：argc → argv → 伪PC）</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// === 步骤5：替换进程页表（核心！） ===</span></span><br><span class="line">  <span class="comment">// 释放旧页表</span></span><br><span class="line">  proc_freepagetable(p-&gt;pagetable, p-&gt;sz);</span><br><span class="line">  <span class="comment">// 替换为新页表</span></span><br><span class="line">  p-&gt;pagetable = pagetable;</span><br><span class="line">  p-&gt;sz = sz;</span><br><span class="line">  <span class="comment">// 修改进程上下文：PC指向ELF入口（elf.entry），栈指针sp指向新栈</span></span><br><span class="line">  p-&gt;trapframe-&gt;epc = elf.entry;    <span class="comment">// 新程序的入口地址</span></span><br><span class="line">  p-&gt;trapframe-&gt;sp = sp;            <span class="comment">// 新程序的栈指针</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// === 步骤6：关闭文件，返回成功（无返回值） ===</span></span><br><span class="line">  close(fd);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">bad:</span><br><span class="line">  <span class="comment">// 错误处理：释放新页表、关闭文件，返回-1</span></span><br><span class="line">  <span class="keyword">if</span>(pagetable) proc_freepagetable(pagetable, sz);</span><br><span class="line">  close(fd);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>核心关键点：<ol>
+<li>新页表与旧页表隔离，错误时仅释放新页表，不影响旧地址空间；</li>
+<li>修改进程的 <code>trapframe</code>：<code>epc</code> 设为新程序入口（ELF的<code>elf.entry</code>），<code>sp</code> 设为新栈顶；</li>
+<li>保护页：栈下的无效页（PTE_V&#x3D;0），检测栈溢出。</li>
+</ol>
+</li>
+</ul>
+<h3 id="阶段4：内核态→用户态-返回并执行新程序"><a href="#阶段4：内核态→用户态-返回并执行新程序" class="headerlink" title="阶段4：内核态→用户态 - 返回并执行新程序"></a>阶段4：内核态→用户态 - 返回并执行新程序</h3><p>exec 核心逻辑完成后，内核从 trap 处理流程返回用户态，步骤如下：</p>
+<h4 id="4-1-内核trap返回（kernel-trap-c：trapret）"><a href="#4-1-内核trap返回（kernel-trap-c：trapret）" class="headerlink" title="4.1 内核trap返回（kernel&#x2F;trap.c：trapret）"></a>4.1 内核trap返回（kernel&#x2F;trap.c：trapret）</h4><p><code>trap</code> 函数处理完系统调用后，调用 <code>trapret</code> 回到用户态：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// kernel/trap.c</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">trapret</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">proc</span> *<span class="title">p</span> =</span> myproc();</span><br><span class="line">  <span class="comment">// 1. 切换到蹦床页的地址空间（所有进程共享）</span></span><br><span class="line">  w_satp(MAKE_SATP(p-&gt;pagetable)); <span class="comment">// 写入新页表的PPN到satp</span></span><br><span class="line">  sfence.vma(); <span class="comment">// 刷新TLB，确保新页表生效</span></span><br><span class="line">  <span class="comment">// 2. 跳转到蹦床页的trapret汇编代码</span></span><br><span class="line">  uint64 trampoline = (uint64)TRAMPOLINE;</span><br><span class="line">  <span class="keyword">asm</span> <span class="title function_">volatile</span><span class="params">(<span class="string">&quot;jr %0&quot;</span> : : <span class="string">&quot;r&quot;</span>(trampoline))</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-2-蹦床页的trapret汇编（kernel-trampoline-S）"><a href="#4-2-蹦床页的trapret汇编（kernel-trampoline-S）" class="headerlink" title="4.2 蹦床页的trapret汇编（kernel&#x2F;trampoline.S）"></a>4.2 蹦床页的trapret汇编（kernel&#x2F;trampoline.S）</h4><p>蹦床页（TRAMPOLINE）是所有进程共享的物理页，负责恢复用户态上下文：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># kernel/trampoline.S</span><br><span class="line">.globl trampoline</span><br><span class="line">trampoline:</span><br><span class="line">  # 1. 恢复用户态栈指针（sp）和状态字（sstatus）</span><br><span class="line">  ld sp, 0(a0)    # a0指向进程的trapframe，恢复sp</span><br><span class="line">  ld t0, 8(a0)    # 恢复sstatus</span><br><span class="line">  csrw sstatus, t0</span><br><span class="line">  # 2. 恢复用户态PC（epc），跳转到新程序入口</span><br><span class="line">  ld t0, 16(a0)   # 恢复epc（ELF的entry地址）</span><br><span class="line">  csrw sepc, t0</span><br><span class="line">  # 3. sret指令：从内核态切回用户态，执行epc指向的代码</span><br><span class="line">  sret</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>sret</code> 指令：CPU 从内核态（S态）切回用户态（U态），PC 跳转到 <code>sepc</code>（即新程序的入口<code>elf.entry</code>）。</li>
+</ul>
+<h4 id="4-3-用户态执行新程序"><a href="#4-3-用户态执行新程序" class="headerlink" title="4.3 用户态执行新程序"></a>4.3 用户态执行新程序</h4><p>此时，CPU 执行新程序的第一条指令（ELF的入口），原进程的代码&#x2F;数据已被完全替换，exec 调用后的代码不再执行。</p>
+<h2 id="三、关键核心总结"><a href="#三、关键核心总结" class="headerlink" title="三、关键核心总结"></a>三、关键核心总结</h2><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>核心动作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>用户态C层</td>
+<td>调用exec封装函数，传入path和argv</td>
+</tr>
+<tr>
+<td>用户态汇编存根</td>
+<td>设置系统调用号（a7&#x3D;SYS_exec），ecall陷入内核</td>
+</tr>
+<tr>
+<td>内核trap处理</td>
+<td>识别系统调用，分发到sys_exec</td>
+</tr>
+<tr>
+<td>内核exec核心</td>
+<td>打开ELF→校验→创建新页表→加载段→初始化栈→替换页表→修改trapframe</td>
+</tr>
+<tr>
+<td>内核返回用户态</td>
+<td>写入新页表到satp→刷新TLB→蹦床页恢复上下文→sret跳转到新程序入口</td>
+</tr>
+<tr>
+<td>用户态新程序</td>
+<td>执行ELF入口代码，从main(argc, argv)开始运行</td>
+</tr>
+</tbody></table>
+<h2 id="四、关键特性补充"><a href="#四、关键特性补充" class="headerlink" title="四、关键特性补充"></a>四、关键特性补充</h2><ol>
+<li><strong>地址空间替换</strong>：exec 替换进程的页表和地址空间，原进程的代码&#x2F;数据被销毁，仅保留PID、内核栈、文件描述符等；</li>
+<li><strong>TLB刷新</strong>：每次切换页表后调用 <code>sfence.vma</code>，避免旧映射残留；</li>
+<li><strong>蹦床页的作用</strong>：统一的上下文切换入口，所有进程共享，无需为每个进程分配切换代码；</li>
+<li><strong>安全检查</strong>：内核对ELF地址、参数地址、栈大小等做校验，防止用户伪造地址攻击内核。</li>
+</ol>
+
+    </div>
+</article>
+
+
+                </div>
+                <aside class="col-md-4 gal-left" id="sidebar">
+    <!-- 此为sidebar的搜索框, 非搜索结果页面 -->
+<aside id="sidebar-search">
+    <div class="search hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <form class="form-inline clearfix" id="search-form" method="get"
+              action="/search/index.html">
+            <input type="text" name="s" class="form-control" id="searchInput" placeholder="搜索文章~" autocomplete="off">
+            <button class="btn btn-danger btn-gal" type="submit">
+                <i class="fa fa-search"></i>
+            </button>
+        </form>
+    </div>
+</aside>
+    <aside id="sidebar-author">
+    <div class="panel panel-gal" data-aos="flip-right" data-aos-duration="3000">
+        <div class="panel-heading" style="text-align: center">
+            <i class="fa fa-quote-left"></i>
+            Ivan-FYF
+            <i class="fa fa-quote-right"></i>
+        </div>
+        <div class="author-panel text-center">
+            <img src="/imgs/avatar.jpg" width="140" height="140"
+                 alt="个人头像" class="author-image">
+            <p class="author-description"><p>记录 C++、Linux、系统方向学习与项目</p>
+</p>
+        </div>
+    </div>
+</aside>
+    
+    <aside id="sidebar-recent_comments">
+    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <div class="panel-heading">
+            <i class="fa fa-comments"></i>
+            最新评论
+            <i class="fa fa-times-circle panel-remove"></i>
+            <i class="fa fa-chevron-circle-up panel-toggle"></i>
+        </div>
+        <ul class="list-group list-group-flush"></ul>
+    </div>
+</aside>
+    
+    <!-- 要配置好leancloud才能开启此小工具 -->
+    
+    
+    <aside id="sidebar-recent_posts">
+    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <div class="panel-heading">
+            <i class="fa fa-refresh"></i>
+            近期文章
+            <i class="fa fa-times-circle panel-remove"></i>
+            <i class="fa fa-chevron-circle-up panel-toggle"></i>
+        </div>
+        <ul class="list-group list-group-flush">
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/01/22/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E4%B8%80%E5%A4%A9/">算法训练营第一天</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/01/21/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E8%B9%A6%E5%BA%8A%E9%A1%B5/">蹦床页</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/01/21/unbuntu%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%82%A8%E4%B8%8D%E8%B6%B3/">unbuntu系统存储不足</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/trap-c%E8%AF%A6%E8%A7%A3/">trap.c详解</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8%EF%BC%9Axv6-%E6%9E%81%E7%AE%80%E5%A4%84%E7%90%86-vs-%E7%9C%9F%E5%AE%9E-OS-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/">页面错误异常：xv6 极简处理 vs 真实 OS 的高级应用</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从内核空间陷入</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0/">xv6 系统调用参数处理：提取、校验与安全传输</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E4%B8%AD-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF/">xv6 中 exec 系统调用的完整调用链路</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/RISC-V%E9%99%B7%E5%85%A5%E6%9C%BA%E5%88%B6/">陷阱指令和系统调用 核心解析</a>
+                </span>
+            </li>
+            
+        </ul>
+    </div>
+</aside>
+    
+    
+    <aside id="sidebar-rand_posts">
+    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <div class="panel-heading">
+            <i class="fa fa-refresh"></i>
+            随机文章
+            <i class="fa fa-times-circle panel-remove"></i>
+            <i class="fa fa-chevron-circle-up panel-toggle"></i>
+        </div>
+        <ul class="list-group list-group-flush">
+            
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">git使用</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 exec 系统调用核心逻辑总结</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/">xv6内核架构</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/copyin-copyout%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/">copyin/copyout详细介绍</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 进程地址空间总结</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3/">系统调用正确理解</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8%EF%BC%9Axv6-%E6%9E%81%E7%AE%80%E5%A4%84%E7%90%86-vs-%E7%9C%9F%E5%AE%9E-OS-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/">页面错误异常：xv6 极简处理 vs 真实 OS 的高级应用</a>
+                </span>
+            </li>
+            
+        </ul>
+    </div>
+</aside>
+    
+    
+    <aside id="gal-sets">
+        <div class="panel panel-gal hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+            <ul class="nav nav-pills pills-gal">
+
+                
+                <li>
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
+                </li>
+                
+                
+                <li>
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
+                </li>
+                
+                
+                <li>
+                    <a href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
+                </li>
+                
+            </ul>
+            <div class="tab-content">
+                
+                <div class="cloud-tags tab-pane nav bs-sidenav fade" id="sidebar-tags">
+    
+</div>
+                
+                
+                <div class="friend-links tab-pane nav bs-sidenav fade" id="sidebar-friend-links">
+    
+    <li>
+        <a href="http://kdays.net/days/" target="_blank">KDays Forum</a>
+    </li>
+    
+    <li>
+        <a href="http://www.gal123.com/" target="_blank">绅士导航♂</a>
+    </li>
+    
+    <li>
+        <a href="http://www.moe123.com/" target="_blank">萌导航</a>
+    </li>
+    
+</div>
+                
+                
+                <div class="links tab-pane nav bs-sidenav fade" id="sidebar-links">
+    
+    <li>
+        <a href="https://github.com/ZEROKISEKI/" target="_blank">Github</a>
+    </li>
+    
+    <li>
+        <a href="https://coding.net/u/SORA1" target="_blank">Coding</a>
+    </li>
+    
+    <li>
+        <a href="https://www.zhihu.com/people/aonosora/activities" target="_blank">知乎</a>
+    </li>
+    
+</div>
+                
+            </div>
+        </div>
+    </aside>
+    
+</aside>
+            </div>
+        </div>
+    </div>
+    <footer id="gal-footer">
+    <div class="container">
+        Copyright © 2018 Ivan-FYF Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>.&nbsp;Theme by <a href="https://github.com/ZEROKISEKI" target="_blank">AONOSORA</a>
+    </div>
+</footer>
+
+<!-- 回到顶端 -->
+<div id="gal-gotop">
+    <i class="fa fa-angle-up"></i>
+</div>
+</body>
+
+<script src="/js/activate-power-mode.js"></script>
+
+<script>
+
+    // 配置highslide
+	hs.graphicsDir = '/js/highslide/graphics/'
+    hs.outlineType = "rounded-white";
+    hs.dimmingOpacity = 0.8;
+    hs.outlineWhileAnimating = true;
+    hs.showCredits = false;
+    hs.captionEval = "this.thumb.alt";
+    hs.numberPosition = "caption";
+    hs.align = "center";
+    hs.transitions = ["expand", "crossfade"];
+    hs.lang.number = '共%2张图, 当前是第%1张';
+    hs.addSlideshow({
+      interval: 5000,
+      repeat: true,
+      useControls: true,
+      fixedControls: "fit",
+      overlayOptions: {
+        opacity: 0.75,
+        position: "bottom center",
+        hideOnMouseOut: true
+      }
+    })
+
+    // 初始化aos
+    AOS.init({
+      duration: 1000,
+      delay: 0,
+      easing: 'ease-out-back'
+    });
+
+</script>
+<script>
+	POWERMODE.colorful = 'true';    // make power mode colorful
+	POWERMODE.shake = 'true';       // turn off shake
+	// TODO 这里根据具体情况修改
+	document.body.addEventListener('input', POWERMODE);
+</script>
+<script>
+    window.slideConfig = {
+      prefix: '/imgs/slide/background',
+      ext: 'jpg',
+      maxCount: '6'
+    }
+</script>
+
+<script src="/js/hs.js"></script>
+<script src="/js/blog.js"></script>
+
+
+
+
+</html>
