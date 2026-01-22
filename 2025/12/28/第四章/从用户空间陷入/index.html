@@ -1,354 +1,396 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
-<head>
+<html 
+	lang="zh-Hans">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		
+<link rel="stylesheet" href="/css/layout.css">
 
-    <!--[if lt IE 9]>
-        <style>body {display: none; background: none !important} </style>
-        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
-    <![endif]-->
+		
+		<title> 从用户空间陷入 -  Ivan&#39;s Tech Blog</title>
+		<!-- <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" /> -->
+		<!-- <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script> -->
+		
+<link rel="stylesheet" href="/lib/mdui/mdui.min.css">
 
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="format-detection" content="telephone=no" />
-<meta name="author" content="Ivan-FYF" />
+		
+<script src="/lib/mdui/mdui.min.js"></script>
+
+		<!-- lazyload -->
+		
+<script src="/lib/lazysizes.js"></script>
+
+		<!-- smooth-scrolling -->
+		
+<script src="/lib/smooth-scrolling.js"></script>
+
+		<!-- highlight -->
+		
+<link rel="stylesheet" href="/lib/highlight/atom-one-dark.min.css">
+
+		
+<script src="/lib/highlight/highlight.min.js"></script>
+
+		<!-- 预置 kiraicon -->
+		
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+
+		
+		<link
+			rel="shortcut icon"
+			href="https://kira.host/assets/Pictures/Others/116359b4ccf19917.jpg"
+			type="image/png"
+		/>
+		
+<link rel="stylesheet" href="/deps/css/APlayer.min.css">
+
+		
+		
+<script src="/deps/js/APlayer.min.js"></script>
+<script src="/deps/js/Meting.min.js"></script>
+
+	<meta name="generator" content="Hexo 8.1.1"></head>
+
+	<body>
+		<div
+			class="kira-background"
+			style="background-image: url('https://kira.host/assets/Pictures/Others/-f0d5cc34c6e5aa7_compressed.jpg')"
+		></div>
+		<div class="kira-header">
+    <a
+        class="kira-drawer-button mdui-ripple"
+        title="导航栏"
+        onclick="document.querySelector('.kira-sidebar-modal').classList.add('show');document.querySelector('.kira-sidebar#sidebar').classList.add('show');"
+    >
+        <i class="kirafont icon-menu"></i>
+    </a>
+    <a href="/" title="Ivan&#39;s Tech Blog">
+        <img
+			src="https://kira.host/assets/Pictures/Others/20220922230447.jpg"
+			alt="Ivan-FYF"
+		/>
+    </a>
+</div>
+		<div class="kira-body">
+			<div class="kira-sidebar" id="sidebar">
+	<div class="kira-avatar mdui-ripple">
+		<a target="_blank" rel="noopener" href="https://kira.host/assets/Pictures/Others/20220922230447.jpg" title="Ivan-FYF">
+			<img
+				src="https://kira.host/assets/Pictures/Others/20220922230447.jpg"
+				alt="Ivan-FYF"
+			/>
+		</a>
+	</div>
+	<div class="kira-count">
+		<div><span>文章</span>29</div>
+		<div><span>标签</span>0</div>
+		<div><span>分类</span>0</div>
+	</div>
+	<div class="kira-list">
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/"
+			title="�ص���ҳ"
+		>
+			<i
+				class="kirafont
+					
+						icon-home
+					"
+			></i>
+			<div class="kira-list-item-content">
+				�ص���ҳ
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/archive.html"
+			title="���¹鵵"
+		>
+			<i
+				class="kirafont
+					
+						icon-container
+					"
+			></i>
+			<div class="kira-list-item-content">
+				���¹鵵
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/about.html"
+			title="���ڱ���"
+		>
+			<i
+				class="kirafont
+					
+						icon-user
+					"
+			></i>
+			<div class="kira-list-item-content">
+				���ڱ���
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/friends.html"
+			title="�ҵ�����"
+		>
+			<i
+				class="kirafont
+					
+						icon-team
+					"
+			></i>
+			<div class="kira-list-item-content">
+				�ҵ�����
+			</div>
+		</a>
+		
+	</div>
+	<aside id="kira-sidebar">
+		
+			<div class="kira-widget-wrap">
+	<div class="kira-widget kira-social">
+		
+			<a
+				class="mdui-ripple"
+				href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=<ȥ�������ź��������QQ��>&website=www.oicqzone.com"
+				target="_blank"
+				mdui-tooltip="{content: 'QQ'}"
+				style="color: rgb(49, 174, 255); background-color: rgba(49, 174, 255, .1);"
+			>
+				<i
+					class="kirafont
+					
+						icon-QQ
+					"
+				></i>
+			</a>
+		
+			<a
+				class="mdui-ripple"
+				href="https://space.bilibili.com/<�ĳ����Bվuid>"
+				target="_blank"
+				mdui-tooltip="{content: '��������'}"
+				style="color: rgb(231, 106, 141); background-color: rgba(231, 106, 141, .15);"
+			>
+				<i
+					class="kirafont
+					
+						icon-bilibili
+					"
+				></i>
+			</a>
+		
+			<a
+				class="mdui-ripple"
+				href="https://github.com/<���github id>/"
+				target="_blank"
+				mdui-tooltip="{content: 'GitHub'}"
+				style="color: rgb(25, 23, 23); background-color: rgba(25, 23, 23, .15);"
+			>
+				<i
+					class="kirafont
+					
+						icon-github
+					"
+				></i>
+			</a>
+		
+			<a
+				class="mdui-ripple"
+				href="https://gitee.com/<���gitee id>"
+				target="_blank"
+				mdui-tooltip="{content: 'Gitee'}"
+				style="color: rgb(165, 15, 15); background-color: rgba(165, 15, 15, .15);"
+			>
+				<i
+					class="kirafont
+					
+						icon-gitee
+					"
+				></i>
+			</a>
+		
+	</div>
+</div>
+
+		
+			
+		
+			
+
+		
+			
+	<div class="kira-widget-wrap">
+		<h3 class="kira-widget-title">
+			文章归档
+		</h3>
+		<div class="kira-widget">
+			<ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/">2026</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/">2025</a><span class="archive-list-count">26</span></li></ul>
+		</div>
+	</div>
 
 
-
-<meta name="description" content="从用户空间陷入（陷阱）：xv6 完整流程解析用户空间触发陷阱（系统调用&#x2F;异常&#x2F;设备中断）是 xv6 陷阱处理中最复杂的场景，核心挑战是：用户页表不映射内核、栈指针可能非法、硬件不自动切换页表。xv6 通过「蹦床页（trampoline）+ 陷阱帧（trapframe）+ 分层处理（汇编→C→汇编）」解决这些问题，以下是全流程的逐阶段拆解： 一、陷阱触发前的前置准备（内核初始化&amp;">
-<meta property="og:type" content="article">
-<meta property="og:title" content="从用户空间陷入">
-<meta property="og:url" content="https://hellonnnnn.github.io/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/index.html">
-<meta property="og:site_name" content="Ivan&#39;s Tech Blog">
-<meta property="og:description" content="从用户空间陷入（陷阱）：xv6 完整流程解析用户空间触发陷阱（系统调用&#x2F;异常&#x2F;设备中断）是 xv6 陷阱处理中最复杂的场景，核心挑战是：用户页表不映射内核、栈指针可能非法、硬件不自动切换页表。xv6 通过「蹦床页（trampoline）+ 陷阱帧（trapframe）+ 分层处理（汇编→C→汇编）」解决这些问题，以下是全流程的逐阶段拆解： 一、陷阱触发前的前置准备（内核初始化&amp;">
-<meta property="og:locale">
-<meta property="article:published_time" content="2025-12-28T13:05:10.000Z">
-<meta property="article:modified_time" content="2025-12-29T11:21:22.146Z">
-<meta property="article:author" content="Ivan-FYF">
-<meta name="twitter:card" content="summary">
-
-<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
-
-
-    <link rel="alternate" href="/atom.xml" title="Ivan&#39;s Tech Blog" type="application/atom+xml">
-
-
-
-    <link rel="shortcut icon" href="/favicon.png">
-
-
-
-    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
-
-
-
-    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+		
+	</aside>
+	<div class="kira-copyright">
+		&copy; 2026
+		<a href="/">Ivan-FYF</a>
+		Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> &
+		<a href="https://github.com/ch1ny/kira-hexo/" target="_blank">Kira-Hexo</a>
+		<br />
+		
+		
+	</div>
+</div>
+<div
+	class="kira-sidebar-modal"
+	id="sidebar-modal"
+	onclick="(function(self) {
+		self.classList.remove('show');
+		document.querySelector('.kira-sidebar.show#sidebar').classList.remove('show');
+	})(this)"
+></div>
+			<div class="kira-content">
+				<div id="kira-top-header"></div>
+				<div class="kira-main-content">
+					
+<link rel="stylesheet" href="/css/kira-image.css">
 
 
+<script src="/js/kira-image.js"></script>
 
-    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
-    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
-
-
-
-<link rel="stylesheet" href="/css/style.css">
-
-
-
-
-<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-
-
-<title>从用户空间陷入 | Ivan&#39;s Tech Blog</title>
-
-<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
-<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
-
-<script>
-    var yiliaConfig = {
-        fancybox: true,
-        animate: true,
-        isHome: false,
-        isPost: true,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
-        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
-        search: 
-    }
-</script>
-
-
-    <script> yiliaConfig.jquery_ui = [false]; </script>
-
-
-
-    <script> yiliaConfig.rootUrl = "\/";</script>
-
-
-
-
-
-
-<meta name="generator" content="Hexo 8.1.1"></head>
-<body>
-  <div id="container">
-    <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-    <header id="header" class="inner">
-        <a href="/" class="profilepic">
-            <img src="/img/avatar.png" class="animated zoomIn">
-        </a>
-        <hgroup>
-          <h1 class="header-author"><a href="/"></a></h1>
-        </hgroup>
-
-        
-
-        
-
-
-        
-            <div id="switch-btn" class="switch-btn">
-                <div class="icon">
-                    <div class="icon-ctn">
-                        <div class="icon-wrap icon-house" data-idx="0">
-                            <div class="birdhouse"></div>
-                            <div class="birdhouse_holes"></div>
-                        </div>
-                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
-                            <div class="ribbon"></div>
-                        </div>
-                        
-                        <div class="icon-wrap icon-link hide" data-idx="2">
-                            <div class="loopback_l"></div>
-                            <div class="loopback_r"></div>
-                        </div>
-                        
-                        
-                        <div class="icon-wrap icon-me hide" data-idx="3">
-                            <div class="user"></div>
-                            <div class="shoulder"></div>
-                        </div>
-                        
-                    </div>
-                    
+<div class="kira-image">
+    <div class="kira-image-modal">
+        <div class="kira-image-header">
+            <div class="kira-image-counter"></div>
+            <div class="kira-image-title"></div>
+            <div class="kira-image-operation">
+                <div class="kira-image-operation-button" id="kira-image-operation-button-zoom">
+                    <i class="kirafont icon-zoom-in"></i>
                 </div>
-                <div class="tips-box hide">
-                    <div class="tips-arrow"></div>
-                    <ul class="tips-inner">
-                        <li>菜单</li>
-                        <li>标签</li>
-                        
-                        <li>友情链接</li>
-                        
-                        
-                        <li>关于我</li>
-                        
-                    </ul>
+                <div class="kira-image-operation-button" id="kira-image-operation-button-close">
+                    <i class="kirafont icon-close"></i>
                 </div>
-            </div>
-        
-
-        <div id="switch-area" class="switch-area">
-            <div class="switch-wrap">
-                <section class="switch-part switch-part1">
-                    <nav class="header-menu">
-                        <ul>
-                        
-                            <li><a href="/">主页</a></li>
-                        
-                            <li><a href="/archives/">所有文章</a></li>
-                        
-                            <li><a href="/tags/">标签云</a></li>
-                        
-                            <li><a href="/about/">关于我</a></li>
-                        
-                        </ul>
-                    </nav>
-                    <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" href="mailto:123@123.com" title="Email"></a>
-                            
-                                <a class="fa GitHub" href="#" title="GitHub"></a>
-                            
-                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
-                            
-                        </ul>
-                    </nav>
-                </section>
-                
-                
-                <section class="switch-part switch-part2">
-                    <div class="widget tagcloud" id="js-tagcloud">
-                        
-                    </div>
-                </section>
-                
-                
-                
-                <section class="switch-part switch-part3">
-                    <div id="js-friends">
-                    
-                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
-                    
-                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub</a>
-                    
-                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="http://moxfive.xyz/">MOxFIVE</a>
-                    
-                    </div>
-                </section>
-                
-
-                
-                
-                <section class="switch-part switch-part4">
-                
-                    <div id="js-aboutme">专注于前端</div>
-                </section>
-                
             </div>
         </div>
-    </header>                
+        <div class="kira-image-container">
+            <div class="kira-image-prev-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-left"></i>
+                </div>
+            </div>
+            <div class="kira-image-list">
+                <div class="kira-image-prev">
+                    <img />
+                </div>
+                <div class="kira-image-now">
+                    <img />
+                </div>
+                <div class="kira-image-next">
+                    <img />
+                </div>
+            </div>
+            <div class="kira-image-next-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-    </div>
-    <div class="mid-col">
-      <nav id="mobile-nav">
-      <div class="overlay">
-          <div class="slider-trigger"></div>
-          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
-      </div>
-    <div class="intrude-less">
-        <header id="header" class="inner">
-            <a href="/" class="profilepic">
-                <img src="/img/avatar.png" class="animated zoomIn">
-            </a>
-            <hgroup>
-              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
-            </hgroup>
-            
-            <nav class="header-menu">
-                <ul>
-                
-                    <li><a href="/">主页</a></li>
-                
-                    <li><a href="/archives/">所有文章</a></li>
-                
-                    <li><a href="/tags/">标签云</a></li>
-                
-                    <li><a href="/about/">关于我</a></li>
-                
-                <div class="clearfix"></div>
-                </ul>
-            </nav>
-            <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" target="_blank" href="mailto:123@123.com" title="Email"></a>
-                            
-                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
-                            
-                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
-                            
-                        </ul>
-            </nav>
-        </header>                
-    </div>
-    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
-</nav>
-      <div class="body-wrap"><article id="post-第四章/从用户空间陷入" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/" class="article-date">
-      <time datetime="2025-12-28T13:05:10.000Z" itemprop="datePublished">2025-12-28</time>
-</a>
+
+	
+<link rel="stylesheet" href="/css/kira-code-copy.css">
+
+	
+<script src="/js/kira-code-copy.js"></script>
 
 
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      从用户空间陷入
-    </h1>
-  
-
-      </header>
-      
-      <div class="article-info article-info-post">
-        
-
-        
-        <div class="clearfix"></div>
-      </div>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h3 id="从用户空间陷入（陷阱）：xv6-完整流程解析"><a href="#从用户空间陷入（陷阱）：xv6-完整流程解析" class="headerlink" title="从用户空间陷入（陷阱）：xv6 完整流程解析"></a>从用户空间陷入（陷阱）：xv6 完整流程解析</h3><p>用户空间触发陷阱（系统调用&#x2F;异常&#x2F;设备中断）是 xv6 陷阱处理中最复杂的场景，核心挑战是：<strong>用户页表不映射内核、栈指针可能非法、硬件不自动切换页表</strong>。xv6 通过「蹦床页（trampoline）+ 陷阱帧（trapframe）+ 分层处理（汇编→C→汇编）」解决这些问题，以下是全流程的逐阶段拆解：</p>
-<h4 id="一、陷阱触发前的前置准备（内核初始化-进程创建）"><a href="#一、陷阱触发前的前置准备（内核初始化-进程创建）" class="headerlink" title="一、陷阱触发前的前置准备（内核初始化&#x2F;进程创建）"></a>一、陷阱触发前的前置准备（内核初始化&#x2F;进程创建）</h4><p>为了让用户态陷阱能安全进入内核，xv6 提前完成 3 个关键配置：</p>
-<h5 id="1-蹦床页（trampoline-page）的映射"><a href="#1-蹦床页（trampoline-page）的映射" class="headerlink" title="1. 蹦床页（trampoline page）的映射"></a>1. 蹦床页（trampoline page）的映射</h5><ul>
+<div class="kira-post">
+	<article>
+		
+		<div
+			class="kira-post-cover"
+			style="padding-bottom: '56.25%'"
+		>
+			<img
+				data-src="https://kira.host/assets/Pictures/Others/-f0d5cc34c6e5aa7_compressed.jpg"
+				data-sizes="auto"
+				alt="从用户空间陷入"
+				class="lazyload kira-post-cover-image disabled-kira-image"
+			/>
+			<h1>从用户空间陷入</h1>
+		</div>
+		
+		<div class="kira-post-meta kira-rainbow" style="margin:10px 0!important;">
+			<a><i class="kirafont icon-calendar-fill"></i>2025年12月28日</a>
+			<a><i class="kirafont icon-edit-fill"></i>3.6k 字</a>
+			<a><i class="kirafont icon-time-circle-fill"></i>大概 15 分钟</a>
+		</div>
+		<html><head></head><body><h3><span id="%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5%E9%99%B7%E9%98%B1xv6-%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B%E8%A7%A3%E6%9E%90">从用户空间陷入（陷阱）：xv6 完整流程解析</span></h3><p>用户空间触发陷阱（系统调用/异常/设备中断）是 xv6 陷阱处理中最复杂的场景，核心挑战是：<strong>用户页表不映射内核、栈指针可能非法、硬件不自动切换页表</strong>。xv6 通过「蹦床页（trampoline）+ 陷阱帧（trapframe）+ 分层处理（汇编→C→汇编）」解决这些问题，以下是全流程的逐阶段拆解：</p>
+<h4><span id="%E4%B8%80%E9%99%B7%E9%98%B1%E8%A7%A6%E5%8F%91%E5%89%8D%E7%9A%84%E5%89%8D%E7%BD%AE%E5%87%86%E5%A4%87%E5%86%85%E6%A0%B8%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA">一、陷阱触发前的前置准备（内核初始化/进程创建）</span></h4><p>为了让用户态陷阱能安全进入内核，xv6 提前完成 3 个关键配置：</p>
+<h5><span id="1-%E8%B9%A6%E5%BA%8A%E9%A1%B5trampoline-page%E7%9A%84%E6%98%A0%E5%B0%84">1. 蹦床页（trampoline page）的映射</span></h5><ul>
 <li><strong>核心问题</strong>：RISC-V 硬件触发陷阱时不切换页表，<code>stvec</code> 指向的 <code>uservec</code> 汇编代码必须在<strong>用户页表中可访问</strong>；但 <code>uservec</code> 又需要切换到内核页表，因此 <code>uservec</code> 所在的蹦床页必须同时映射到「用户页表 + 内核页表」的<strong>相同虚拟地址（TRAMPOLINE）</strong>。</li>
 <li><strong>实现</strong>：<ul>
-<li>蹦床页的内容是 <code>trampoline.S</code> 中的 <code>uservec</code>&#x2F;<code>userret</code> 汇编代码，编译后固定在 TRAMPOLINE 地址；</li>
+<li>蹦床页的内容是 <code>trampoline.S</code> 中的 <code>uservec</code>/<code>userret</code> 汇编代码，编译后固定在 TRAMPOLINE 地址；</li>
 <li>内核页表：将蹦床页的物理地址映射到 TRAMPOLINE 虚拟地址（只读、S 模式）；</li>
 <li>每个用户进程页表：同样将蹦床页的物理地址映射到 TRAMPOLINE 虚拟地址（只读、U 模式可执行）。</li>
 </ul>
 </li>
 </ul>
-<h5 id="2-陷阱帧（trapframe）的分配与映射"><a href="#2-陷阱帧（trapframe）的分配与映射" class="headerlink" title="2. 陷阱帧（trapframe）的分配与映射"></a>2. 陷阱帧（trapframe）的分配与映射</h5><ul>
+<h5><span id="2-%E9%99%B7%E9%98%B1%E5%B8%A7trapframe%E7%9A%84%E5%88%86%E9%85%8D%E4%B8%8E%E6%98%A0%E5%B0%84">2. 陷阱帧（trapframe）的分配与映射</span></h5><ul>
 <li><strong>核心问题</strong>：<code>uservec</code> 需要保存用户寄存器，但此时仍在用户页表下，必须让陷阱帧在用户地址空间可访问。</li>
 <li><strong>实现</strong>：<ul>
 <li>每个进程创建时（<code>allocproc()</code>），内核分配一页物理内存作为该进程的 <code>trapframe</code>（结构体见前文），用于保存用户寄存器、内核栈指针、hartid、内核页表地址等；</li>
 <li>该陷阱帧被映射到用户页表的 <code>TRAPFRAME</code> 虚拟地址（紧邻 TRAMPOLINE 下方），同时内核页表通过 <code>p-&gt;trapframe</code> 直接访问该物理页（无需虚拟地址映射）；</li>
-<li>内核将 <code>sscratch</code> 寄存器设置为 <code>TRAPFRAME</code> 地址（用户态运行时），作为 <code>uservec</code> 切换栈&#x2F;保存寄存器的锚点。</li>
+<li>内核将 <code>sscratch</code> 寄存器设置为 <code>TRAPFRAME</code> 地址（用户态运行时），作为 <code>uservec</code> 切换栈/保存寄存器的锚点。</li>
 </ul>
 </li>
 </ul>
-<h5 id="3-stvec-寄存器初始化"><a href="#3-stvec-寄存器初始化" class="headerlink" title="3. stvec 寄存器初始化"></a>3. stvec 寄存器初始化</h5><p>内核在进程切换到用户态前（<code>usertrapret()</code>），将 <code>stvec</code> 设置为 <code>uservec</code> 的地址（TRAMPOLINE + 偏移），确保用户态陷阱触发时，CPU 跳转到 <code>uservec</code>。</p>
-<h4 id="二、陷阱触发：uservec-汇编处理（trampoline-S）"><a href="#二、陷阱触发：uservec-汇编处理（trampoline-S）" class="headerlink" title="二、陷阱触发：uservec 汇编处理（trampoline.S）"></a>二、陷阱触发：uservec 汇编处理（trampoline.S）</h4><p>用户态执行 <code>ecall</code>&#x2F;触发异常&#x2F;设备中断时，CPU 硬件完成基础操作（切 S 模式、保存 sepc&#x2F;scause、跳 stvec）后，进入 <code>uservec</code> 汇编代码，核心任务是「安全保存用户寄存器 + 切换到内核页表」。</p>
-<h5 id="步骤-1：交换-a0-和-sscratch（解锁可用寄存器）"><a href="#步骤-1：交换-a0-和-sscratch（解锁可用寄存器）" class="headerlink" title="步骤 1：交换 a0 和 sscratch（解锁可用寄存器）"></a>步骤 1：交换 a0 和 sscratch（解锁可用寄存器）</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># uservec 入口第一步</span><br><span class="line">csrrw a0, sscratch, a0  # 原子交换：</span><br><span class="line">                        # a0 = 原sscratch（TRAPFRAME 地址）</span><br><span class="line">                        # sscratch = 原a0（用户态的a0值，先暂存）</span><br></pre></td></tr></table></figure>
+<h5><span id="3-stvec-%E5%AF%84%E5%AD%98%E5%99%A8%E5%88%9D%E5%A7%8B%E5%8C%96">3. stvec 寄存器初始化</span></h5><p>内核在进程切换到用户态前（<code>usertrapret()</code>），将 <code>stvec</code> 设置为 <code>uservec</code> 的地址（TRAMPOLINE + 偏移），确保用户态陷阱触发时，CPU 跳转到 <code>uservec</code>。</p>
+<h4><span id="%E4%BA%8C%E9%99%B7%E9%98%B1%E8%A7%A6%E5%8F%91uservec-%E6%B1%87%E7%BC%96%E5%A4%84%E7%90%86trampolines">二、陷阱触发：uservec 汇编处理（trampoline.S）</span></h4><p>用户态执行 <code>ecall</code>/触发异常/设备中断时，CPU 硬件完成基础操作（切 S 模式、保存 sepc/scause、跳 stvec）后，进入 <code>uservec</code> 汇编代码，核心任务是「安全保存用户寄存器 + 切换到内核页表」。</p>
+<h5><span id="%E6%AD%A5%E9%AA%A4-1%E4%BA%A4%E6%8D%A2-a0-%E5%92%8C-sscratch%E8%A7%A3%E9%94%81%E5%8F%AF%E7%94%A8%E5%AF%84%E5%AD%98%E5%99%A8">步骤 1：交换 a0 和 sscratch（解锁可用寄存器）</span></h5><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs asm"># uservec 入口第一步<br>csrrw a0, sscratch, a0  # 原子交换：<br>                        # a0 = 原sscratch（TRAPFRAME 地址）<br>                        # sscratch = 原a0（用户态的a0值，先暂存）<br></code></pre></td></tr></tbody></table></figure>
 <ul>
 <li><strong>为什么要交换</strong>：此时所有 32 个通用寄存器都持有用户态的值，<code>uservec</code> 不能直接修改任何寄存器（否则会覆盖用户数据）；通过 <code>csrrw</code> 交换 <code>a0</code> 和 <code>sscratch</code>，既保存了用户的 <code>a0</code>，又让 <code>a0</code> 指向陷阱帧（TRAPFRAME），成为 <code>uservec</code> 可安全使用的第一个寄存器。</li>
 </ul>
-<h5 id="步骤-2：保存所有用户寄存器到陷阱帧"><a href="#步骤-2：保存所有用户寄存器到陷阱帧" class="headerlink" title="步骤 2：保存所有用户寄存器到陷阱帧"></a>步骤 2：保存所有用户寄存器到陷阱帧</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># a0 现在指向 TRAPFRAME，逐个保存用户寄存器</span><br><span class="line">sd ra, 0(a0)            # ra → trapframe.ra</span><br><span class="line">sd sp, 8(a0)            # 用户栈sp → trapframe.sp</span><br><span class="line">sd gp, 16(a0)           # gp → trapframe.gp</span><br><span class="line">...                     # 保存所有通用寄存器（a1-a7、s0-s11、t0-t6等）</span><br><span class="line">sd a0, 72(a0)           # 恢复用户a0：从sscratch读取原a0值，写入trapframe.a0</span><br></pre></td></tr></table></figure>
+<h5><span id="%E6%AD%A5%E9%AA%A4-2%E4%BF%9D%E5%AD%98%E6%89%80%E6%9C%89%E7%94%A8%E6%88%B7%E5%AF%84%E5%AD%98%E5%99%A8%E5%88%B0%E9%99%B7%E9%98%B1%E5%B8%A7">步骤 2：保存所有用户寄存器到陷阱帧</span></h5><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs asm"># a0 现在指向 TRAPFRAME，逐个保存用户寄存器<br>sd ra, 0(a0)            # ra → trapframe.ra<br>sd sp, 8(a0)            # 用户栈sp → trapframe.sp<br>sd gp, 16(a0)           # gp → trapframe.gp<br>...                     # 保存所有通用寄存器（a1-a7、s0-s11、t0-t6等）<br>sd a0, 72(a0)           # 恢复用户a0：从sscratch读取原a0值，写入trapframe.a0<br></code></pre></td></tr></tbody></table></figure>
 <ul>
 <li><strong>关键</strong>：此时仍在用户页表下，但 TRAPFRAME 已映射到用户地址空间，因此能直接写入陷阱帧；所有用户寄存器保存完成后，用户态上下文被完整兜底。</li>
 </ul>
-<h5 id="步骤-3：切换到内核页表并调用-usertrap"><a href="#步骤-3：切换到内核页表并调用-usertrap" class="headerlink" title="步骤 3：切换到内核页表并调用 usertrap"></a>步骤 3：切换到内核页表并调用 usertrap</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 从陷阱帧读取内核页表地址（satp）、内核栈地址、usertrap 地址</span><br><span class="line">ld t0, (TRAPFRAME + kernel_satp)(a0)  # t0 = 内核页表的satp值</span><br><span class="line">ld sp, (TRAPFRAME + kernel_sp)(a0)    # sp = 进程的内核栈地址</span><br><span class="line">ld t1, (TRAPFRAME + usertrap)(a0)     # t1 = usertrap() 函数地址</span><br><span class="line"></span><br><span class="line"># 切换到内核页表（satp = t0）</span><br><span class="line">csrw satp, t0</span><br><span class="line">sfence.vma                           # 刷新TLB，确保页表切换生效</span><br><span class="line"></span><br><span class="line"># 跳转到 usertrap()（内核栈已就绪，页表已切换）</span><br><span class="line">jr t1</span><br></pre></td></tr></table></figure>
+<h5><span id="%E6%AD%A5%E9%AA%A4-3%E5%88%87%E6%8D%A2%E5%88%B0%E5%86%85%E6%A0%B8%E9%A1%B5%E8%A1%A8%E5%B9%B6%E8%B0%83%E7%94%A8-usertrap">步骤 3：切换到内核页表并调用 usertrap</span></h5><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs asm"># 从陷阱帧读取内核页表地址（satp）、内核栈地址、usertrap 地址<br>ld t0, (TRAPFRAME + kernel_satp)(a0)  # t0 = 内核页表的satp值<br>ld sp, (TRAPFRAME + kernel_sp)(a0)    # sp = 进程的内核栈地址<br>ld t1, (TRAPFRAME + usertrap)(a0)     # t1 = usertrap() 函数地址<br><br># 切换到内核页表（satp = t0）<br>csrw satp, t0<br>sfence.vma                           # 刷新TLB，确保页表切换生效<br><br># 跳转到 usertrap()（内核栈已就绪，页表已切换）<br>jr t1<br></code></pre></td></tr></tbody></table></figure>
 <ul>
 <li><strong>核心逻辑</strong>：陷阱帧中提前存储了内核页表的 <code>satp</code> 值（内核初始化时写入），切换 <code>satp</code> 后，CPU 才能访问内核的所有虚拟地址；切换内核栈（<code>sp</code>）后，C 函数 <code>usertrap()</code> 可安全执行。</li>
 </ul>
-<h4 id="三、陷阱处理：usertrap-C-逻辑（trap-c）"><a href="#三、陷阱处理：usertrap-C-逻辑（trap-c）" class="headerlink" title="三、陷阱处理：usertrap C 逻辑（trap.c）"></a>三、陷阱处理：usertrap C 逻辑（trap.c）</h4><p><code>usertrap()</code> 是用户态陷阱的核心分发器，负责判断陷阱类型并处理，核心流程：</p>
-<h5 id="步骤-1：重设-stvec（避免内核态陷阱走-uservec）"><a href="#步骤-1：重设-stvec（避免内核态陷阱走-uservec）" class="headerlink" title="步骤 1：重设 stvec（避免内核态陷阱走 uservec）"></a>步骤 1：重设 stvec（避免内核态陷阱走 uservec）</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">w_stvec((uint64)kernelvec); <span class="comment">// 内核态陷阱改由 kernelvec 处理</span></span><br></pre></td></tr></table></figure>
+<h4><span id="%E4%B8%89%E9%99%B7%E9%98%B1%E5%A4%84%E7%90%86usertrap-c-%E9%80%BB%E8%BE%91trapc">三、陷阱处理：usertrap C 逻辑（trap.c）</span></h4><p><code>usertrap()</code> 是用户态陷阱的核心分发器，负责判断陷阱类型并处理，核心流程：</p>
+<h5><span id="%E6%AD%A5%E9%AA%A4-1%E9%87%8D%E8%AE%BE-stvec%E9%81%BF%E5%85%8D%E5%86%85%E6%A0%B8%E6%80%81%E9%99%B7%E9%98%B1%E8%B5%B0-uservec">步骤 1：重设 stvec（避免内核态陷阱走 uservec）</span></h5><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">w_stvec((uint64)kernelvec); <span class="hljs-comment">// 内核态陷阱改由 kernelvec 处理</span><br></code></pre></td></tr></tbody></table></figure>
 
-<h5 id="步骤-2：保存-sepc（防止进程切换覆盖）"><a href="#步骤-2：保存-sepc（防止进程切换覆盖）" class="headerlink" title="步骤 2：保存 sepc（防止进程切换覆盖）"></a>步骤 2：保存 sepc（防止进程切换覆盖）</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">proc</span> *<span class="title">p</span> =</span> myproc();</span><br><span class="line">p-&gt;trapframe-&gt;sepc = r_sepc(); <span class="comment">// 保存陷阱发生时的用户PC</span></span><br></pre></td></tr></table></figure>
+<h5><span id="%E6%AD%A5%E9%AA%A4-2%E4%BF%9D%E5%AD%98-sepc%E9%98%B2%E6%AD%A2%E8%BF%9B%E7%A8%8B%E5%88%87%E6%8D%A2%E8%A6%86%E7%9B%96">步骤 2：保存 sepc（防止进程切换覆盖）</span></h5><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">proc</span> *<span class="hljs-title">p</span> =</span> myproc();<br>p-&gt;trapframe-&gt;sepc = r_sepc(); <span class="hljs-comment">// 保存陷阱发生时的用户PC</span><br></code></pre></td></tr></tbody></table></figure>
 <ul>
 <li><strong>原因</strong>：若陷阱是定时器中断，内核可能触发进程切换，<code>sepc</code> 是 CPU 寄存器，切换进程后会被覆盖，因此需保存到陷阱帧。</li>
 </ul>
-<h5 id="步骤-3：分类型处理陷阱"><a href="#步骤-3：分类型处理陷阱" class="headerlink" title="步骤 3：分类型处理陷阱"></a>步骤 3：分类型处理陷阱</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>((r_scause() &amp; <span class="number">0x8000000000000000L</span>) != <span class="number">0</span>)&#123;</span><br><span class="line">  <span class="comment">// 情况1：设备中断（最高位为1）</span></span><br><span class="line">  <span class="keyword">if</span>(r_scause() == <span class="number">0x8000000000000005L</span>) timerintr(); <span class="comment">// 定时器中断</span></span><br><span class="line">  w_sip(r_sip() &amp; ~<span class="number">2</span>); <span class="comment">// 清除中断标记</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="comment">// 情况2：异常/系统调用（最高位为0）</span></span><br><span class="line">  <span class="keyword">if</span>(r_scause() == <span class="number">8</span>)&#123;</span><br><span class="line">    <span class="comment">// 系统调用（ecall触发，scause=8）</span></span><br><span class="line">    p-&gt;trapframe-&gt;sepc += <span class="number">4</span>; <span class="comment">// 跳过ecall指令（返回后执行下一条）</span></span><br><span class="line">    uint64 syscallno = p-&gt;trapframe-&gt;a7; <span class="comment">// 读取系统调用号（a7寄存器）</span></span><br><span class="line">    p-&gt;trapframe-&gt;a0 = syscall(syscallno); <span class="comment">// 执行sys_*函数，结果存a0</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 异常（除零、无效地址等）：终止进程</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;user trap %p pid=%d\n&quot;</span>, r_sepc(), p-&gt;pid);</span><br><span class="line">    p-&gt;killed = <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5><span id="%E6%AD%A5%E9%AA%A4-3%E5%88%86%E7%B1%BB%E5%9E%8B%E5%A4%84%E7%90%86%E9%99%B7%E9%98%B1">步骤 3：分类型处理陷阱</span></h5><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">if</span>((r_scause() &amp; <span class="hljs-number">0x8000000000000000L</span>) != <span class="hljs-number">0</span>){<br>  <span class="hljs-comment">// 情况1：设备中断（最高位为1）</span><br>  <span class="hljs-keyword">if</span>(r_scause() == <span class="hljs-number">0x8000000000000005L</span>) timerintr(); <span class="hljs-comment">// 定时器中断</span><br>  w_sip(r_sip() &amp; ~<span class="hljs-number">2</span>); <span class="hljs-comment">// 清除中断标记</span><br>} <span class="hljs-keyword">else</span> {<br>  <span class="hljs-comment">// 情况2：异常/系统调用（最高位为0）</span><br>  <span class="hljs-keyword">if</span>(r_scause() == <span class="hljs-number">8</span>){<br>    <span class="hljs-comment">// 系统调用（ecall触发，scause=8）</span><br>    p-&gt;trapframe-&gt;sepc += <span class="hljs-number">4</span>; <span class="hljs-comment">// 跳过ecall指令（返回后执行下一条）</span><br>    uint64 syscallno = p-&gt;trapframe-&gt;a7; <span class="hljs-comment">// 读取系统调用号（a7寄存器）</span><br>    p-&gt;trapframe-&gt;a0 = syscall(syscallno); <span class="hljs-comment">// 执行sys_*函数，结果存a0</span><br>  } <span class="hljs-keyword">else</span> {<br>    <span class="hljs-comment">// 异常（除零、无效地址等）：终止进程</span><br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"user trap %p pid=%d\n"</span>, r_sepc(), p-&gt;pid);<br>    p-&gt;killed = <span class="hljs-number">1</span>;<br>  }<br>}<br></code></pre></td></tr></tbody></table></figure>
 
-<h5 id="步骤-4：检查进程状态（是否终止-需要调度）"><a href="#步骤-4：检查进程状态（是否终止-需要调度）" class="headerlink" title="步骤 4：检查进程状态（是否终止&#x2F;需要调度）"></a>步骤 4：检查进程状态（是否终止&#x2F;需要调度）</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(p-&gt;killed) <span class="built_in">exit</span>(<span class="number">-1</span>); <span class="comment">// 异常导致进程被杀死，直接退出</span></span><br><span class="line"><span class="keyword">if</span>(which_dev() == <span class="number">2</span>) yield(); <span class="comment">// 定时器中断，触发进程调度</span></span><br></pre></td></tr></table></figure>
+<h5><span id="%E6%AD%A5%E9%AA%A4-4%E6%A3%80%E6%9F%A5%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81%E6%98%AF%E5%90%A6%E7%BB%88%E6%AD%A2%E9%9C%80%E8%A6%81%E8%B0%83%E5%BA%A6">步骤 4：检查进程状态（是否终止/需要调度）</span></h5><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">if</span>(p-&gt;killed) <span class="hljs-built_in">exit</span>(<span class="hljs-number">-1</span>); <span class="hljs-comment">// 异常导致进程被杀死，直接退出</span><br><span class="hljs-keyword">if</span>(which_dev() == <span class="hljs-number">2</span>) yield(); <span class="hljs-comment">// 定时器中断，触发进程调度</span><br></code></pre></td></tr></tbody></table></figure>
 
-<h4 id="四、返回用户态：usertrapret-userret"><a href="#四、返回用户态：usertrapret-userret" class="headerlink" title="四、返回用户态：usertrapret + userret"></a>四、返回用户态：usertrapret + userret</h4><p>陷阱处理完成后，内核需要切回用户态，分为「C 层准备（usertrapret）」和「汇编层切换（userret）」两步：</p>
-<h5 id="步骤-1：usertrapret-准备返回环境（trap-c）"><a href="#步骤-1：usertrapret-准备返回环境（trap-c）" class="headerlink" title="步骤 1：usertrapret 准备返回环境（trap.c）"></a>步骤 1：usertrapret 准备返回环境（trap.c）</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">usertrapret</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">proc</span> *<span class="title">p</span> =</span> myproc();</span><br><span class="line">  <span class="comment">// 1. 重置 stvec 为 uservec（为下次用户态陷阱做准备）</span></span><br><span class="line">  w_stvec(TRAMPOLINE + (uservec - trampoline));</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 2. 恢复 sepc 为保存的用户PC（陷阱发生时的地址/ecall下一条）</span></span><br><span class="line">  w_sepc(p-&gt;trapframe-&gt;sepc);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 3. 配置 sstatus：SPP=0（返回U模式）、SIE=1（启用中断）</span></span><br><span class="line">  uint64 sstatus = r_sstatus();</span><br><span class="line">  sstatus &amp;= ~SSTATUS_SPP; <span class="comment">// 清除SPP，标记返回用户态</span></span><br><span class="line">  sstatus |= SSTATUS_SPIE; <span class="comment">// 恢复中断使能</span></span><br><span class="line">  w_sstatus(sstatus);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 4. 跳转到 userret（蹦床页，需传用户页表和TRAPFRAME地址）</span></span><br><span class="line">  uint64 fn = TRAMPOLINE + (userret - trampoline);</span><br><span class="line">  ((<span class="type">void</span> (*)(uint64, uint64))fn)(p-&gt;pagetable, TRAPFRAME);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4><span id="%E5%9B%9B%E8%BF%94%E5%9B%9E%E7%94%A8%E6%88%B7%E6%80%81usertrapret--userret">四、返回用户态：usertrapret + userret</span></h4><p>陷阱处理完成后，内核需要切回用户态，分为「C 层准备（usertrapret）」和「汇编层切换（userret）」两步：</p>
+<h5><span id="%E6%AD%A5%E9%AA%A4-1usertrapret-%E5%87%86%E5%A4%87%E8%BF%94%E5%9B%9E%E7%8E%AF%E5%A2%83trapc">步骤 1：usertrapret 准备返回环境（trap.c）</span></h5><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">void</span> <span class="hljs-title function_">usertrapret</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {<br>  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">proc</span> *<span class="hljs-title">p</span> =</span> myproc();<br>  <span class="hljs-comment">// 1. 重置 stvec 为 uservec（为下次用户态陷阱做准备）</span><br>  w_stvec(TRAMPOLINE + (uservec - trampoline));<br>  <br>  <span class="hljs-comment">// 2. 恢复 sepc 为保存的用户PC（陷阱发生时的地址/ecall下一条）</span><br>  w_sepc(p-&gt;trapframe-&gt;sepc);<br>  <br>  <span class="hljs-comment">// 3. 配置 sstatus：SPP=0（返回U模式）、SIE=1（启用中断）</span><br>  uint64 sstatus = r_sstatus();<br>  sstatus &amp;= ~SSTATUS_SPP; <span class="hljs-comment">// 清除SPP，标记返回用户态</span><br>  sstatus |= SSTATUS_SPIE; <span class="hljs-comment">// 恢复中断使能</span><br>  w_sstatus(sstatus);<br>  <br>  <span class="hljs-comment">// 4. 跳转到 userret（蹦床页，需传用户页表和TRAPFRAME地址）</span><br>  uint64 fn = TRAMPOLINE + (userret - trampoline);<br>  ((<span class="hljs-type">void</span> (*)(uint64, uint64))fn)(p-&gt;pagetable, TRAPFRAME);<br>}<br></code></pre></td></tr></tbody></table></figure>
 
-<h5 id="步骤-2：userret-汇编切回用户态（trampoline-S）"><a href="#步骤-2：userret-汇编切回用户态（trampoline-S）" class="headerlink" title="步骤 2：userret 汇编切回用户态（trampoline.S）"></a>步骤 2：userret 汇编切回用户态（trampoline.S）</h5><p><code>userret</code> 接收两个参数：<code>a0=用户页表satp</code>、<code>a1=TRAPFRAME地址</code>，核心逻辑是「切换回用户页表 + 恢复用户寄存器 + sret 返回」：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">userret:</span><br><span class="line">  # 步骤1：切换到用户页表</span><br><span class="line">  csrw satp, a0         # satp = 用户页表的satp值</span><br><span class="line">  sfence.vma           # 刷新TLB</span><br><span class="line">  mv a0, a1            # a0 = TRAPFRAME地址</span><br><span class="line">  </span><br><span class="line">  # 步骤2：准备sscratch（恢复为TRAPFRAME，为下次陷阱做准备）</span><br><span class="line">  csrr t0, sscratch    # 暂存当前sscratch</span><br><span class="line">  csrw sscratch, a0    # sscratch = TRAPFRAME</span><br><span class="line">  </span><br><span class="line">  # 步骤3：从陷阱帧恢复所有用户寄存器</span><br><span class="line">  ld ra, 0(a0)         # 恢复ra</span><br><span class="line">  ld sp, 8(a0)         # 恢复用户栈sp</span><br><span class="line">  ld gp, 16(a0)        # 恢复gp</span><br><span class="line">  ...                  # 恢复所有通用寄存器</span><br><span class="line">  ld a0, 72(a0)        # 恢复用户a0</span><br><span class="line">  </span><br><span class="line">  # 步骤4：交换a0和sscratch（恢复用户a0，sscratch保留TRAPFRAME）</span><br><span class="line">  csrrw a0, sscratch, a0</span><br><span class="line">  </span><br><span class="line">  # 步骤5：sret 返回用户态（sepc恢复PC，特权级切回U模式）</span><br><span class="line">  sret</span><br></pre></td></tr></table></figure>
+<h5><span id="%E6%AD%A5%E9%AA%A4-2userret-%E6%B1%87%E7%BC%96%E5%88%87%E5%9B%9E%E7%94%A8%E6%88%B7%E6%80%81trampolines">步骤 2：userret 汇编切回用户态（trampoline.S）</span></h5><p><code>userret</code> 接收两个参数：<code>a0=用户页表satp</code>、<code>a1=TRAPFRAME地址</code>，核心逻辑是「切换回用户页表 + 恢复用户寄存器 + sret 返回」：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs asm">userret:<br>  # 步骤1：切换到用户页表<br>  csrw satp, a0         # satp = 用户页表的satp值<br>  sfence.vma           # 刷新TLB<br>  mv a0, a1            # a0 = TRAPFRAME地址<br>  <br>  # 步骤2：准备sscratch（恢复为TRAPFRAME，为下次陷阱做准备）<br>  csrr t0, sscratch    # 暂存当前sscratch<br>  csrw sscratch, a0    # sscratch = TRAPFRAME<br>  <br>  # 步骤3：从陷阱帧恢复所有用户寄存器<br>  ld ra, 0(a0)         # 恢复ra<br>  ld sp, 8(a0)         # 恢复用户栈sp<br>  ld gp, 16(a0)        # 恢复gp<br>  ...                  # 恢复所有通用寄存器<br>  ld a0, 72(a0)        # 恢复用户a0<br>  <br>  # 步骤4：交换a0和sscratch（恢复用户a0，sscratch保留TRAPFRAME）<br>  csrrw a0, sscratch, a0<br>  <br>  # 步骤5：sret 返回用户态（sepc恢复PC，特权级切回U模式）<br>  sret<br></code></pre></td></tr></tbody></table></figure>
 <ul>
 <li><strong>关键</strong>：切换回用户页表后，只有蹦床页和 TRAPFRAME 可访问，因此所有操作必须基于寄存器和陷阱帧；<code>sret</code> 指令会将 <code>sepc</code> 写回 PC，CPU 从陷阱发生的下一条指令继续执行。</li>
 </ul>
-<h4 id="五、核心设计要点总结"><a href="#五、核心设计要点总结" class="headerlink" title="五、核心设计要点总结"></a>五、核心设计要点总结</h4><table>
+<h4><span id="%E4%BA%94%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E8%A6%81%E7%82%B9%E6%80%BB%E7%BB%93">五、核心设计要点总结</span></h4><table>
 <thead>
 <tr>
 <th>设计点</th>
@@ -359,7 +401,7 @@
 <tbody><tr>
 <td>蹦床页（TRAMPOLINE）</td>
 <td>硬件不切换页表，uservec需跨页表执行</td>
-<td>同一物理页映射到用户&#x2F;内核页表的相同虚拟地址</td>
+<td>同一物理页映射到用户/内核页表的相同虚拟地址</td>
 </tr>
 <tr>
 <td>陷阱帧（TRAPFRAME）</td>
@@ -377,7 +419,7 @@
 <td>uservec（汇编）→ usertrap（C）→ userret（汇编）</td>
 </tr>
 </tbody></table>
-<h4 id="六、关键疑问解答"><a href="#六、关键疑问解答" class="headerlink" title="六、关键疑问解答"></a>六、关键疑问解答</h4><ol>
+<h4><span id="%E5%85%AD%E5%85%B3%E9%94%AE%E7%96%91%E9%97%AE%E8%A7%A3%E7%AD%94">六、关键疑问解答</span></h4><ol>
 <li><p><strong>为什么切换页表时需要 sfence.vma？</strong><br>TLB（快表）会缓存虚拟地址→物理地址的映射，切换页表后，TLB 中仍保留旧页表的缓存，<code>sfence.vma</code> 会清空 TLB，确保新页表的映射生效。</p>
 </li>
 <li><p><strong>为什么 sepc 要 +4？</strong><br>用户态执行 <code>ecall</code> 触发系统调用时，CPU 将 <code>ecall</code> 指令的地址写入 <code>sepc</code>；但 <code>ecall</code> 执行后，用户程序应从下一条指令继续（<code>ecall</code> 占 4 字节），因此需将 <code>sepc</code> 加 4。</p>
@@ -385,17 +427,17 @@
 <li><p><strong>为什么陷阱帧要映射到用户页表？</strong><br><code>uservec</code> 执行初期仍在用户页表下（未切换 satp），若陷阱帧仅在内核页表映射，<code>uservec</code> 无法访问，因此必须临时映射到用户地址空间（TRAPFRAME），且该地址仅进程自身可访问，无安全风险。</p>
 </li>
 </ol>
-<h3 id="最终流程闭环"><a href="#最终流程闭环" class="headerlink" title="最终流程闭环"></a>最终流程闭环</h3><p>用户态陷阱的完整链路：<br><code>用户指令触发陷阱</code> → CPU硬件切S模式跳uservec → uservec保存寄存器+切内核页表 → usertrap分发处理（系统调用&#x2F;中断&#x2F;异常） → usertrapret准备返回环境 → userret切回用户页表+恢复寄存器 → sret返回用户态继续执行。</p>
-<p>这个流程的核心是「利用蹦床页跨页表执行、利用陷阱帧保存上下文、利用硬件控制寄存器保证特权级隔离」，既解决了用户&#x2F;内核的隔离性问题，又保证了陷阱处理的性能和灵活性。</p>
+<h3><span id="%E6%9C%80%E7%BB%88%E6%B5%81%E7%A8%8B%E9%97%AD%E7%8E%AF">最终流程闭环</span></h3><p>用户态陷阱的完整链路：<br><code>用户指令触发陷阱</code> → CPU硬件切S模式跳uservec → uservec保存寄存器+切内核页表 → usertrap分发处理（系统调用/中断/异常） → usertrapret准备返回环境 → userret切回用户页表+恢复寄存器 → sret返回用户态继续执行。</p>
+<p>这个流程的核心是「利用蹦床页跨页表执行、利用陷阱帧保存上下文、利用硬件控制寄存器保证特权级隔离」，既解决了用户/内核的隔离性问题，又保证了陷阱处理的性能和灵活性。</p>
 <hr>
-<h3 id="核心结论"><a href="#核心结论" class="headerlink" title="核心结论"></a>核心结论</h3><p>在 xv6 的 RISC-V 实现中，<strong>用户态陷阱入口 <code>uservec</code> 里实际交换的是 <code>a0</code> 和 <code>sscratch</code></strong>；而“<code>sp</code> 与 <code>sscratch</code> 交换”是 RISC-V 陷阱切换栈的<strong>通用架构思路</strong>（文档&#x2F;教程常举的示例），但 xv6 为了更安全的寄存器管理，选择了 <code>a0</code> 而非 <code>sp</code>——这是你产生混淆的核心原因。</p>
-<h3 id="一、误解来源：通用思路-vs-xv6-实际实现"><a href="#一、误解来源：通用思路-vs-xv6-实际实现" class="headerlink" title="一、误解来源：通用思路 vs xv6 实际实现"></a>一、误解来源：通用思路 vs xv6 实际实现</h3><h4 id="1-RISC-V-架构的“通用建议”：交换-sp-和-sscratch"><a href="#1-RISC-V-架构的“通用建议”：交换-sp-和-sscratch" class="headerlink" title="1. RISC-V 架构的“通用建议”：交换 sp 和 sscratch"></a>1. RISC-V 架构的“通用建议”：交换 sp 和 sscratch</h4><p>RISC-V 官方文档&#x2F;入门教程中，陷阱切换栈的典型思路是：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 通用示例（非xv6）：交换sp和sscratch，直接切换到内核栈</span><br><span class="line">csrrw sp, sscratch, sp  # sp = 原sscratch（内核栈/trapframe地址），sscratch = 原sp（用户栈）</span><br></pre></td></tr></table></figure>
+<h3><span id="%E6%A0%B8%E5%BF%83%E7%BB%93%E8%AE%BA">核心结论</span></h3><p>在 xv6 的 RISC-V 实现中，<strong>用户态陷阱入口 <code>uservec</code> 里实际交换的是 <code>a0</code> 和 <code>sscratch</code></strong>；而“<code>sp</code> 与 <code>sscratch</code> 交换”是 RISC-V 陷阱切换栈的<strong>通用架构思路</strong>（文档/教程常举的示例），但 xv6 为了更安全的寄存器管理，选择了 <code>a0</code> 而非 <code>sp</code>——这是你产生混淆的核心原因。</p>
+<h3><span id="%E4%B8%80%E8%AF%AF%E8%A7%A3%E6%9D%A5%E6%BA%90%E9%80%9A%E7%94%A8%E6%80%9D%E8%B7%AF-vs-xv6-%E5%AE%9E%E9%99%85%E5%AE%9E%E7%8E%B0">一、误解来源：通用思路 vs xv6 实际实现</span></h3><h4><span id="1-risc-v-%E6%9E%B6%E6%9E%84%E7%9A%84%E9%80%9A%E7%94%A8%E5%BB%BA%E8%AE%AE%E4%BA%A4%E6%8D%A2-sp-%E5%92%8C-sscratch">1. RISC-V 架构的“通用建议”：交换 sp 和 sscratch</span></h4><p>RISC-V 官方文档/入门教程中，陷阱切换栈的典型思路是：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs asm"># 通用示例（非xv6）：交换sp和sscratch，直接切换到内核栈<br>csrrw sp, sscratch, sp  # sp = 原sscratch（内核栈/trapframe地址），sscratch = 原sp（用户栈）<br></code></pre></td></tr></tbody></table></figure>
 <p>这个思路的核心是「用 sscratch 锚定内核栈地址，一条指令完成栈切换」，逻辑简洁，但有个前提：<strong>切换 sp 前无需保存其他寄存器</strong>（或仅需保存少量）。</p>
-<h4 id="2-xv6-的实际选择：交换-a0-和-sscratch"><a href="#2-xv6-的实际选择：交换-a0-和-sscratch" class="headerlink" title="2. xv6 的实际选择：交换 a0 和 sscratch"></a>2. xv6 的实际选择：交换 a0 和 sscratch</h4><p>xv6 中 <code>uservec</code>（trampoline.S）的真实代码是：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"># kernel/trampoline.S: uservec 入口（xv6 RISC-V 原版）</span><br><span class="line">uservec:</span><br><span class="line">  # 交换 a0 和 sscratch：解锁第一个可用寄存器，锚定 trapframe 地址</span><br><span class="line">  csrrw a0, sscratch, a0  # a0 = 原sscratch (TRAPFRAME地址)；sscratch = 原a0 (用户态a0值)</span><br><span class="line">  </span><br><span class="line">  # 保存所有用户寄存器到 trapframe（此时a0指向TRAPFRAME，用户页表可访问）</span><br><span class="line">  sd ra, 0(a0)</span><br><span class="line">  sd sp, 8(a0)   # 保存用户态的sp（此时sp仍指向用户栈）</span><br><span class="line">  sd gp, 16(a0)</span><br><span class="line">  sd tp, 24(a0)</span><br><span class="line">  sd t0, 32(a0)</span><br><span class="line">  sd t1, 40(a0)</span><br><span class="line">  sd t2, 48(a0)</span><br><span class="line">  sd s0, 56(a0)</span><br><span class="line">  sd s1, 64(a0)</span><br><span class="line">  sd a1, 72(a0)  # 注意：a0已经被交换，所以先存a1，最后恢复用户a0</span><br><span class="line">  sd a2, 80(a0)</span><br><span class="line">  # ... 省略其他寄存器（a3-a7、s2-s11、t3-t6等）</span><br><span class="line">  csrr a1, sscratch       # 从sscratch取回用户态的a0值</span><br><span class="line">  sd a1, 68(a0)           # 保存用户态a0到trapframe.a0</span><br><span class="line">  </span><br><span class="line">  # 后续：切换内核页表、跳转到usertrap...</span><br></pre></td></tr></table></figure>
+<h4><span id="2-xv6-%E7%9A%84%E5%AE%9E%E9%99%85%E9%80%89%E6%8B%A9%E4%BA%A4%E6%8D%A2-a0-%E5%92%8C-sscratch">2. xv6 的实际选择：交换 a0 和 sscratch</span></h4><p>xv6 中 <code>uservec</code>（trampoline.S）的真实代码是：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs asm"># kernel/trampoline.S: uservec 入口（xv6 RISC-V 原版）<br>uservec:<br>  # 交换 a0 和 sscratch：解锁第一个可用寄存器，锚定 trapframe 地址<br>  csrrw a0, sscratch, a0  # a0 = 原sscratch (TRAPFRAME地址)；sscratch = 原a0 (用户态a0值)<br>  <br>  # 保存所有用户寄存器到 trapframe（此时a0指向TRAPFRAME，用户页表可访问）<br>  sd ra, 0(a0)<br>  sd sp, 8(a0)   # 保存用户态的sp（此时sp仍指向用户栈）<br>  sd gp, 16(a0)<br>  sd tp, 24(a0)<br>  sd t0, 32(a0)<br>  sd t1, 40(a0)<br>  sd t2, 48(a0)<br>  sd s0, 56(a0)<br>  sd s1, 64(a0)<br>  sd a1, 72(a0)  # 注意：a0已经被交换，所以先存a1，最后恢复用户a0<br>  sd a2, 80(a0)<br>  # ... 省略其他寄存器（a3-a7、s2-s11、t3-t6等）<br>  csrr a1, sscratch       # 从sscratch取回用户态的a0值<br>  sd a1, 68(a0)           # 保存用户态a0到trapframe.a0<br>  <br>  # 后续：切换内核页表、跳转到usertrap...<br></code></pre></td></tr></tbody></table></figure>
 
-<h3 id="二、xv6-选择-a0-而非-sp-的核心原因"><a href="#二、xv6-选择-a0-而非-sp-的核心原因" class="headerlink" title="二、xv6 选择 a0 而非 sp 的核心原因"></a>二、xv6 选择 a0 而非 sp 的核心原因</h3><p>陷阱触发后，CPU 刚跳转到 <code>uservec</code> 时，<strong>所有 32 个通用寄存器都持有用户态的值</strong>，且此时仍在「用户页表」上下文（未切换到内核页表）。xv6 选择 a0 交换的关键考量是：</p>
+<h3><span id="%E4%BA%8Cxv6-%E9%80%89%E6%8B%A9-a0-%E8%80%8C%E9%9D%9E-sp-%E7%9A%84%E6%A0%B8%E5%BF%83%E5%8E%9F%E5%9B%A0">二、xv6 选择 a0 而非 sp 的核心原因</span></h3><p>陷阱触发后，CPU 刚跳转到 <code>uservec</code> 时，<strong>所有 32 个通用寄存器都持有用户态的值</strong>，且此时仍在「用户页表」上下文（未切换到内核页表）。xv6 选择 a0 交换的关键考量是：</p>
 <ol>
 <li><p><strong>避免过早修改 sp 导致寄存器保存失败</strong><br>若先交换 sp（用户栈→trapframe），此时 sp 指向 trapframe，但还未保存任何用户寄存器（包括原 sp），后续保存 <code>sd sp, 8(a0)</code> 时，写入的是「已切换后的 sp（trapframe 地址）」，而非用户态的 sp——会导致用户栈地址丢失。</p>
 <p>而先交换 a0：</p>
@@ -404,13 +446,13 @@
 <li>a0 被解锁为「可用寄存器」（指向 trapframe），后续所有寄存器保存操作都基于 a0 完成，无冲突。</li>
 </ul>
 </li>
-<li><p><strong>trapframe 需先保存全量寄存器，再切换栈&#x2F;页表</strong><br>xv6 的 trapframe 要保存所有用户寄存器（而非仅 sp），且保存操作必须在「用户页表」下完成（因为还未切换到内核页表）。先拿 a0 锚定 trapframe 地址，才能安全完成全量寄存器保存，再执行后续的「切换内核栈（sp）」和「切换内核页表（satp）」。</p>
+<li><p><strong>trapframe 需先保存全量寄存器，再切换栈/页表</strong><br>xv6 的 trapframe 要保存所有用户寄存器（而非仅 sp），且保存操作必须在「用户页表」下完成（因为还未切换到内核页表）。先拿 a0 锚定 trapframe 地址，才能安全完成全量寄存器保存，再执行后续的「切换内核栈（sp）」和「切换内核页表（satp）」。</p>
 </li>
 </ol>
-<h3 id="三、关键补充：sp-的切换时机（在-a0-交换之后）"><a href="#三、关键补充：sp-的切换时机（在-a0-交换之后）" class="headerlink" title="三、关键补充：sp 的切换时机（在 a0 交换之后）"></a>三、关键补充：sp 的切换时机（在 a0 交换之后）</h3><p>xv6 并非不切换 sp，而是<strong>把 sp 切换延后到“保存完所有用户寄存器、切换到内核页表之后”</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># uservec 中保存完寄存器后，切换到内核栈</span><br><span class="line">ld sp, (TRAPFRAME + kernel_sp)(a0)  # sp = 进程的内核栈地址（从trapframe读取）</span><br><span class="line">csrw satp, t0                       # 切换到内核页表</span><br><span class="line">sfence.vma</span><br><span class="line">jr t1                               # 跳转到usertrap（此时sp已为内核栈）</span><br></pre></td></tr></table></figure>
+<h3><span id="%E4%B8%89%E5%85%B3%E9%94%AE%E8%A1%A5%E5%85%85sp-%E7%9A%84%E5%88%87%E6%8D%A2%E6%97%B6%E6%9C%BA%E5%9C%A8-a0-%E4%BA%A4%E6%8D%A2%E4%B9%8B%E5%90%8E">三、关键补充：sp 的切换时机（在 a0 交换之后）</span></h3><p>xv6 并非不切换 sp，而是<strong>把 sp 切换延后到“保存完所有用户寄存器、切换到内核页表之后”</strong>：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs asm"># uservec 中保存完寄存器后，切换到内核栈<br>ld sp, (TRAPFRAME + kernel_sp)(a0)  # sp = 进程的内核栈地址（从trapframe读取）<br>csrw satp, t0                       # 切换到内核页表<br>sfence.vma<br>jr t1                               # 跳转到usertrap（此时sp已为内核栈）<br></code></pre></td></tr></tbody></table></figure>
 <p>此时切换 sp 是安全的：用户寄存器已全部保存到 trapframe，且已切换到内核页表，内核栈地址（trapframe.kernel_sp）是内核可访问的。</p>
-<h3 id="四、总结：两种交换的核心目的一致，仅时机-寄存器选择不同"><a href="#四、总结：两种交换的核心目的一致，仅时机-寄存器选择不同" class="headerlink" title="四、总结：两种交换的核心目的一致，仅时机&#x2F;寄存器选择不同"></a>四、总结：两种交换的核心目的一致，仅时机&#x2F;寄存器选择不同</h3><table>
+<h3><span id="%E5%9B%9B%E6%80%BB%E7%BB%93%E4%B8%A4%E7%A7%8D%E4%BA%A4%E6%8D%A2%E7%9A%84%E6%A0%B8%E5%BF%83%E7%9B%AE%E7%9A%84%E4%B8%80%E8%87%B4%E4%BB%85%E6%97%B6%E6%9C%BA%E5%AF%84%E5%AD%98%E5%99%A8%E9%80%89%E6%8B%A9%E4%B8%8D%E5%90%8C">四、总结：两种交换的核心目的一致，仅时机/寄存器选择不同</span></h3><table>
 <thead>
 <tr>
 <th>对比维度</th>
@@ -442,219 +484,70 @@
 <p>简单来说：</p>
 <ul>
 <li>你之前看到的“sp 和 sscratch 交换”是<strong>架构级通用示例</strong>；</li>
-<li>xv6 实际执行的是“a0 和 sscratch 交换”，是针对「全量寄存器保存+用户&#x2F;内核页表切换」场景的优化，本质都是利用 <code>sscratch</code> 作为“内核侧锚点”，只是选择了不同的临时寄存器。</li>
+<li>xv6 实际执行的是“a0 和 sscratch 交换”，是针对「全量寄存器保存+用户/内核页表切换」场景的优化，本质都是利用 <code>sscratch</code> 作为“内核侧锚点”，只是选择了不同的临时寄存器。</li>
 </ul>
+</body></html>
+	</article>
 
-      
+	 
+    <div class="kira-post-copyright">
+        <strong>本文作者：</strong>Ivan-FYF<br>
+        <strong>本文链接：</strong><a href="https://hellonnnnn.github.io/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/" title="https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2025&#x2F;12&#x2F;28&#x2F;第四章&#x2F;从用户空间陷入&#x2F;" target="_blank" rel="noopener">https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2025&#x2F;12&#x2F;28&#x2F;第四章&#x2F;从用户空间陷入&#x2F;</a><br>
+        
+            <strong>��Ȩ������</strong>���Ĳ��� <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> Э���������
+        
     </div>
-    
-  </div>
-  
-    
-    <div class="copyright">
-        <p><span>本文标题:</span><a href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a></p>
-        <p><span>文章作者:</span><a href="/" title="回到主页"></a></p>
-        <p><span>发布时间:</span>2025-12-28, 21:05:10</p>
-        <p><span>最后更新:</span>2025-12-29, 19:21:22</p>
-        <p>
-            <span>原始链接:</span><a class="post-url" href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/" title="从用户空间陷入">https://hellonnnnn.github.io/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://hellonnnnn.github.io/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/　　作者: " title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
-            <script> var clipboard = new Clipboard('.copy-path'); </script>
-        </p>
-        <p>
-            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
-        </p>
-    </div>
-
-
-
-    <nav id="article-nav">
-        
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E4%B8%AD-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF/">
-                    xv6 中 exec 系统调用的完整调用链路
-                </a>
-            </div>
-        
-        
-            <div id="article-nav-older" class="article-nav-title">
-                <a href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/RISC-V%E9%99%B7%E5%85%A5%E6%9C%BA%E5%88%B6/">
-                    陷阱指令和系统调用 核心解析
-                </a>
-            </div>
-        
-    </nav>
 
   
-</article>
+	<div class="kira-post-nav">
+		<nav class="post-nav">
+			
+		</nav>
+	</div>
+	
+	<div class="kira-post-meta kira-rainbow">
+		
+		
+	</div>
+	
+	<div class="kira-post-footer">
+		
 
-    <div id="toc" class="toc-article">
-        <strong class="toc-title">文章目录</strong>
-        
-            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5%EF%BC%88%E9%99%B7%E9%98%B1%EF%BC%89%EF%BC%9Axv6-%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B%E8%A7%A3%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">从用户空间陷入（陷阱）：xv6 完整流程解析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E9%99%B7%E9%98%B1%E8%A7%A6%E5%8F%91%E5%89%8D%E7%9A%84%E5%89%8D%E7%BD%AE%E5%87%86%E5%A4%87%EF%BC%88%E5%86%85%E6%A0%B8%E5%88%9D%E5%A7%8B%E5%8C%96-%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%EF%BC%89"><span class="toc-number">1.1.</span> <span class="toc-text">一、陷阱触发前的前置准备（内核初始化&#x2F;进程创建）</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-%E8%B9%A6%E5%BA%8A%E9%A1%B5%EF%BC%88trampoline-page%EF%BC%89%E7%9A%84%E6%98%A0%E5%B0%84"><span class="toc-number">1.1.1.</span> <span class="toc-text">1. 蹦床页（trampoline page）的映射</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-%E9%99%B7%E9%98%B1%E5%B8%A7%EF%BC%88trapframe%EF%BC%89%E7%9A%84%E5%88%86%E9%85%8D%E4%B8%8E%E6%98%A0%E5%B0%84"><span class="toc-number">1.1.2.</span> <span class="toc-text">2. 陷阱帧（trapframe）的分配与映射</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-stvec-%E5%AF%84%E5%AD%98%E5%99%A8%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">1.1.3.</span> <span class="toc-text">3. stvec 寄存器初始化</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E9%99%B7%E9%98%B1%E8%A7%A6%E5%8F%91%EF%BC%9Auservec-%E6%B1%87%E7%BC%96%E5%A4%84%E7%90%86%EF%BC%88trampoline-S%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">二、陷阱触发：uservec 汇编处理（trampoline.S）</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-1%EF%BC%9A%E4%BA%A4%E6%8D%A2-a0-%E5%92%8C-sscratch%EF%BC%88%E8%A7%A3%E9%94%81%E5%8F%AF%E7%94%A8%E5%AF%84%E5%AD%98%E5%99%A8%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">步骤 1：交换 a0 和 sscratch（解锁可用寄存器）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-2%EF%BC%9A%E4%BF%9D%E5%AD%98%E6%89%80%E6%9C%89%E7%94%A8%E6%88%B7%E5%AF%84%E5%AD%98%E5%99%A8%E5%88%B0%E9%99%B7%E9%98%B1%E5%B8%A7"><span class="toc-number">1.2.2.</span> <span class="toc-text">步骤 2：保存所有用户寄存器到陷阱帧</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-3%EF%BC%9A%E5%88%87%E6%8D%A2%E5%88%B0%E5%86%85%E6%A0%B8%E9%A1%B5%E8%A1%A8%E5%B9%B6%E8%B0%83%E7%94%A8-usertrap"><span class="toc-number">1.2.3.</span> <span class="toc-text">步骤 3：切换到内核页表并调用 usertrap</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E9%99%B7%E9%98%B1%E5%A4%84%E7%90%86%EF%BC%9Ausertrap-C-%E9%80%BB%E8%BE%91%EF%BC%88trap-c%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">三、陷阱处理：usertrap C 逻辑（trap.c）</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-1%EF%BC%9A%E9%87%8D%E8%AE%BE-stvec%EF%BC%88%E9%81%BF%E5%85%8D%E5%86%85%E6%A0%B8%E6%80%81%E9%99%B7%E9%98%B1%E8%B5%B0-uservec%EF%BC%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">步骤 1：重设 stvec（避免内核态陷阱走 uservec）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-2%EF%BC%9A%E4%BF%9D%E5%AD%98-sepc%EF%BC%88%E9%98%B2%E6%AD%A2%E8%BF%9B%E7%A8%8B%E5%88%87%E6%8D%A2%E8%A6%86%E7%9B%96%EF%BC%89"><span class="toc-number">1.3.2.</span> <span class="toc-text">步骤 2：保存 sepc（防止进程切换覆盖）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-3%EF%BC%9A%E5%88%86%E7%B1%BB%E5%9E%8B%E5%A4%84%E7%90%86%E9%99%B7%E9%98%B1"><span class="toc-number">1.3.3.</span> <span class="toc-text">步骤 3：分类型处理陷阱</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-4%EF%BC%9A%E6%A3%80%E6%9F%A5%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81%EF%BC%88%E6%98%AF%E5%90%A6%E7%BB%88%E6%AD%A2-%E9%9C%80%E8%A6%81%E8%B0%83%E5%BA%A6%EF%BC%89"><span class="toc-number">1.3.4.</span> <span class="toc-text">步骤 4：检查进程状态（是否终止&#x2F;需要调度）</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E8%BF%94%E5%9B%9E%E7%94%A8%E6%88%B7%E6%80%81%EF%BC%9Ausertrapret-userret"><span class="toc-number">1.4.</span> <span class="toc-text">四、返回用户态：usertrapret + userret</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-1%EF%BC%9Ausertrapret-%E5%87%86%E5%A4%87%E8%BF%94%E5%9B%9E%E7%8E%AF%E5%A2%83%EF%BC%88trap-c%EF%BC%89"><span class="toc-number">1.4.1.</span> <span class="toc-text">步骤 1：usertrapret 准备返回环境（trap.c）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-2%EF%BC%9Auserret-%E6%B1%87%E7%BC%96%E5%88%87%E5%9B%9E%E7%94%A8%E6%88%B7%E6%80%81%EF%BC%88trampoline-S%EF%BC%89"><span class="toc-number">1.4.2.</span> <span class="toc-text">步骤 2：userret 汇编切回用户态（trampoline.S）</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E8%A6%81%E7%82%B9%E6%80%BB%E7%BB%93"><span class="toc-number">1.5.</span> <span class="toc-text">五、核心设计要点总结</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%85%B3%E9%94%AE%E7%96%91%E9%97%AE%E8%A7%A3%E7%AD%94"><span class="toc-number">1.6.</span> <span class="toc-text">六、关键疑问解答</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E6%B5%81%E7%A8%8B%E9%97%AD%E7%8E%AF"><span class="toc-number">2.</span> <span class="toc-text">最终流程闭环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E7%BB%93%E8%AE%BA"><span class="toc-number">3.</span> <span class="toc-text">核心结论</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%AF%AF%E8%A7%A3%E6%9D%A5%E6%BA%90%EF%BC%9A%E9%80%9A%E7%94%A8%E6%80%9D%E8%B7%AF-vs-xv6-%E5%AE%9E%E9%99%85%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.</span> <span class="toc-text">一、误解来源：通用思路 vs xv6 实际实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-RISC-V-%E6%9E%B6%E6%9E%84%E7%9A%84%E2%80%9C%E9%80%9A%E7%94%A8%E5%BB%BA%E8%AE%AE%E2%80%9D%EF%BC%9A%E4%BA%A4%E6%8D%A2-sp-%E5%92%8C-sscratch"><span class="toc-number">4.1.</span> <span class="toc-text">1. RISC-V 架构的“通用建议”：交换 sp 和 sscratch</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-xv6-%E7%9A%84%E5%AE%9E%E9%99%85%E9%80%89%E6%8B%A9%EF%BC%9A%E4%BA%A4%E6%8D%A2-a0-%E5%92%8C-sscratch"><span class="toc-number">4.2.</span> <span class="toc-text">2. xv6 的实际选择：交换 a0 和 sscratch</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81xv6-%E9%80%89%E6%8B%A9-a0-%E8%80%8C%E9%9D%9E-sp-%E7%9A%84%E6%A0%B8%E5%BF%83%E5%8E%9F%E5%9B%A0"><span class="toc-number">5.</span> <span class="toc-text">二、xv6 选择 a0 而非 sp 的核心原因</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%85%B3%E9%94%AE%E8%A1%A5%E5%85%85%EF%BC%9Asp-%E7%9A%84%E5%88%87%E6%8D%A2%E6%97%B6%E6%9C%BA%EF%BC%88%E5%9C%A8-a0-%E4%BA%A4%E6%8D%A2%E4%B9%8B%E5%90%8E%EF%BC%89"><span class="toc-number">6.</span> <span class="toc-text">三、关键补充：sp 的切换时机（在 a0 交换之后）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%80%BB%E7%BB%93%EF%BC%9A%E4%B8%A4%E7%A7%8D%E4%BA%A4%E6%8D%A2%E7%9A%84%E6%A0%B8%E5%BF%83%E7%9B%AE%E7%9A%84%E4%B8%80%E8%87%B4%EF%BC%8C%E4%BB%85%E6%97%B6%E6%9C%BA-%E5%AF%84%E5%AD%98%E5%99%A8%E9%80%89%E6%8B%A9%E4%B8%8D%E5%90%8C"><span class="toc-number">7.</span> <span class="toc-text">四、总结：两种交换的核心目的一致，仅时机&#x2F;寄存器选择不同</span></a></li></ol>
-        
-    </div>
-    <style>
-        .left-col .switch-btn,
-        .left-col .switch-area {
-            display: none;
-        }
-        .toc-level-3 i,
-        .toc-level-3 ol {
-            display: none !important;
-        }
-    </style>
+		
+	<div class="giscus"></div>
+  
+    <script src="https://giscus.app/client.js"
+      data-repo="-your github username-/-your giscus repo-"
+      data-repo-id="-your giscus repo ID-"
+      data-category="Announcements"
+      data-category-id="-giscus category id-"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="light"
+      data-lang="en"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async  
+    ></script>
+  
 
-    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
-
-    <script>
-        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
-    </script>
-
-
-
-    
-<div class="share">
-    
-        <div class="bdsharebuttonbox">
-            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
-            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
-            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
-            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
-            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
-            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
-            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
-        </div>
-        <script>
-            window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"从用户空间陷入　| Ivan's Tech Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-        </script>
-    
-
-    
+	</div>
+	
 </div>
 
-
-
-
-
-
-
-    
-
-
-
-
-    <div class="scroll" id="post-nav-button">
-        
-            <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E4%B8%AD-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF/" title="上一篇: xv6 中 exec 系统调用的完整调用链路">
-                <i class="fa fa-angle-left"></i>
-            </a>
-        
-
-        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
-
-        
-            <a href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/RISC-V%E9%99%B7%E5%85%A5%E6%9C%BA%E5%88%B6/" title="下一篇: 陷阱指令和系统调用 核心解析">
-                <i class="fa fa-angle-right"></i>
-            </a>
-        
-    </div>
-
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/01/22/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E4%B8%80%E5%A4%A9/">算法训练营第一天</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/01/21/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E8%B9%A6%E5%BA%8A%E9%A1%B5/">蹦床页</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/01/21/unbuntu%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%82%A8%E4%B8%8D%E8%B6%B3/">unbuntu系统存储不足</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/trap-c%E8%AF%A6%E8%A7%A3/">trap.c详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8%EF%BC%9Axv6-%E6%9E%81%E7%AE%80%E5%A4%84%E7%90%86-vs-%E7%9C%9F%E5%AE%9E-OS-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/">页面错误异常：xv6 极简处理 vs 真实 OS 的高级应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从内核空间陷入</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0/">xv6 系统调用参数处理：提取、校验与安全传输</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E4%B8%AD-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF/">xv6 中 exec 系统调用的完整调用链路</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/RISC-V%E9%99%B7%E5%85%A5%E6%9C%BA%E5%88%B6/">陷阱指令和系统调用 核心解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 exec 系统调用核心逻辑总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-sbrk-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%88%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E6%89%A9%E7%BC%A9%E5%AE%B9%EF%BC%89%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 sbrk 系统调用（进程内存扩缩容）核心逻辑总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 进程地址空间总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E9%87%8A%E6%94%BE%E6%9C%BA%E5%88%B6%E6%80%BB%E7%BB%93/">xv6 物理内存分配与释放机制总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E5%86%85%E6%A0%B8%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 内核地址空间总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/satp/">satp</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/copyin-copyout%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/">copyin/copyout详细介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3/">系统调用正确理解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/">xv6内核架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/">添加系统调用的过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/21/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0/">第二章</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">git使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a></li></ul>
-
-
-
-
-    <script>
-        
-    </script>
+				</div>
+			</div>
+			<div class="kira-right-column">
+	<a onclick="document.querySelector('#kira-top-header').scrollIntoView({behavior: 'smooth'});" class="kira-backtotop" aria-label="回到顶部" title="回到顶部">
+		<button class="mdui-fab mdui-ripple">
+			<i class="kirafont icon-caret-up"></i>
+		</button>
+	</a>
 </div>
-      <footer id="footer">
-    <div class="outer">
-        <div id="footer-info">
-            <div class="footer-left">
-                <i class="fa fa-copyright"></i> 
-                2016-2026 Ivan-FYF
-            </div>
-            <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
-            </div>
-        </div>
-        
-            <div class="visit">
-                
-                    <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
-                        </span>
-                    </span>
-                
-                
-                    <span>| </span>
-                
-                
-                    <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
-                        </span>
-                    </span>
-                
-            </div>
-        
-    </div>
-</footer>
-    </div>
-    
-<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            var iPad = window.navigator.userAgent.indexOf('iPad');
-            if (iPad > -1 || $(".left-col").css("display") === "none") {
-                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
-                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
-                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
-            }
-            else {
-                var backgroundnum = 5;
-                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
-                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
-            }
-        })
-    </script>
-
-
-
-
-
-<div class="scroll" id="scroll">
-    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
-</div>
-<script>
-    // Open in New Window
-    
-        var oOpenInNew = {
-            
-            
-            
-            
-            
-            
-             archives: ".archive-article-title", 
-             miniArchives: "a.post-list-link", 
-            
-             friends: "#js-friends a", 
-             socail: ".social a" 
-        }
-        for (var x in oOpenInNew) {
-            $(oOpenInNew[x]).attr("target", "_blank");
-        }
-    
-</script>
-
-<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
-</script>
-  </div>
-</body>
+		</div>
+	</body>
 </html>

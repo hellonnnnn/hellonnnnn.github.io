@@ -1,302 +1,344 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
-<head>
+<html 
+	lang="zh-Hans">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		
+<link rel="stylesheet" href="/css/layout.css">
 
-    <!--[if lt IE 9]>
-        <style>body {display: none; background: none !important} </style>
-        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
-    <![endif]-->
+		
+		<title> Unix/Linux 管道的工作原理 -  Ivan&#39;s Tech Blog</title>
+		<!-- <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" /> -->
+		<!-- <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script> -->
+		
+<link rel="stylesheet" href="/lib/mdui/mdui.min.css">
 
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="format-detection" content="telephone=no" />
-<meta name="author" content="Ivan-FYF" />
+		
+<script src="/lib/mdui/mdui.min.js"></script>
+
+		<!-- lazyload -->
+		
+<script src="/lib/lazysizes.js"></script>
+
+		<!-- smooth-scrolling -->
+		
+<script src="/lib/smooth-scrolling.js"></script>
+
+		<!-- highlight -->
+		
+<link rel="stylesheet" href="/lib/highlight/atom-one-dark.min.css">
+
+		
+<script src="/lib/highlight/highlight.min.js"></script>
+
+		<!-- 预置 kiraicon -->
+		
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+
+		
+		<link
+			rel="shortcut icon"
+			href="https://kira.host/assets/Pictures/Others/116359b4ccf19917.jpg"
+			type="image/png"
+		/>
+		
+<link rel="stylesheet" href="/deps/css/APlayer.min.css">
+
+		
+		
+<script src="/deps/js/APlayer.min.js"></script>
+<script src="/deps/js/Meting.min.js"></script>
+
+	<meta name="generator" content="Hexo 8.1.1"></head>
+
+	<body>
+		<div
+			class="kira-background"
+			style="background-image: url('https://kira.host/assets/Pictures/Others/-f0d5cc34c6e5aa7_compressed.jpg')"
+		></div>
+		<div class="kira-header">
+    <a
+        class="kira-drawer-button mdui-ripple"
+        title="导航栏"
+        onclick="document.querySelector('.kira-sidebar-modal').classList.add('show');document.querySelector('.kira-sidebar#sidebar').classList.add('show');"
+    >
+        <i class="kirafont icon-menu"></i>
+    </a>
+    <a href="/" title="Ivan&#39;s Tech Blog">
+        <img
+			src="https://kira.host/assets/Pictures/Others/20220922230447.jpg"
+			alt="Ivan-FYF"
+		/>
+    </a>
+</div>
+		<div class="kira-body">
+			<div class="kira-sidebar" id="sidebar">
+	<div class="kira-avatar mdui-ripple">
+		<a target="_blank" rel="noopener" href="https://kira.host/assets/Pictures/Others/20220922230447.jpg" title="Ivan-FYF">
+			<img
+				src="https://kira.host/assets/Pictures/Others/20220922230447.jpg"
+				alt="Ivan-FYF"
+			/>
+		</a>
+	</div>
+	<div class="kira-count">
+		<div><span>文章</span>29</div>
+		<div><span>标签</span>0</div>
+		<div><span>分类</span>0</div>
+	</div>
+	<div class="kira-list">
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/"
+			title="�ص���ҳ"
+		>
+			<i
+				class="kirafont
+					
+						icon-home
+					"
+			></i>
+			<div class="kira-list-item-content">
+				�ص���ҳ
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/archive.html"
+			title="���¹鵵"
+		>
+			<i
+				class="kirafont
+					
+						icon-container
+					"
+			></i>
+			<div class="kira-list-item-content">
+				���¹鵵
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/about.html"
+			title="���ڱ���"
+		>
+			<i
+				class="kirafont
+					
+						icon-user
+					"
+			></i>
+			<div class="kira-list-item-content">
+				���ڱ���
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/friends.html"
+			title="�ҵ�����"
+		>
+			<i
+				class="kirafont
+					
+						icon-team
+					"
+			></i>
+			<div class="kira-list-item-content">
+				�ҵ�����
+			</div>
+		</a>
+		
+	</div>
+	<aside id="kira-sidebar">
+		
+			<div class="kira-widget-wrap">
+	<div class="kira-widget kira-social">
+		
+			<a
+				class="mdui-ripple"
+				href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=<ȥ�������ź��������QQ��>&website=www.oicqzone.com"
+				target="_blank"
+				mdui-tooltip="{content: 'QQ'}"
+				style="color: rgb(49, 174, 255); background-color: rgba(49, 174, 255, .1);"
+			>
+				<i
+					class="kirafont
+					
+						icon-QQ
+					"
+				></i>
+			</a>
+		
+			<a
+				class="mdui-ripple"
+				href="https://space.bilibili.com/<�ĳ����Bվuid>"
+				target="_blank"
+				mdui-tooltip="{content: '��������'}"
+				style="color: rgb(231, 106, 141); background-color: rgba(231, 106, 141, .15);"
+			>
+				<i
+					class="kirafont
+					
+						icon-bilibili
+					"
+				></i>
+			</a>
+		
+			<a
+				class="mdui-ripple"
+				href="https://github.com/<���github id>/"
+				target="_blank"
+				mdui-tooltip="{content: 'GitHub'}"
+				style="color: rgb(25, 23, 23); background-color: rgba(25, 23, 23, .15);"
+			>
+				<i
+					class="kirafont
+					
+						icon-github
+					"
+				></i>
+			</a>
+		
+			<a
+				class="mdui-ripple"
+				href="https://gitee.com/<���gitee id>"
+				target="_blank"
+				mdui-tooltip="{content: 'Gitee'}"
+				style="color: rgb(165, 15, 15); background-color: rgba(165, 15, 15, .15);"
+			>
+				<i
+					class="kirafont
+					
+						icon-gitee
+					"
+				></i>
+			</a>
+		
+	</div>
+</div>
+
+		
+			
+		
+			
+
+		
+			
+	<div class="kira-widget-wrap">
+		<h3 class="kira-widget-title">
+			文章归档
+		</h3>
+		<div class="kira-widget">
+			<ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/">2026</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/">2025</a><span class="archive-list-count">26</span></li></ul>
+		</div>
+	</div>
 
 
-
-<meta name="description" content="管道（Pipe）原理与Xv6 shell实现笔记一、管道核心概念1. 定义管道是内核提供的小型缓冲区，通过一对文件描述符（读端p[0]、写端p[1]）暴露给进程，数据从写端写入、读端读取，实现进程间通信（IPC）。 2. 核心特性 半双工：数据仅能从写端流向读端，无法反向传输。 阻塞机制： 管道为空时，read操作阻塞，直到有数据写入或所有写端关闭（此时read返回0，类似文件末尾）。 管道满时（">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Unix&#x2F;Linux 管道的工作原理">
-<meta property="og:url" content="https://hellonnnnn.github.io/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/index.html">
-<meta property="og:site_name" content="Ivan&#39;s Tech Blog">
-<meta property="og:description" content="管道（Pipe）原理与Xv6 shell实现笔记一、管道核心概念1. 定义管道是内核提供的小型缓冲区，通过一对文件描述符（读端p[0]、写端p[1]）暴露给进程，数据从写端写入、读端读取，实现进程间通信（IPC）。 2. 核心特性 半双工：数据仅能从写端流向读端，无法反向传输。 阻塞机制： 管道为空时，read操作阻塞，直到有数据写入或所有写端关闭（此时read返回0，类似文件末尾）。 管道满时（">
-<meta property="og:locale">
-<meta property="article:published_time" content="2025-12-20T08:08:59.000Z">
-<meta property="article:modified_time" content="2025-12-20T08:16:03.387Z">
-<meta property="article:author" content="Ivan-FYF">
-<meta name="twitter:card" content="summary">
-
-<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
-
-
-    <link rel="alternate" href="/atom.xml" title="Ivan&#39;s Tech Blog" type="application/atom+xml">
-
-
-
-    <link rel="shortcut icon" href="/favicon.png">
-
-
-
-    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
-
-
-
-    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+		
+	</aside>
+	<div class="kira-copyright">
+		&copy; 2026
+		<a href="/">Ivan-FYF</a>
+		Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> &
+		<a href="https://github.com/ch1ny/kira-hexo/" target="_blank">Kira-Hexo</a>
+		<br />
+		
+		
+	</div>
+</div>
+<div
+	class="kira-sidebar-modal"
+	id="sidebar-modal"
+	onclick="(function(self) {
+		self.classList.remove('show');
+		document.querySelector('.kira-sidebar.show#sidebar').classList.remove('show');
+	})(this)"
+></div>
+			<div class="kira-content">
+				<div id="kira-top-header"></div>
+				<div class="kira-main-content">
+					
+<link rel="stylesheet" href="/css/kira-image.css">
 
 
+<script src="/js/kira-image.js"></script>
 
-    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
-    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
-
-
-
-<link rel="stylesheet" href="/css/style.css">
-
-
-
-
-<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-
-
-<title>Unix/Linux 管道的工作原理 | Ivan&#39;s Tech Blog</title>
-
-<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
-<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
-
-<script>
-    var yiliaConfig = {
-        fancybox: true,
-        animate: true,
-        isHome: false,
-        isPost: true,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
-        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
-        search: 
-    }
-</script>
-
-
-    <script> yiliaConfig.jquery_ui = [false]; </script>
-
-
-
-    <script> yiliaConfig.rootUrl = "\/";</script>
-
-
-
-
-
-
-<meta name="generator" content="Hexo 8.1.1"></head>
-<body>
-  <div id="container">
-    <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-    <header id="header" class="inner">
-        <a href="/" class="profilepic">
-            <img src="/img/avatar.png" class="animated zoomIn">
-        </a>
-        <hgroup>
-          <h1 class="header-author"><a href="/"></a></h1>
-        </hgroup>
-
-        
-
-        
-
-
-        
-            <div id="switch-btn" class="switch-btn">
-                <div class="icon">
-                    <div class="icon-ctn">
-                        <div class="icon-wrap icon-house" data-idx="0">
-                            <div class="birdhouse"></div>
-                            <div class="birdhouse_holes"></div>
-                        </div>
-                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
-                            <div class="ribbon"></div>
-                        </div>
-                        
-                        <div class="icon-wrap icon-link hide" data-idx="2">
-                            <div class="loopback_l"></div>
-                            <div class="loopback_r"></div>
-                        </div>
-                        
-                        
-                        <div class="icon-wrap icon-me hide" data-idx="3">
-                            <div class="user"></div>
-                            <div class="shoulder"></div>
-                        </div>
-                        
-                    </div>
-                    
+<div class="kira-image">
+    <div class="kira-image-modal">
+        <div class="kira-image-header">
+            <div class="kira-image-counter"></div>
+            <div class="kira-image-title"></div>
+            <div class="kira-image-operation">
+                <div class="kira-image-operation-button" id="kira-image-operation-button-zoom">
+                    <i class="kirafont icon-zoom-in"></i>
                 </div>
-                <div class="tips-box hide">
-                    <div class="tips-arrow"></div>
-                    <ul class="tips-inner">
-                        <li>菜单</li>
-                        <li>标签</li>
-                        
-                        <li>友情链接</li>
-                        
-                        
-                        <li>关于我</li>
-                        
-                    </ul>
+                <div class="kira-image-operation-button" id="kira-image-operation-button-close">
+                    <i class="kirafont icon-close"></i>
                 </div>
-            </div>
-        
-
-        <div id="switch-area" class="switch-area">
-            <div class="switch-wrap">
-                <section class="switch-part switch-part1">
-                    <nav class="header-menu">
-                        <ul>
-                        
-                            <li><a href="/">主页</a></li>
-                        
-                            <li><a href="/archives/">所有文章</a></li>
-                        
-                            <li><a href="/tags/">标签云</a></li>
-                        
-                            <li><a href="/about/">关于我</a></li>
-                        
-                        </ul>
-                    </nav>
-                    <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" href="mailto:123@123.com" title="Email"></a>
-                            
-                                <a class="fa GitHub" href="#" title="GitHub"></a>
-                            
-                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
-                            
-                        </ul>
-                    </nav>
-                </section>
-                
-                
-                <section class="switch-part switch-part2">
-                    <div class="widget tagcloud" id="js-tagcloud">
-                        
-                    </div>
-                </section>
-                
-                
-                
-                <section class="switch-part switch-part3">
-                    <div id="js-friends">
-                    
-                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
-                    
-                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub</a>
-                    
-                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="http://moxfive.xyz/">MOxFIVE</a>
-                    
-                    </div>
-                </section>
-                
-
-                
-                
-                <section class="switch-part switch-part4">
-                
-                    <div id="js-aboutme">专注于前端</div>
-                </section>
-                
             </div>
         </div>
-    </header>                
+        <div class="kira-image-container">
+            <div class="kira-image-prev-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-left"></i>
+                </div>
+            </div>
+            <div class="kira-image-list">
+                <div class="kira-image-prev">
+                    <img />
+                </div>
+                <div class="kira-image-now">
+                    <img />
+                </div>
+                <div class="kira-image-next">
+                    <img />
+                </div>
+            </div>
+            <div class="kira-image-next-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-    </div>
-    <div class="mid-col">
-      <nav id="mobile-nav">
-      <div class="overlay">
-          <div class="slider-trigger"></div>
-          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
-      </div>
-    <div class="intrude-less">
-        <header id="header" class="inner">
-            <a href="/" class="profilepic">
-                <img src="/img/avatar.png" class="animated zoomIn">
-            </a>
-            <hgroup>
-              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
-            </hgroup>
-            
-            <nav class="header-menu">
-                <ul>
-                
-                    <li><a href="/">主页</a></li>
-                
-                    <li><a href="/archives/">所有文章</a></li>
-                
-                    <li><a href="/tags/">标签云</a></li>
-                
-                    <li><a href="/about/">关于我</a></li>
-                
-                <div class="clearfix"></div>
-                </ul>
-            </nav>
-            <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" target="_blank" href="mailto:123@123.com" title="Email"></a>
-                            
-                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
-                            
-                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
-                            
-                        </ul>
-            </nav>
-        </header>                
-    </div>
-    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
-</nav>
-      <div class="body-wrap"><article id="post-第一章/Unix-Linux-管道的工作原理" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" class="article-date">
-      <time datetime="2025-12-20T08:08:59.000Z" itemprop="datePublished">2025-12-20</time>
-</a>
+
+	
+<link rel="stylesheet" href="/css/kira-code-copy.css">
+
+	
+<script src="/js/kira-code-copy.js"></script>
 
 
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      Unix/Linux 管道的工作原理
-    </h1>
-  
-
-      </header>
-      
-      <div class="article-info article-info-post">
-        
-
-        
-        <div class="clearfix"></div>
-      </div>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h1 id="管道（Pipe）原理与Xv6-shell实现笔记"><a href="#管道（Pipe）原理与Xv6-shell实现笔记" class="headerlink" title="管道（Pipe）原理与Xv6 shell实现笔记"></a>管道（Pipe）原理与Xv6 shell实现笔记</h1><h2 id="一、管道核心概念"><a href="#一、管道核心概念" class="headerlink" title="一、管道核心概念"></a>一、管道核心概念</h2><h3 id="1-定义"><a href="#1-定义" class="headerlink" title="1. 定义"></a>1. 定义</h3><p>管道是内核提供的小型缓冲区，通过一对文件描述符（读端<code>p[0]</code>、写端<code>p[1]</code>）暴露给进程，数据从写端写入、读端读取，实现进程间通信（IPC）。</p>
-<h3 id="2-核心特性"><a href="#2-核心特性" class="headerlink" title="2. 核心特性"></a>2. 核心特性</h3><ul>
+<div class="kira-post">
+	<article>
+		
+		<div
+			class="kira-post-cover"
+			style="padding-bottom: '56.25%'"
+		>
+			<img
+				data-src="https://kira.host/assets/Pictures/Others/-f0d5cc34c6e5aa7_compressed.jpg"
+				data-sizes="auto"
+				alt="Unix/Linux 管道的工作原理"
+				class="lazyload kira-post-cover-image disabled-kira-image"
+			/>
+			<h1>Unix/Linux 管道的工作原理</h1>
+		</div>
+		
+		<div class="kira-post-meta kira-rainbow" style="margin:10px 0!important;">
+			<a><i class="kirafont icon-calendar-fill"></i>2025年12月20日</a>
+			<a><i class="kirafont icon-edit-fill"></i>2.1k 字</a>
+			<a><i class="kirafont icon-time-circle-fill"></i>大概 8 分钟</a>
+		</div>
+		<html><head></head><body><h1><span id="%E7%AE%A1%E9%81%93pipe%E5%8E%9F%E7%90%86%E4%B8%8Exv6-shell%E5%AE%9E%E7%8E%B0%E7%AC%94%E8%AE%B0">管道（Pipe）原理与Xv6 shell实现笔记</span></h1><h2><span id="%E4%B8%80%E7%AE%A1%E9%81%93%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5">一、管道核心概念</span></h2><h3><span id="1-%E5%AE%9A%E4%B9%89">1. 定义</span></h3><p>管道是内核提供的小型缓冲区，通过一对文件描述符（读端<code>p[0]</code>、写端<code>p[1]</code>）暴露给进程，数据从写端写入、读端读取，实现进程间通信（IPC）。</p>
+<h3><span id="2-%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7">2. 核心特性</span></h3><ul>
 <li><strong>半双工</strong>：数据仅能从写端流向读端，无法反向传输。</li>
 <li><strong>阻塞机制</strong>：<ul>
 <li>管道为空时，<code>read</code>操作阻塞，直到有数据写入或所有写端关闭（此时<code>read</code>返回0，类似文件末尾）。</li>
@@ -306,9 +348,9 @@
 <li><strong>字节流传输</strong>：数据无边界，读取方需自行处理分割（如按行、按空格）。</li>
 <li><strong>生命周期</strong>：所有关联文件描述符关闭后，内核释放管道缓冲区，管道销毁。</li>
 </ul>
-<h2 id="二、管道使用示例代码解析"><a href="#二、管道使用示例代码解析" class="headerlink" title="二、管道使用示例代码解析"></a>二、管道使用示例代码解析</h2><h3 id="1-完整代码（Unix-Linux环境）"><a href="#1-完整代码（Unix-Linux环境）" class="headerlink" title="1. 完整代码（Unix&#x2F;Linux环境）"></a>1. 完整代码（Unix&#x2F;Linux环境）</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> p[<span class="number">2</span>]; <span class="comment">// 管道描述符：p[0]读端，p[1]写端</span></span><br><span class="line">    <span class="type">char</span> *argv[<span class="number">2</span>]; <span class="comment">// wc命令参数数组</span></span><br><span class="line">    argv[<span class="number">0</span>] = <span class="string">&quot;wc&quot;</span>; <span class="comment">// 命令名</span></span><br><span class="line">    argv[<span class="number">1</span>] = <span class="literal">NULL</span>; <span class="comment">// 参数数组以NULL结尾（exec要求）</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. 创建管道</span></span><br><span class="line">    <span class="keyword">if</span> (pipe(p) == <span class="number">-1</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;pipe&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 创建子进程</span></span><br><span class="line">    <span class="type">pid_t</span> pid = fork();</span><br><span class="line">    <span class="keyword">if</span> (pid == <span class="number">-1</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;fork&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (pid == <span class="number">0</span>) &#123; <span class="comment">// 子进程：执行wc，从管道读数据</span></span><br><span class="line">        close(<span class="number">0</span>); <span class="comment">// 关闭标准输入（默认终端）</span></span><br><span class="line">        dup(p[<span class="number">0</span>]); <span class="comment">// 复制管道读端到最小未用描述符（0，即标准输入）</span></span><br><span class="line">        close(p[<span class="number">0</span>]); <span class="comment">// 关闭原始读端（已重定向，无需保留）</span></span><br><span class="line">        close(p[<span class="number">1</span>]); <span class="comment">// 必须关闭写端（否则wc认为有进程可能写数据，永久阻塞）</span></span><br><span class="line">        execvp(<span class="string">&quot;wc&quot;</span>, argv); <span class="comment">// 执行wc，标准输入绑定管道读端</span></span><br><span class="line">        perror(<span class="string">&quot;execvp&quot;</span>); <span class="comment">// exec失败时执行</span></span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123; <span class="comment">// 父进程：向管道写数据</span></span><br><span class="line">        close(p[<span class="number">0</span>]); <span class="comment">// 关闭读端（父进程仅写）</span></span><br><span class="line">        write(p[<span class="number">1</span>], <span class="string">&quot;hello world\n&quot;</span>, <span class="number">12</span>); <span class="comment">// 写入数据</span></span><br><span class="line">        close(p[<span class="number">1</span>]); <span class="comment">// 关闭写端（让子进程感知数据结束）</span></span><br><span class="line">        wait(<span class="literal">NULL</span>); <span class="comment">// 等待子进程结束，避免僵尸进程</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2><span id="%E4%BA%8C%E7%AE%A1%E9%81%93%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90">二、管道使用示例代码解析</span></h2><h3><span id="1-%E5%AE%8C%E6%95%B4%E4%BB%A3%E7%A0%81unixlinux%E7%8E%AF%E5%A2%83">1. 完整代码（Unix/Linux环境）</span></h3><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> {<br>    <span class="hljs-type">int</span> p[<span class="hljs-number">2</span>]; <span class="hljs-comment">// 管道描述符：p[0]读端，p[1]写端</span><br>    <span class="hljs-type">char</span> *argv[<span class="hljs-number">2</span>]; <span class="hljs-comment">// wc命令参数数组</span><br>    argv[<span class="hljs-number">0</span>] = <span class="hljs-string">"wc"</span>; <span class="hljs-comment">// 命令名</span><br>    argv[<span class="hljs-number">1</span>] = <span class="hljs-literal">NULL</span>; <span class="hljs-comment">// 参数数组以NULL结尾（exec要求）</span><br><br>    <span class="hljs-comment">// 1. 创建管道</span><br>    <span class="hljs-keyword">if</span> (pipe(p) == <span class="hljs-number">-1</span>) {<br>        perror(<span class="hljs-string">"pipe"</span>);<br>        <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);<br>    }<br><br>    <span class="hljs-comment">// 2. 创建子进程</span><br>    <span class="hljs-type">pid_t</span> pid = fork();<br>    <span class="hljs-keyword">if</span> (pid == <span class="hljs-number">-1</span>) {<br>        perror(<span class="hljs-string">"fork"</span>);<br>        <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);<br>    }<br><br>    <span class="hljs-keyword">if</span> (pid == <span class="hljs-number">0</span>) { <span class="hljs-comment">// 子进程：执行wc，从管道读数据</span><br>        close(<span class="hljs-number">0</span>); <span class="hljs-comment">// 关闭标准输入（默认终端）</span><br>        dup(p[<span class="hljs-number">0</span>]); <span class="hljs-comment">// 复制管道读端到最小未用描述符（0，即标准输入）</span><br>        close(p[<span class="hljs-number">0</span>]); <span class="hljs-comment">// 关闭原始读端（已重定向，无需保留）</span><br>        close(p[<span class="hljs-number">1</span>]); <span class="hljs-comment">// 必须关闭写端（否则wc认为有进程可能写数据，永久阻塞）</span><br>        execvp(<span class="hljs-string">"wc"</span>, argv); <span class="hljs-comment">// 执行wc，标准输入绑定管道读端</span><br>        perror(<span class="hljs-string">"execvp"</span>); <span class="hljs-comment">// exec失败时执行</span><br>        <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);<br>    } <span class="hljs-keyword">else</span> { <span class="hljs-comment">// 父进程：向管道写数据</span><br>        close(p[<span class="hljs-number">0</span>]); <span class="hljs-comment">// 关闭读端（父进程仅写）</span><br>        write(p[<span class="hljs-number">1</span>], <span class="hljs-string">"hello world\n"</span>, <span class="hljs-number">12</span>); <span class="hljs-comment">// 写入数据</span><br>        close(p[<span class="hljs-number">1</span>]); <span class="hljs-comment">// 关闭写端（让子进程感知数据结束）</span><br>        wait(<span class="hljs-literal">NULL</span>); <span class="hljs-comment">// 等待子进程结束，避免僵尸进程</span><br>    }<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>}<br></code></pre></td></tr></tbody></table></figure>
 
-<h3 id="2-关键步骤说明"><a href="#2-关键步骤说明" class="headerlink" title="2. 关键步骤说明"></a>2. 关键步骤说明</h3><table>
+<h3><span id="2-%E5%85%B3%E9%94%AE%E6%AD%A5%E9%AA%A4%E8%AF%B4%E6%98%8E">2. 关键步骤说明</span></h3><table>
 <thead>
 <tr>
 <th>操作</th>
@@ -317,7 +359,7 @@
 </thead>
 <tbody><tr>
 <td><code>pipe(p)</code></td>
-<td>创建管道，内核分配缓冲区，返回读&#x2F;写描述符</td>
+<td>创建管道，内核分配缓冲区，返回读/写描述符</td>
 </tr>
 <tr>
 <td><code>fork()</code></td>
@@ -340,9 +382,9 @@
 <td>关闭写端，触发子进程wc的EOF检测</td>
 </tr>
 </tbody></table>
-<h3 id="3-运行结果"><a href="#3-运行结果" class="headerlink" title="3. 运行结果"></a>3. 运行结果</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1       2      12  # 1行、2个单词、12个字符（包含换行符）</span><br></pre></td></tr></table></figure>
+<h3><span id="3-%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C">3. 运行结果</span></h3><figure class="highlight basic"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-symbol">1 </span>      <span class="hljs-number">2</span>      <span class="hljs-number">12</span>  # <span class="hljs-number">1</span>行、<span class="hljs-number">2</span>个单词、<span class="hljs-number">12</span>个字符（包含换行符）<br></code></pre></td></tr></tbody></table></figure>
 
-<h2 id="三、Xv6-shell管道实现"><a href="#三、Xv6-shell管道实现" class="headerlink" title="三、Xv6 shell管道实现"></a>三、Xv6 shell管道实现</h2><h3 id="1-进程树结构"><a href="#1-进程树结构" class="headerlink" title="1. 进程树结构"></a>1. 进程树结构</h3><p>Xv6 shell处理<code>cmd1 | cmd2 | cmd3</code>时，会构建<strong>进程树</strong>：</p>
+<h2><span id="%E4%B8%89xv6-shell%E7%AE%A1%E9%81%93%E5%AE%9E%E7%8E%B0">三、Xv6 shell管道实现</span></h2><h3><span id="1-%E8%BF%9B%E7%A8%8B%E6%A0%91%E7%BB%93%E6%9E%84">1. 进程树结构</span></h3><p>Xv6 shell处理<code>cmd1 | cmd2 | cmd3</code>时，会构建<strong>进程树</strong>：</p>
 <ul>
 <li><strong>叶子节点</strong>：执行具体命令（如<code>grep</code>、<code>wc</code>）的进程。</li>
 <li><strong>内部节点</strong>：每个管道<code>|</code>对应一个进程，作用为：<ol>
@@ -352,251 +394,102 @@
 </ol>
 </li>
 </ul>
-<h3 id="2-设计取舍：为何保留内部节点进程？"><a href="#2-设计取舍：为何保留内部节点进程？" class="headerlink" title="2. 设计取舍：为何保留内部节点进程？"></a>2. 设计取舍：为何保留内部节点进程？</h3><p>理论上可让内部节点直接运行左&#x2F;右命令（减少进程创建），但会导致逻辑复杂：</p>
+<h3><span id="2-%E8%AE%BE%E8%AE%A1%E5%8F%96%E8%88%8D%E4%B8%BA%E4%BD%95%E4%BF%9D%E7%95%99%E5%86%85%E9%83%A8%E8%8A%82%E7%82%B9%E8%BF%9B%E7%A8%8B">2. 设计取舍：为何保留内部节点进程？</span></h3><p>理论上可让内部节点直接运行左/右命令（减少进程创建），但会导致逻辑复杂：</p>
 <ul>
 <li>若内部进程运行左命令（如<code>echo hi</code>），命令退出后内部进程也退出，无法运行右命令（如<code>wc</code>）；</li>
 <li>若内部进程运行右命令（如<code>echo hi</code>），右命令不会等待左命令（如<code>sleep 10</code>）完成，导致时序错误（<code>sleep 10 | echo hi</code>立即输出）。</li>
 </ul>
 <p>为保证代码简洁，Xv6 shell选择保留内部节点进程，牺牲少量性能换取逻辑正确性。</p>
-<h2 id="四、核心要点总结"><a href="#四、核心要点总结" class="headerlink" title="四、核心要点总结"></a>四、核心要点总结</h2><ol>
+<h2><span id="%E5%9B%9B%E6%A0%B8%E5%BF%83%E8%A6%81%E7%82%B9%E6%80%BB%E7%BB%93">四、核心要点总结</span></h2><ol>
 <li>管道通过内核缓冲区实现进程间通信，依赖文件描述符重定向；</li>
 <li>必须关闭无用的管道描述符（尤其是写端），否则读取进程会永久阻塞；</li>
 <li>Xv6 shell通过进程树实现多管道命令，内部节点进程负责管道管理和等待子进程；</li>
 <li>管道是字节流、半双工，阻塞特性由内核控制。</li>
 </ol>
-<h1 id="管道-vs-临时文件：核心优势解析"><a href="#管道-vs-临时文件：核心优势解析" class="headerlink" title="管道 vs 临时文件：核心优势解析"></a>管道 vs 临时文件：核心优势解析</h1><p>管道与临时文件都能实现“前序命令输出作为后序命令输入”的效果，但管道在自动化、性能、并行性和语义适配性上具备显著优势，以下是详细对比：管道看起来并不比临时文件更强大：下面的管道命令行<br>echo hello world | wc<br>可以不通过管道实现，如下<br>echo hello world &gt; &#x2F;tmp&#x2F;xyz; wc &lt; &#x2F;tmp&#x2F;xyz<br>区别在于：</p>
-<h2 id="一、自动清理，无残留风险"><a href="#一、自动清理，无残留风险" class="headerlink" title="一、自动清理，无残留风险"></a>一、自动清理，无残留风险</h2><ul>
+<h1><span id="%E7%AE%A1%E9%81%93-vs-%E4%B8%B4%E6%97%B6%E6%96%87%E4%BB%B6%E6%A0%B8%E5%BF%83%E4%BC%98%E5%8A%BF%E8%A7%A3%E6%9E%90">管道 vs 临时文件：核心优势解析</span></h1><p>管道与临时文件都能实现“前序命令输出作为后序命令输入”的效果，但管道在自动化、性能、并行性和语义适配性上具备显著优势，以下是详细对比：管道看起来并不比临时文件更强大：下面的管道命令行<br>echo hello world | wc<br>可以不通过管道实现，如下<br>echo hello world &gt; /tmp/xyz; wc &lt; /tmp/xyz<br>区别在于：</p>
+<h2><span id="%E4%B8%80%E8%87%AA%E5%8A%A8%E6%B8%85%E7%90%86%E6%97%A0%E6%AE%8B%E7%95%99%E9%A3%8E%E9%99%A9">一、自动清理，无残留风险</span></h2><ul>
 <li><strong>临时文件</strong>：使用后需手动删除（如<code>rm /tmp/xyz</code>），若程序异常退出（如被中断、崩溃），临时文件会残留，长期积累会占用磁盘空间，甚至导致同名文件覆盖、权限冲突等问题（例如多个进程同时使用<code>/tmp/xyz</code>）。</li>
 <li><strong>管道</strong>：管道的生命周期与关联进程绑定——当所有读写进程退出、管道描述符全部关闭时，内核会自动释放管道缓冲区，无需人工干预，不存在残留垃圾，也避免了临时文件的命名冲突问题。</li>
 </ul>
-<h2 id="二、无需磁盘空间，支持流式传输"><a href="#二、无需磁盘空间，支持流式传输" class="headerlink" title="二、无需磁盘空间，支持流式传输"></a>二、无需磁盘空间，支持流式传输</h2><ul>
-<li><strong>临时文件</strong>：必须将完整数据写入磁盘文件后，后续程序才能读取，依赖磁盘空闲空间。若传输超大数据流（如GB级日志、视频流），磁盘空间不足会导致操作失败；且磁盘I&#x2F;O速度远低于内存，数据写入&#x2F;读取会产生显著延迟。</li>
-<li><strong>管道</strong>：数据存储在内核缓冲区（内存中），采用“流式传输”——前序进程写入一部分数据，后序进程即可读取一部分，无需等待完整数据生成。即使传输TB级数据流，只要内核缓冲区能周转，就无需依赖磁盘空间，且内存I&#x2F;O速度远快于磁盘，效率更高。</li>
+<h2><span id="%E4%BA%8C%E6%97%A0%E9%9C%80%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4%E6%94%AF%E6%8C%81%E6%B5%81%E5%BC%8F%E4%BC%A0%E8%BE%93">二、无需磁盘空间，支持流式传输</span></h2><ul>
+<li><strong>临时文件</strong>：必须将完整数据写入磁盘文件后，后续程序才能读取，依赖磁盘空闲空间。若传输超大数据流（如GB级日志、视频流），磁盘空间不足会导致操作失败；且磁盘I/O速度远低于内存，数据写入/读取会产生显著延迟。</li>
+<li><strong>管道</strong>：数据存储在内核缓冲区（内存中），采用“流式传输”——前序进程写入一部分数据，后序进程即可读取一部分，无需等待完整数据生成。即使传输TB级数据流，只要内核缓冲区能周转，就无需依赖磁盘空间，且内存I/O速度远快于磁盘，效率更高。</li>
 </ul>
-<h2 id="三、支持并行执行，提升整体效率"><a href="#三、支持并行执行，提升整体效率" class="headerlink" title="三、支持并行执行，提升整体效率"></a>三、支持并行执行，提升整体效率</h2><ul>
+<h2><span id="%E4%B8%89%E6%94%AF%E6%8C%81%E5%B9%B6%E8%A1%8C%E6%89%A7%E8%A1%8C%E6%8F%90%E5%8D%87%E6%95%B4%E4%BD%93%E6%95%88%E7%8E%87">三、支持并行执行，提升整体效率</span></h2><ul>
 <li><strong>临时文件</strong>：必须严格串行执行——前序命令（如<code>echo hello world &gt; /tmp/xyz</code>）完全执行并将所有数据写入文件后，后序命令（如<code>wc &lt; /tmp/xyz</code>）才能启动，总耗时为两个命令耗时之和（<code>T总 = T1 + T2</code>）。</li>
 <li><strong>管道</strong>：前后命令可并行执行——前序进程（<code>echo</code>）写入数据的同时，后序进程（<code>wc</code>）可立即读取并处理，无需等待前序进程结束。例如<code>大型日志生成 | grep 关键词</code>场景中，日志生成到一半时，<code>grep</code>已开始匹配，总耗时接近较慢进程的耗时（<code>T总 ≈ max(T1, T2)</code>），大幅缩短执行时间。</li>
 </ul>
-<h2 id="四、阻塞式语义适配进程通信，更高效"><a href="#四、阻塞式语义适配进程通信，更高效" class="headerlink" title="四、阻塞式语义适配进程通信，更高效"></a>四、阻塞式语义适配进程通信，更高效</h2><ul>
-<li><strong>临时文件</strong>：文件操作的核心语义是“非阻塞”——写入文件后数据持久化，读取时只需从磁盘加载，无需等待写入方；但进程间通信时，若后序进程读取速度快于前序进程写入速度，会出现“读空”（需轮询文件是否有新数据），若前序进程写入速度快，会占用大量磁盘空间，轮询和磁盘I&#x2F;O都会产生额外开销。</li>
+<h2><span id="%E5%9B%9B%E9%98%BB%E5%A1%9E%E5%BC%8F%E8%AF%AD%E4%B9%89%E9%80%82%E9%85%8D%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%E6%9B%B4%E9%AB%98%E6%95%88">四、阻塞式语义适配进程通信，更高效</span></h2><ul>
+<li><strong>临时文件</strong>：文件操作的核心语义是“非阻塞”——写入文件后数据持久化，读取时只需从磁盘加载，无需等待写入方；但进程间通信时，若后序进程读取速度快于前序进程写入速度，会出现“读空”（需轮询文件是否有新数据），若前序进程写入速度快，会占用大量磁盘空间，轮询和磁盘I/O都会产生额外开销。</li>
 <li><strong>管道</strong>：管道的阻塞式读写语义完全适配进程间通信需求：<ul>
 <li>读端阻塞：若管道为空，读进程（如<code>wc</code>）会自动阻塞，直到写进程（如<code>echo</code>）写入数据或所有写端关闭，无需轮询，减少CPU消耗；</li>
-<li>写端阻塞：若管道缓冲区满，写进程会阻塞，直到读进程读取数据，避免数据溢出，天然实现“生产-消费”的速率匹配；<br>这种阻塞机制由内核实现，无需用户态代码干预，比文件的轮询&#x2F;非阻塞处理更高效、更简洁。</li>
+<li>写端阻塞：若管道缓冲区满，写进程会阻塞，直到读进程读取数据，避免数据溢出，天然实现“生产-消费”的速率匹配；<br>这种阻塞机制由内核实现，无需用户态代码干预，比文件的轮询/非阻塞处理更高效、更简洁。</li>
 </ul>
 </li>
 </ul>
-<h2 id="补充：管道的隐藏优势——无磁盘I-O损耗"><a href="#补充：管道的隐藏优势——无磁盘I-O损耗" class="headerlink" title="补充：管道的隐藏优势——无磁盘I&#x2F;O损耗"></a>补充：管道的隐藏优势——无磁盘I&#x2F;O损耗</h2><p>临时文件的所有数据都需经过“内存→磁盘→内存”的两次拷贝（前序进程写磁盘、后序进程读磁盘），而管道数据仅在“进程内存→内核缓冲区→进程内存”之间拷贝，全程无磁盘参与，对于高频、小数据量的进程通信（如shell命令链、程序模块间交互），管道的延迟和资源占用远低于临时文件。</p>
+<h2><span id="%E8%A1%A5%E5%85%85%E7%AE%A1%E9%81%93%E7%9A%84%E9%9A%90%E8%97%8F%E4%BC%98%E5%8A%BF%E6%97%A0%E7%A3%81%E7%9B%98io%E6%8D%9F%E8%80%97">补充：管道的隐藏优势——无磁盘I/O损耗</span></h2><p>临时文件的所有数据都需经过“内存→磁盘→内存”的两次拷贝（前序进程写磁盘、后序进程读磁盘），而管道数据仅在“进程内存→内核缓冲区→进程内存”之间拷贝，全程无磁盘参与，对于高频、小数据量的进程通信（如shell命令链、程序模块间交互），管道的延迟和资源占用远低于临时文件。</p>
+</body></html>
+	</article>
 
-      
+	 
+    <div class="kira-post-copyright">
+        <strong>本文作者：</strong>Ivan-FYF<br>
+        <strong>本文链接：</strong><a href="https://hellonnnnn.github.io/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2025&#x2F;12&#x2F;20&#x2F;第一章&#x2F;Unix-Linux-管道的工作原理&#x2F;" target="_blank" rel="noopener">https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2025&#x2F;12&#x2F;20&#x2F;第一章&#x2F;Unix-Linux-管道的工作原理&#x2F;</a><br>
+        
+            <strong>��Ȩ������</strong>���Ĳ��� <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> Э���������
+        
     </div>
-    
-  </div>
-  
-    
-    <div class="copyright">
-        <p><span>本文标题:</span><a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a></p>
-        <p><span>文章作者:</span><a href="/" title="回到主页"></a></p>
-        <p><span>发布时间:</span>2025-12-20, 16:08:59</p>
-        <p><span>最后更新:</span>2025-12-20, 16:16:03</p>
-        <p>
-            <span>原始链接:</span><a class="post-url" href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="Unix/Linux 管道的工作原理">https://hellonnnnn.github.io/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://hellonnnnn.github.io/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/　　作者: " title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
-            <script> var clipboard = new Clipboard('.copy-path'); </script>
-        </p>
-        <p>
-            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
-        </p>
-    </div>
-
-
-
-    <nav id="article-nav">
-        
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">
-                    git使用
-                </a>
-            </div>
-        
-        
-            <div id="article-nav-older" class="article-nav-title">
-                <a href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">
-                    xv6-labs-2020 lab1
-                </a>
-            </div>
-        
-    </nav>
 
   
-</article>
+	<div class="kira-post-nav">
+		<nav class="post-nav">
+			
+		</nav>
+	</div>
+	
+	<div class="kira-post-meta kira-rainbow">
+		
+		
+	</div>
+	
+	<div class="kira-post-footer">
+		
 
-    <div id="toc" class="toc-article">
-        <strong class="toc-title">文章目录</strong>
-        
-            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%A1%E9%81%93%EF%BC%88Pipe%EF%BC%89%E5%8E%9F%E7%90%86%E4%B8%8EXv6-shell%E5%AE%9E%E7%8E%B0%E7%AC%94%E8%AE%B0"><span class="toc-number">1.</span> <span class="toc-text">管道（Pipe）原理与Xv6 shell实现笔记</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E7%AE%A1%E9%81%93%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="toc-number">1.1.</span> <span class="toc-text">一、管道核心概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AE%9A%E4%B9%89"><span class="toc-number">1.1.1.</span> <span class="toc-text">1. 定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7"><span class="toc-number">1.1.2.</span> <span class="toc-text">2. 核心特性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%AE%A1%E9%81%93%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90"><span class="toc-number">1.2.</span> <span class="toc-text">二、管道使用示例代码解析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AE%8C%E6%95%B4%E4%BB%A3%E7%A0%81%EF%BC%88Unix-Linux%E7%8E%AF%E5%A2%83%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">1. 完整代码（Unix&#x2F;Linux环境）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%85%B3%E9%94%AE%E6%AD%A5%E9%AA%A4%E8%AF%B4%E6%98%8E"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. 关键步骤说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">1.2.3.</span> <span class="toc-text">3. 运行结果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81Xv6-shell%E7%AE%A1%E9%81%93%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.3.</span> <span class="toc-text">三、Xv6 shell管道实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%BF%9B%E7%A8%8B%E6%A0%91%E7%BB%93%E6%9E%84"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. 进程树结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%AE%BE%E8%AE%A1%E5%8F%96%E8%88%8D%EF%BC%9A%E4%B8%BA%E4%BD%95%E4%BF%9D%E7%95%99%E5%86%85%E9%83%A8%E8%8A%82%E7%82%B9%E8%BF%9B%E7%A8%8B%EF%BC%9F"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 设计取舍：为何保留内部节点进程？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%A0%B8%E5%BF%83%E8%A6%81%E7%82%B9%E6%80%BB%E7%BB%93"><span class="toc-number">1.4.</span> <span class="toc-text">四、核心要点总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%A1%E9%81%93-vs-%E4%B8%B4%E6%97%B6%E6%96%87%E4%BB%B6%EF%BC%9A%E6%A0%B8%E5%BF%83%E4%BC%98%E5%8A%BF%E8%A7%A3%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">管道 vs 临时文件：核心优势解析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%87%AA%E5%8A%A8%E6%B8%85%E7%90%86%EF%BC%8C%E6%97%A0%E6%AE%8B%E7%95%99%E9%A3%8E%E9%99%A9"><span class="toc-number">2.1.</span> <span class="toc-text">一、自动清理，无残留风险</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%97%A0%E9%9C%80%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4%EF%BC%8C%E6%94%AF%E6%8C%81%E6%B5%81%E5%BC%8F%E4%BC%A0%E8%BE%93"><span class="toc-number">2.2.</span> <span class="toc-text">二、无需磁盘空间，支持流式传输</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%94%AF%E6%8C%81%E5%B9%B6%E8%A1%8C%E6%89%A7%E8%A1%8C%EF%BC%8C%E6%8F%90%E5%8D%87%E6%95%B4%E4%BD%93%E6%95%88%E7%8E%87"><span class="toc-number">2.3.</span> <span class="toc-text">三、支持并行执行，提升整体效率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E9%98%BB%E5%A1%9E%E5%BC%8F%E8%AF%AD%E4%B9%89%E9%80%82%E9%85%8D%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%8C%E6%9B%B4%E9%AB%98%E6%95%88"><span class="toc-number">2.4.</span> <span class="toc-text">四、阻塞式语义适配进程通信，更高效</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%A5%E5%85%85%EF%BC%9A%E7%AE%A1%E9%81%93%E7%9A%84%E9%9A%90%E8%97%8F%E4%BC%98%E5%8A%BF%E2%80%94%E2%80%94%E6%97%A0%E7%A3%81%E7%9B%98I-O%E6%8D%9F%E8%80%97"><span class="toc-number">2.5.</span> <span class="toc-text">补充：管道的隐藏优势——无磁盘I&#x2F;O损耗</span></a></li></ol></li></ol>
-        
-    </div>
-    <style>
-        .left-col .switch-btn,
-        .left-col .switch-area {
-            display: none;
-        }
-        .toc-level-3 i,
-        .toc-level-3 ol {
-            display: none !important;
-        }
-    </style>
+		
+	<div class="giscus"></div>
+  
+    <script src="https://giscus.app/client.js"
+      data-repo="-your github username-/-your giscus repo-"
+      data-repo-id="-your giscus repo ID-"
+      data-category="Announcements"
+      data-category-id="-giscus category id-"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="light"
+      data-lang="en"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async  
+    ></script>
+  
 
-    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
-
-    <script>
-        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
-    </script>
-
-
-
-    
-<div class="share">
-    
-        <div class="bdsharebuttonbox">
-            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
-            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
-            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
-            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
-            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
-            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
-            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
-        </div>
-        <script>
-            window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"Unix/Linux 管道的工作原理　| Ivan's Tech Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-        </script>
-    
-
-    
+	</div>
+	
 </div>
 
-
-
-
-
-
-
-    
-
-
-
-
-    <div class="scroll" id="post-nav-button">
-        
-            <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/" title="上一篇: git使用">
-                <i class="fa fa-angle-left"></i>
-            </a>
-        
-
-        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
-
-        
-            <a href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/" title="下一篇: xv6-labs-2020 lab1">
-                <i class="fa fa-angle-right"></i>
-            </a>
-        
-    </div>
-
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/01/22/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E4%B8%80%E5%A4%A9/">算法训练营第一天</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/01/21/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E8%B9%A6%E5%BA%8A%E9%A1%B5/">蹦床页</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/01/21/unbuntu%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%82%A8%E4%B8%8D%E8%B6%B3/">unbuntu系统存储不足</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/trap-c%E8%AF%A6%E8%A7%A3/">trap.c详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8%EF%BC%9Axv6-%E6%9E%81%E7%AE%80%E5%A4%84%E7%90%86-vs-%E7%9C%9F%E5%AE%9E-OS-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/">页面错误异常：xv6 极简处理 vs 真实 OS 的高级应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从内核空间陷入</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0/">xv6 系统调用参数处理：提取、校验与安全传输</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E4%B8%AD-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF/">xv6 中 exec 系统调用的完整调用链路</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/RISC-V%E9%99%B7%E5%85%A5%E6%9C%BA%E5%88%B6/">陷阱指令和系统调用 核心解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 exec 系统调用核心逻辑总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-sbrk-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%88%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E6%89%A9%E7%BC%A9%E5%AE%B9%EF%BC%89%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 sbrk 系统调用（进程内存扩缩容）核心逻辑总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 进程地址空间总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E9%87%8A%E6%94%BE%E6%9C%BA%E5%88%B6%E6%80%BB%E7%BB%93/">xv6 物理内存分配与释放机制总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E5%86%85%E6%A0%B8%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 内核地址空间总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/satp/">satp</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/copyin-copyout%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/">copyin/copyout详细介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3/">系统调用正确理解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/">xv6内核架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/">添加系统调用的过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/21/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0/">第二章</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">git使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a></li></ul>
-
-
-
-
-    <script>
-        
-    </script>
+				</div>
+			</div>
+			<div class="kira-right-column">
+	<a onclick="document.querySelector('#kira-top-header').scrollIntoView({behavior: 'smooth'});" class="kira-backtotop" aria-label="回到顶部" title="回到顶部">
+		<button class="mdui-fab mdui-ripple">
+			<i class="kirafont icon-caret-up"></i>
+		</button>
+	</a>
 </div>
-      <footer id="footer">
-    <div class="outer">
-        <div id="footer-info">
-            <div class="footer-left">
-                <i class="fa fa-copyright"></i> 
-                2016-2026 Ivan-FYF
-            </div>
-            <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
-            </div>
-        </div>
-        
-            <div class="visit">
-                
-                    <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
-                        </span>
-                    </span>
-                
-                
-                    <span>| </span>
-                
-                
-                    <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
-                        </span>
-                    </span>
-                
-            </div>
-        
-    </div>
-</footer>
-    </div>
-    
-<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            var iPad = window.navigator.userAgent.indexOf('iPad');
-            if (iPad > -1 || $(".left-col").css("display") === "none") {
-                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
-                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
-                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
-            }
-            else {
-                var backgroundnum = 5;
-                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
-                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
-            }
-        })
-    </script>
-
-
-
-
-
-<div class="scroll" id="scroll">
-    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
-</div>
-<script>
-    // Open in New Window
-    
-        var oOpenInNew = {
-            
-            
-            
-            
-            
-            
-             archives: ".archive-article-title", 
-             miniArchives: "a.post-list-link", 
-            
-             friends: "#js-friends a", 
-             socail: ".social a" 
-        }
-        for (var x in oOpenInNew) {
-            $(oOpenInNew[x]).attr("target", "_blank");
-        }
-    
-</script>
-
-<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
-</script>
-  </div>
-</body>
+		</div>
+	</body>
 </html>

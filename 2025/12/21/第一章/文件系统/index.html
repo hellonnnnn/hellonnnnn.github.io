@@ -1,310 +1,352 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
-<head>
+<html 
+	lang="zh-Hans">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		
+<link rel="stylesheet" href="/css/layout.css">
 
-    <!--[if lt IE 9]>
-        <style>body {display: none; background: none !important} </style>
-        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
-    <![endif]-->
+		
+		<title> 文件系统 -  Ivan&#39;s Tech Blog</title>
+		<!-- <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" /> -->
+		<!-- <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script> -->
+		
+<link rel="stylesheet" href="/lib/mdui/mdui.min.css">
 
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="format-detection" content="telephone=no" />
-<meta name="author" content="Ivan-FYF" />
+		
+<script src="/lib/mdui/mdui.min.js"></script>
+
+		<!-- lazyload -->
+		
+<script src="/lib/lazysizes.js"></script>
+
+		<!-- smooth-scrolling -->
+		
+<script src="/lib/smooth-scrolling.js"></script>
+
+		<!-- highlight -->
+		
+<link rel="stylesheet" href="/lib/highlight/atom-one-dark.min.css">
+
+		
+<script src="/lib/highlight/highlight.min.js"></script>
+
+		<!-- 预置 kiraicon -->
+		
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+
+		
+		<link
+			rel="shortcut icon"
+			href="https://kira.host/assets/Pictures/Others/116359b4ccf19917.jpg"
+			type="image/png"
+		/>
+		
+<link rel="stylesheet" href="/deps/css/APlayer.min.css">
+
+		
+		
+<script src="/deps/js/APlayer.min.js"></script>
+<script src="/deps/js/Meting.min.js"></script>
+
+	<meta name="generator" content="Hexo 8.1.1"></head>
+
+	<body>
+		<div
+			class="kira-background"
+			style="background-image: url('https://kira.host/assets/Pictures/Others/-f0d5cc34c6e5aa7_compressed.jpg')"
+		></div>
+		<div class="kira-header">
+    <a
+        class="kira-drawer-button mdui-ripple"
+        title="导航栏"
+        onclick="document.querySelector('.kira-sidebar-modal').classList.add('show');document.querySelector('.kira-sidebar#sidebar').classList.add('show');"
+    >
+        <i class="kirafont icon-menu"></i>
+    </a>
+    <a href="/" title="Ivan&#39;s Tech Blog">
+        <img
+			src="https://kira.host/assets/Pictures/Others/20220922230447.jpg"
+			alt="Ivan-FYF"
+		/>
+    </a>
+</div>
+		<div class="kira-body">
+			<div class="kira-sidebar" id="sidebar">
+	<div class="kira-avatar mdui-ripple">
+		<a target="_blank" rel="noopener" href="https://kira.host/assets/Pictures/Others/20220922230447.jpg" title="Ivan-FYF">
+			<img
+				src="https://kira.host/assets/Pictures/Others/20220922230447.jpg"
+				alt="Ivan-FYF"
+			/>
+		</a>
+	</div>
+	<div class="kira-count">
+		<div><span>文章</span>29</div>
+		<div><span>标签</span>0</div>
+		<div><span>分类</span>0</div>
+	</div>
+	<div class="kira-list">
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/"
+			title="�ص���ҳ"
+		>
+			<i
+				class="kirafont
+					
+						icon-home
+					"
+			></i>
+			<div class="kira-list-item-content">
+				�ص���ҳ
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/archive.html"
+			title="���¹鵵"
+		>
+			<i
+				class="kirafont
+					
+						icon-container
+					"
+			></i>
+			<div class="kira-list-item-content">
+				���¹鵵
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/about.html"
+			title="���ڱ���"
+		>
+			<i
+				class="kirafont
+					
+						icon-user
+					"
+			></i>
+			<div class="kira-list-item-content">
+				���ڱ���
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/friends.html"
+			title="�ҵ�����"
+		>
+			<i
+				class="kirafont
+					
+						icon-team
+					"
+			></i>
+			<div class="kira-list-item-content">
+				�ҵ�����
+			</div>
+		</a>
+		
+	</div>
+	<aside id="kira-sidebar">
+		
+			<div class="kira-widget-wrap">
+	<div class="kira-widget kira-social">
+		
+			<a
+				class="mdui-ripple"
+				href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=<ȥ�������ź��������QQ��>&website=www.oicqzone.com"
+				target="_blank"
+				mdui-tooltip="{content: 'QQ'}"
+				style="color: rgb(49, 174, 255); background-color: rgba(49, 174, 255, .1);"
+			>
+				<i
+					class="kirafont
+					
+						icon-QQ
+					"
+				></i>
+			</a>
+		
+			<a
+				class="mdui-ripple"
+				href="https://space.bilibili.com/<�ĳ����Bվuid>"
+				target="_blank"
+				mdui-tooltip="{content: '��������'}"
+				style="color: rgb(231, 106, 141); background-color: rgba(231, 106, 141, .15);"
+			>
+				<i
+					class="kirafont
+					
+						icon-bilibili
+					"
+				></i>
+			</a>
+		
+			<a
+				class="mdui-ripple"
+				href="https://github.com/<���github id>/"
+				target="_blank"
+				mdui-tooltip="{content: 'GitHub'}"
+				style="color: rgb(25, 23, 23); background-color: rgba(25, 23, 23, .15);"
+			>
+				<i
+					class="kirafont
+					
+						icon-github
+					"
+				></i>
+			</a>
+		
+			<a
+				class="mdui-ripple"
+				href="https://gitee.com/<���gitee id>"
+				target="_blank"
+				mdui-tooltip="{content: 'Gitee'}"
+				style="color: rgb(165, 15, 15); background-color: rgba(165, 15, 15, .15);"
+			>
+				<i
+					class="kirafont
+					
+						icon-gitee
+					"
+				></i>
+			</a>
+		
+	</div>
+</div>
+
+		
+			
+		
+			
+
+		
+			
+	<div class="kira-widget-wrap">
+		<h3 class="kira-widget-title">
+			文章归档
+		</h3>
+		<div class="kira-widget">
+			<ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/">2026</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/">2025</a><span class="archive-list-count">26</span></li></ul>
+		</div>
+	</div>
 
 
-
-<meta name="description" content="你想要我为你详细解释这段关于Xv6文件系统的核心概念和设计细节，包括文件、目录、inode、系统调用以及相关工具程序的设计逻辑，尤其是cd内置在shell的原因。 我会从核心概念入手，由浅入深地为你拆解这些内容： 一、Xv6文件系统的核心结构与概念1. 目录与路径的逻辑Xv6的文件系统是树形结构，核心特点如下：  根目录：整个文件系统的起点（&#x2F;），所有文件和目录都依附于这个根节点。 绝对路径：以&#x2F;">
-<meta property="og:type" content="article">
-<meta property="og:title" content="文件系统">
-<meta property="og:url" content="https://hellonnnnn.github.io/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/index.html">
-<meta property="og:site_name" content="Ivan&#39;s Tech Blog">
-<meta property="og:description" content="你想要我为你详细解释这段关于Xv6文件系统的核心概念和设计细节，包括文件、目录、inode、系统调用以及相关工具程序的设计逻辑，尤其是cd内置在shell的原因。 我会从核心概念入手，由浅入深地为你拆解这些内容： 一、Xv6文件系统的核心结构与概念1. 目录与路径的逻辑Xv6的文件系统是树形结构，核心特点如下：  根目录：整个文件系统的起点（&#x2F;），所有文件和目录都依附于这个根节点。 绝对路径：以&#x2F;">
-<meta property="og:locale">
-<meta property="article:published_time" content="2025-12-21T11:20:42.000Z">
-<meta property="article:modified_time" content="2025-12-22T08:25:50.136Z">
-<meta property="article:author" content="Ivan-FYF">
-<meta name="twitter:card" content="summary">
-
-<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
-
-
-    <link rel="alternate" href="/atom.xml" title="Ivan&#39;s Tech Blog" type="application/atom+xml">
-
-
-
-    <link rel="shortcut icon" href="/favicon.png">
-
-
-
-    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
-
-
-
-    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+		
+	</aside>
+	<div class="kira-copyright">
+		&copy; 2026
+		<a href="/">Ivan-FYF</a>
+		Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> &
+		<a href="https://github.com/ch1ny/kira-hexo/" target="_blank">Kira-Hexo</a>
+		<br />
+		
+		
+	</div>
+</div>
+<div
+	class="kira-sidebar-modal"
+	id="sidebar-modal"
+	onclick="(function(self) {
+		self.classList.remove('show');
+		document.querySelector('.kira-sidebar.show#sidebar').classList.remove('show');
+	})(this)"
+></div>
+			<div class="kira-content">
+				<div id="kira-top-header"></div>
+				<div class="kira-main-content">
+					
+<link rel="stylesheet" href="/css/kira-image.css">
 
 
+<script src="/js/kira-image.js"></script>
 
-    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
-    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
-
-
-
-<link rel="stylesheet" href="/css/style.css">
-
-
-
-
-<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-
-
-<title>文件系统 | Ivan&#39;s Tech Blog</title>
-
-<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
-<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
-
-<script>
-    var yiliaConfig = {
-        fancybox: true,
-        animate: true,
-        isHome: false,
-        isPost: true,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
-        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
-        search: 
-    }
-</script>
-
-
-    <script> yiliaConfig.jquery_ui = [false]; </script>
-
-
-
-    <script> yiliaConfig.rootUrl = "\/";</script>
-
-
-
-
-
-
-<meta name="generator" content="Hexo 8.1.1"></head>
-<body>
-  <div id="container">
-    <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-    <header id="header" class="inner">
-        <a href="/" class="profilepic">
-            <img src="/img/avatar.png" class="animated zoomIn">
-        </a>
-        <hgroup>
-          <h1 class="header-author"><a href="/"></a></h1>
-        </hgroup>
-
-        
-
-        
-
-
-        
-            <div id="switch-btn" class="switch-btn">
-                <div class="icon">
-                    <div class="icon-ctn">
-                        <div class="icon-wrap icon-house" data-idx="0">
-                            <div class="birdhouse"></div>
-                            <div class="birdhouse_holes"></div>
-                        </div>
-                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
-                            <div class="ribbon"></div>
-                        </div>
-                        
-                        <div class="icon-wrap icon-link hide" data-idx="2">
-                            <div class="loopback_l"></div>
-                            <div class="loopback_r"></div>
-                        </div>
-                        
-                        
-                        <div class="icon-wrap icon-me hide" data-idx="3">
-                            <div class="user"></div>
-                            <div class="shoulder"></div>
-                        </div>
-                        
-                    </div>
-                    
+<div class="kira-image">
+    <div class="kira-image-modal">
+        <div class="kira-image-header">
+            <div class="kira-image-counter"></div>
+            <div class="kira-image-title"></div>
+            <div class="kira-image-operation">
+                <div class="kira-image-operation-button" id="kira-image-operation-button-zoom">
+                    <i class="kirafont icon-zoom-in"></i>
                 </div>
-                <div class="tips-box hide">
-                    <div class="tips-arrow"></div>
-                    <ul class="tips-inner">
-                        <li>菜单</li>
-                        <li>标签</li>
-                        
-                        <li>友情链接</li>
-                        
-                        
-                        <li>关于我</li>
-                        
-                    </ul>
+                <div class="kira-image-operation-button" id="kira-image-operation-button-close">
+                    <i class="kirafont icon-close"></i>
                 </div>
-            </div>
-        
-
-        <div id="switch-area" class="switch-area">
-            <div class="switch-wrap">
-                <section class="switch-part switch-part1">
-                    <nav class="header-menu">
-                        <ul>
-                        
-                            <li><a href="/">主页</a></li>
-                        
-                            <li><a href="/archives/">所有文章</a></li>
-                        
-                            <li><a href="/tags/">标签云</a></li>
-                        
-                            <li><a href="/about/">关于我</a></li>
-                        
-                        </ul>
-                    </nav>
-                    <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" href="mailto:123@123.com" title="Email"></a>
-                            
-                                <a class="fa GitHub" href="#" title="GitHub"></a>
-                            
-                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
-                            
-                        </ul>
-                    </nav>
-                </section>
-                
-                
-                <section class="switch-part switch-part2">
-                    <div class="widget tagcloud" id="js-tagcloud">
-                        
-                    </div>
-                </section>
-                
-                
-                
-                <section class="switch-part switch-part3">
-                    <div id="js-friends">
-                    
-                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
-                    
-                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub</a>
-                    
-                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="http://moxfive.xyz/">MOxFIVE</a>
-                    
-                    </div>
-                </section>
-                
-
-                
-                
-                <section class="switch-part switch-part4">
-                
-                    <div id="js-aboutme">专注于前端</div>
-                </section>
-                
             </div>
         </div>
-    </header>                
+        <div class="kira-image-container">
+            <div class="kira-image-prev-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-left"></i>
+                </div>
+            </div>
+            <div class="kira-image-list">
+                <div class="kira-image-prev">
+                    <img />
+                </div>
+                <div class="kira-image-now">
+                    <img />
+                </div>
+                <div class="kira-image-next">
+                    <img />
+                </div>
+            </div>
+            <div class="kira-image-next-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-    </div>
-    <div class="mid-col">
-      <nav id="mobile-nav">
-      <div class="overlay">
-          <div class="slider-trigger"></div>
-          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
-      </div>
-    <div class="intrude-less">
-        <header id="header" class="inner">
-            <a href="/" class="profilepic">
-                <img src="/img/avatar.png" class="animated zoomIn">
-            </a>
-            <hgroup>
-              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
-            </hgroup>
-            
-            <nav class="header-menu">
-                <ul>
-                
-                    <li><a href="/">主页</a></li>
-                
-                    <li><a href="/archives/">所有文章</a></li>
-                
-                    <li><a href="/tags/">标签云</a></li>
-                
-                    <li><a href="/about/">关于我</a></li>
-                
-                <div class="clearfix"></div>
-                </ul>
-            </nav>
-            <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" target="_blank" href="mailto:123@123.com" title="Email"></a>
-                            
-                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
-                            
-                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
-                            
-                        </ul>
-            </nav>
-        </header>                
-    </div>
-    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
-</nav>
-      <div class="body-wrap"><article id="post-第一章/文件系统" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" class="article-date">
-      <time datetime="2025-12-21T11:20:42.000Z" itemprop="datePublished">2025-12-21</time>
-</a>
+
+	
+<link rel="stylesheet" href="/css/kira-code-copy.css">
+
+	
+<script src="/js/kira-code-copy.js"></script>
 
 
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      文件系统
-    </h1>
-  
-
-      </header>
-      
-      <div class="article-info article-info-post">
-        
-
-        
-        <div class="clearfix"></div>
-      </div>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <p>你想要我为你详细解释这段关于Xv6文件系统的核心概念和设计细节，包括文件、目录、inode、系统调用以及相关工具程序的设计逻辑，尤其是<code>cd</code>内置在shell的原因。</p>
+<div class="kira-post">
+	<article>
+		
+		<div
+			class="kira-post-cover"
+			style="padding-bottom: '56.25%'"
+		>
+			<img
+				data-src="https://kira.host/assets/Pictures/Others/-f0d5cc34c6e5aa7_compressed.jpg"
+				data-sizes="auto"
+				alt="文件系统"
+				class="lazyload kira-post-cover-image disabled-kira-image"
+			/>
+			<h1>文件系统</h1>
+		</div>
+		
+		<div class="kira-post-meta kira-rainbow" style="margin:10px 0!important;">
+			<a><i class="kirafont icon-calendar-fill"></i>2025年12月21日</a>
+			<a><i class="kirafont icon-edit-fill"></i>1.2k 字</a>
+			<a><i class="kirafont icon-time-circle-fill"></i>大概 5 分钟</a>
+		</div>
+		<html><head></head><body><p>你想要我为你详细解释这段关于Xv6文件系统的核心概念和设计细节，包括文件、目录、inode、系统调用以及相关工具程序的设计逻辑，尤其是<code>cd</code>内置在shell的原因。</p>
 <p>我会从核心概念入手，由浅入深地为你拆解这些内容：</p>
-<h3 id="一、Xv6文件系统的核心结构与概念"><a href="#一、Xv6文件系统的核心结构与概念" class="headerlink" title="一、Xv6文件系统的核心结构与概念"></a>一、Xv6文件系统的核心结构与概念</h3><h4 id="1-目录与路径的逻辑"><a href="#1-目录与路径的逻辑" class="headerlink" title="1. 目录与路径的逻辑"></a>1. 目录与路径的逻辑</h4><p>Xv6的文件系统是<strong>树形结构</strong>，核心特点如下：</p>
+<h3><span id="%E4%B8%80xv6%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%A0%B8%E5%BF%83%E7%BB%93%E6%9E%84%E4%B8%8E%E6%A6%82%E5%BF%B5">一、Xv6文件系统的核心结构与概念</span></h3><h4><span id="1-%E7%9B%AE%E5%BD%95%E4%B8%8E%E8%B7%AF%E5%BE%84%E7%9A%84%E9%80%BB%E8%BE%91">1. 目录与路径的逻辑</span></h4><p>Xv6的文件系统是<strong>树形结构</strong>，核心特点如下：</p>
 <ul>
 <li><strong>根目录</strong>：整个文件系统的起点（<code>/</code>），所有文件和目录都依附于这个根节点。</li>
 <li><strong>绝对路径</strong>：以<code>/</code>开头（如<code>/a/b/c</code>），从根目录开始逐层查找。</li>
 <li><strong>相对路径</strong>：不以<code>/</code>开头（如<code>b/c</code>），从进程的<strong>当前工作目录</strong>开始查找。</li>
-<li><strong>当前工作目录</strong>：进程的一个属性，可通过<code>chdir</code>系统调用修改，这也是为什么代码中先<code>chdir(&quot;/a&quot;)</code>再<code>chdir(&quot;b&quot;)</code>后，<code>open(&quot;c&quot;)</code>能找到<code>/a/b/c</code>的原因。</li>
+<li><strong>当前工作目录</strong>：进程的一个属性，可通过<code>chdir</code>系统调用修改，这也是为什么代码中先<code>chdir("/a")</code>再<code>chdir("b")</code>后，<code>open("c")</code>能找到<code>/a/b/c</code>的原因。</li>
 </ul>
-<h4 id="2-三种核心文件类型与创建方式"><a href="#2-三种核心文件类型与创建方式" class="headerlink" title="2. 三种核心文件类型与创建方式"></a>2. 三种核心文件类型与创建方式</h4><p>Xv6将文件分为三类，各自有对应的创建系统调用：</p>
+<h4><span id="2-%E4%B8%89%E7%A7%8D%E6%A0%B8%E5%BF%83%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B%E4%B8%8E%E5%88%9B%E5%BB%BA%E6%96%B9%E5%BC%8F">2. 三种核心文件类型与创建方式</span></h4><p>Xv6将文件分为三类，各自有对应的创建系统调用：</p>
 <table>
 <thead>
 <tr>
@@ -326,15 +368,15 @@
 <tr>
 <td>设备文件</td>
 <td>关联内核设备（而非磁盘数据）</td>
-<td><code>mknod</code>系统调用（需主&#x2F;次设备号）</td>
+<td><code>mknod</code>系统调用（需主/次设备号）</td>
 </tr>
 </tbody></table>
 <p>其中<strong>设备文件</strong>是特殊的：它不存储实际数据，而是通过主、次设备号关联内核中的设备驱动，当读写设备文件时，内核会调用对应的设备驱动的<code>read/write</code>函数，而非操作磁盘。</p>
-<h4 id="3-inode（索引结点）与链接（link）：文件的本质与命名"><a href="#3-inode（索引结点）与链接（link）：文件的本质与命名" class="headerlink" title="3. inode（索引结点）与链接（link）：文件的本质与命名"></a>3. inode（索引结点）与链接（link）：文件的本质与命名</h4><p>这是Unix&#x2F;Linux（包括Xv6）文件系统的核心设计，需要重点理解：</p>
+<h4><span id="3-inode%E7%B4%A2%E5%BC%95%E7%BB%93%E7%82%B9%E4%B8%8E%E9%93%BE%E6%8E%A5link%E6%96%87%E4%BB%B6%E7%9A%84%E6%9C%AC%E8%B4%A8%E4%B8%8E%E5%91%BD%E5%90%8D">3. inode（索引结点）与链接（link）：文件的本质与命名</span></h4><p>这是Unix/Linux（包括Xv6）文件系统的核心设计，需要重点理解：</p>
 <ul>
 <li><strong>文件名≠文件本身</strong>：文件名只是目录中一个<strong>指向inode的引用</strong>（链接），而<strong>inode才是文件的本质</strong>。</li>
 <li><strong>inode的作用</strong>：存储文件的元数据，包括：<ul>
-<li>文件类型（目录&#x2F;数据&#x2F;设备）、链接数（<code>nlink</code>）、大小、数据在磁盘的位置、inode编号（唯一标识）。</li>
+<li>文件类型（目录/数据/设备）、链接数（<code>nlink</code>）、大小、数据在磁盘的位置、inode编号（唯一标识）。</li>
 </ul>
 </li>
 <li><strong>硬链接（link）</strong>：<code>link</code>系统调用会为同一个inode创建新的文件名，此时：<ul>
@@ -345,238 +387,89 @@
 <li><strong>解除链接（unlink）</strong>：<code>unlink</code>会删除一个文件名（链接），此时<code>nlink</code>减1。<strong>只有当<code>nlink=0</code>且没有文件描述符引用该inode时，inode和磁盘空间才会被释放</strong>。</li>
 </ul>
 <p>举个例子：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建文件a，对应一个inode（nlink=1）</span></span><br><span class="line">open(<span class="string">&quot;a&quot;</span>, O_CREATE | O_WRONLY);</span><br><span class="line"><span class="comment">// 为该inode创建新链接b（nlink=2）</span></span><br><span class="line">link(<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>);</span><br><span class="line"><span class="comment">// 删除链接a（nlink=1），此时inode仍存在，可通过b访问</span></span><br><span class="line">unlink(<span class="string">&quot;a&quot;</span>);</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// 创建文件a，对应一个inode（nlink=1）</span><br>open(<span class="hljs-string">"a"</span>, O_CREATE | O_WRONLY);<br><span class="hljs-comment">// 为该inode创建新链接b（nlink=2）</span><br>link(<span class="hljs-string">"a"</span>, <span class="hljs-string">"b"</span>);<br><span class="hljs-comment">// 删除链接a（nlink=1），此时inode仍存在，可通过b访问</span><br>unlink(<span class="hljs-string">"a"</span>);<br></code></pre></td></tr></tbody></table></figure>
 
 <p>而临时文件的惯用写法：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建文件并得到文件描述符fd</span></span><br><span class="line">fd = open(<span class="string">&quot;/tmp/xyz&quot;</span>, O_CREATE | O_RDWR);</span><br><span class="line"><span class="comment">// 删除文件名，此时inode仍被fd引用，不会释放</span></span><br><span class="line">unlink(<span class="string">&quot;/tmp/xyz&quot;</span>);</span><br><span class="line"><span class="comment">// 进程关闭fd或退出时，fd引用消失，inode被释放</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// 创建文件并得到文件描述符fd</span><br>fd = open(<span class="hljs-string">"/tmp/xyz"</span>, O_CREATE | O_RDWR);<br><span class="hljs-comment">// 删除文件名，此时inode仍被fd引用，不会释放</span><br>unlink(<span class="hljs-string">"/tmp/xyz"</span>);<br><span class="hljs-comment">// 进程关闭fd或退出时，fd引用消失，inode被释放</span><br></code></pre></td></tr></tbody></table></figure>
 
-<h3 id="二、文件工具程序的设计：用户级程序-vs-shell内置"><a href="#二、文件工具程序的设计：用户级程序-vs-shell内置" class="headerlink" title="二、文件工具程序的设计：用户级程序 vs shell内置"></a>二、文件工具程序的设计：用户级程序 vs shell内置</h3><p>Xv6（和Unix）的设计哲学是：<strong>将文件操作的工具（如mkdir、ln、rm）实现为用户级程序</strong>，而非内置在shell或内核中。这样做的好处是：</p>
+<h3><span id="%E4%BA%8C%E6%96%87%E4%BB%B6%E5%B7%A5%E5%85%B7%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%AE%BE%E8%AE%A1%E7%94%A8%E6%88%B7%E7%BA%A7%E7%A8%8B%E5%BA%8F-vs-shell%E5%86%85%E7%BD%AE">二、文件工具程序的设计：用户级程序 vs shell内置</span></h3><p>Xv6（和Unix）的设计哲学是：<strong>将文件操作的工具（如mkdir、ln、rm）实现为用户级程序</strong>，而非内置在shell或内核中。这样做的好处是：</p>
 <ol>
 <li><strong>扩展性强</strong>：任何人都可以编写新的用户级程序来扩展命令行功能，无需修改shell或内核。</li>
 <li><strong>简化设计</strong>：shell只需要负责解析命令、创建子进程执行用户级程序即可，无需内置大量命令逻辑。</li>
 </ol>
-<h4 id="例外：cd为什么是shell内置命令？"><a href="#例外：cd为什么是shell内置命令？" class="headerlink" title="例外：cd为什么是shell内置命令？"></a>例外：<code>cd</code>为什么是shell内置命令？</h4><p>这是一个关键的设计细节，原因如下：</p>
+<h4><span id="%E4%BE%8B%E5%A4%96cd%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AFshell%E5%86%85%E7%BD%AE%E5%91%BD%E4%BB%A4">例外：<code>cd</code>为什么是shell内置命令？</span></h4><p>这是一个关键的设计细节，原因如下：</p>
 <ul>
 <li>进程的<strong>当前工作目录</strong>是进程的私有属性，子进程无法修改父进程的属性。</li>
 <li>如果<code>cd</code>是普通用户级程序：shell会创建一个子进程来执行<code>cd</code>，子进程执行<code>chdir</code>后，只会修改自己的当前工作目录，而父进程（shell）的当前工作目录完全不变，这会导致<code>cd</code>命令失去作用。</li>
 <li>因此，<code>cd</code>必须作为shell的<strong>内置命令</strong>：执行<code>cd</code>时，不会创建子进程，而是直接在shell进程中调用<code>chdir</code>系统调用，修改shell自身的当前工作目录，这样才能达到预期效果。</li>
 </ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ol>
-<li>Xv6文件系统是树形结构，通过<strong>绝对路径&#x2F;相对路径</strong>定位文件，进程的当前工作目录可通过<code>chdir</code>修改。</li>
-<li><strong>inode是文件的核心</strong>，文件名只是指向inode的链接；<code>link</code>创建硬链接（增加nlink），<code>unlink</code>删除链接（减少nlink），只有nlink&#x3D;0且无文件描述符引用时，inode才会被释放。</li>
+<h3><span id="%E6%80%BB%E7%BB%93">总结</span></h3><ol>
+<li>Xv6文件系统是树形结构，通过<strong>绝对路径/相对路径</strong>定位文件，进程的当前工作目录可通过<code>chdir</code>修改。</li>
+<li><strong>inode是文件的核心</strong>，文件名只是指向inode的链接；<code>link</code>创建硬链接（增加nlink），<code>unlink</code>删除链接（减少nlink），只有nlink=0且无文件描述符引用时，inode才会被释放。</li>
 <li>大部分文件工具是用户级程序，而<code>cd</code>必须内置在shell中，因为子进程无法修改父进程（shell）的当前工作目录。</li>
 </ol>
+</body></html>
+	</article>
 
-      
+	 
+    <div class="kira-post-copyright">
+        <strong>本文作者：</strong>Ivan-FYF<br>
+        <strong>本文链接：</strong><a href="https://hellonnnnn.github.io/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" title="https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2025&#x2F;12&#x2F;21&#x2F;第一章&#x2F;文件系统&#x2F;" target="_blank" rel="noopener">https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2025&#x2F;12&#x2F;21&#x2F;第一章&#x2F;文件系统&#x2F;</a><br>
+        
+            <strong>��Ȩ������</strong>���Ĳ��� <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> Э���������
+        
     </div>
-    
-  </div>
-  
-    
-    <div class="copyright">
-        <p><span>本文标题:</span><a href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a></p>
-        <p><span>文章作者:</span><a href="/" title="回到主页"></a></p>
-        <p><span>发布时间:</span>2025-12-21, 19:20:42</p>
-        <p><span>最后更新:</span>2025-12-22, 16:25:50</p>
-        <p>
-            <span>原始链接:</span><a class="post-url" href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" title="文件系统">https://hellonnnnn.github.io/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://hellonnnnn.github.io/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/　　作者: " title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
-            <script> var clipboard = new Clipboard('.copy-path'); </script>
-        </p>
-        <p>
-            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
-        </p>
-    </div>
-
-
-
-    <nav id="article-nav">
-        
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2025/12/21/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0/">
-                    第二章
-                </a>
-            </div>
-        
-        
-            <div id="article-nav-older" class="article-nav-title">
-                <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">
-                    git使用
-                </a>
-            </div>
-        
-    </nav>
 
   
-</article>
+	<div class="kira-post-nav">
+		<nav class="post-nav">
+			
+		</nav>
+	</div>
+	
+	<div class="kira-post-meta kira-rainbow">
+		
+		
+	</div>
+	
+	<div class="kira-post-footer">
+		
 
-    <div id="toc" class="toc-article">
-        <strong class="toc-title">文章目录</strong>
-        
-            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81Xv6%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%A0%B8%E5%BF%83%E7%BB%93%E6%9E%84%E4%B8%8E%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">一、Xv6文件系统的核心结构与概念</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E7%9B%AE%E5%BD%95%E4%B8%8E%E8%B7%AF%E5%BE%84%E7%9A%84%E9%80%BB%E8%BE%91"><span class="toc-number">1.1.</span> <span class="toc-text">1. 目录与路径的逻辑</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E4%B8%89%E7%A7%8D%E6%A0%B8%E5%BF%83%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B%E4%B8%8E%E5%88%9B%E5%BB%BA%E6%96%B9%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">2. 三种核心文件类型与创建方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-inode%EF%BC%88%E7%B4%A2%E5%BC%95%E7%BB%93%E7%82%B9%EF%BC%89%E4%B8%8E%E9%93%BE%E6%8E%A5%EF%BC%88link%EF%BC%89%EF%BC%9A%E6%96%87%E4%BB%B6%E7%9A%84%E6%9C%AC%E8%B4%A8%E4%B8%8E%E5%91%BD%E5%90%8D"><span class="toc-number">1.3.</span> <span class="toc-text">3. inode（索引结点）与链接（link）：文件的本质与命名</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%96%87%E4%BB%B6%E5%B7%A5%E5%85%B7%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%AE%BE%E8%AE%A1%EF%BC%9A%E7%94%A8%E6%88%B7%E7%BA%A7%E7%A8%8B%E5%BA%8F-vs-shell%E5%86%85%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">二、文件工具程序的设计：用户级程序 vs shell内置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BE%8B%E5%A4%96%EF%BC%9Acd%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AFshell%E5%86%85%E7%BD%AE%E5%91%BD%E4%BB%A4%EF%BC%9F"><span class="toc-number">2.1.</span> <span class="toc-text">例外：cd为什么是shell内置命令？</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
-        
-    </div>
-    <style>
-        .left-col .switch-btn,
-        .left-col .switch-area {
-            display: none;
-        }
-        .toc-level-3 i,
-        .toc-level-3 ol {
-            display: none !important;
-        }
-    </style>
+		
+	<div class="giscus"></div>
+  
+    <script src="https://giscus.app/client.js"
+      data-repo="-your github username-/-your giscus repo-"
+      data-repo-id="-your giscus repo ID-"
+      data-category="Announcements"
+      data-category-id="-giscus category id-"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="light"
+      data-lang="en"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async  
+    ></script>
+  
 
-    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
-
-    <script>
-        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
-    </script>
-
-
-
-    
-<div class="share">
-    
-        <div class="bdsharebuttonbox">
-            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
-            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
-            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
-            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
-            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
-            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
-            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
-        </div>
-        <script>
-            window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"文件系统　| Ivan's Tech Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-        </script>
-    
-
-    
+	</div>
+	
 </div>
 
-
-
-
-
-
-
-    
-
-
-
-
-    <div class="scroll" id="post-nav-button">
-        
-            <a href="/2025/12/21/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0/" title="上一篇: 第二章">
-                <i class="fa fa-angle-left"></i>
-            </a>
-        
-
-        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
-
-        
-            <a href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/" title="下一篇: git使用">
-                <i class="fa fa-angle-right"></i>
-            </a>
-        
-    </div>
-
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/01/22/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E4%B8%80%E5%A4%A9/">算法训练营第一天</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/01/21/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E8%B9%A6%E5%BA%8A%E9%A1%B5/">蹦床页</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/01/21/unbuntu%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%82%A8%E4%B8%8D%E8%B6%B3/">unbuntu系统存储不足</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/trap-c%E8%AF%A6%E8%A7%A3/">trap.c详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8%EF%BC%9Axv6-%E6%9E%81%E7%AE%80%E5%A4%84%E7%90%86-vs-%E7%9C%9F%E5%AE%9E-OS-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/">页面错误异常：xv6 极简处理 vs 真实 OS 的高级应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从内核空间陷入</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0/">xv6 系统调用参数处理：提取、校验与安全传输</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E4%B8%AD-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF/">xv6 中 exec 系统调用的完整调用链路</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/RISC-V%E9%99%B7%E5%85%A5%E6%9C%BA%E5%88%B6/">陷阱指令和系统调用 核心解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 exec 系统调用核心逻辑总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-sbrk-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%88%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E6%89%A9%E7%BC%A9%E5%AE%B9%EF%BC%89%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 sbrk 系统调用（进程内存扩缩容）核心逻辑总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 进程地址空间总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E9%87%8A%E6%94%BE%E6%9C%BA%E5%88%B6%E6%80%BB%E7%BB%93/">xv6 物理内存分配与释放机制总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E5%86%85%E6%A0%B8%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 内核地址空间总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/satp/">satp</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/copyin-copyout%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/">copyin/copyout详细介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3/">系统调用正确理解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/">xv6内核架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/">添加系统调用的过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/21/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0/">第二章</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">git使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a></li></ul>
-
-
-
-
-    <script>
-        
-    </script>
+				</div>
+			</div>
+			<div class="kira-right-column">
+	<a onclick="document.querySelector('#kira-top-header').scrollIntoView({behavior: 'smooth'});" class="kira-backtotop" aria-label="回到顶部" title="回到顶部">
+		<button class="mdui-fab mdui-ripple">
+			<i class="kirafont icon-caret-up"></i>
+		</button>
+	</a>
 </div>
-      <footer id="footer">
-    <div class="outer">
-        <div id="footer-info">
-            <div class="footer-left">
-                <i class="fa fa-copyright"></i> 
-                2016-2026 Ivan-FYF
-            </div>
-            <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
-            </div>
-        </div>
-        
-            <div class="visit">
-                
-                    <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
-                        </span>
-                    </span>
-                
-                
-                    <span>| </span>
-                
-                
-                    <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
-                        </span>
-                    </span>
-                
-            </div>
-        
-    </div>
-</footer>
-    </div>
-    
-<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            var iPad = window.navigator.userAgent.indexOf('iPad');
-            if (iPad > -1 || $(".left-col").css("display") === "none") {
-                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
-                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
-                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
-            }
-            else {
-                var backgroundnum = 5;
-                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
-                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
-            }
-        })
-    </script>
-
-
-
-
-
-<div class="scroll" id="scroll">
-    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
-</div>
-<script>
-    // Open in New Window
-    
-        var oOpenInNew = {
-            
-            
-            
-            
-            
-            
-             archives: ".archive-article-title", 
-             miniArchives: "a.post-list-link", 
-            
-             friends: "#js-friends a", 
-             socail: ".social a" 
-        }
-        for (var x in oOpenInNew) {
-            $(oOpenInNew[x]).attr("target", "_blank");
-        }
-    
-</script>
-
-<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
-</script>
-  </div>
-</body>
+		</div>
+	</body>
 </html>

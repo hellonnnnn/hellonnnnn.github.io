@@ -1,361 +1,403 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
-<head>
+<html 
+	lang="zh-Hans">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		
+<link rel="stylesheet" href="/css/layout.css">
 
-    <!--[if lt IE 9]>
-        <style>body {display: none; background: none !important} </style>
-        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
-    <![endif]-->
+		
+		<title> xv6 系统调用参数处理：提取、校验与安全传输 -  Ivan&#39;s Tech Blog</title>
+		<!-- <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" /> -->
+		<!-- <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script> -->
+		
+<link rel="stylesheet" href="/lib/mdui/mdui.min.css">
 
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="format-detection" content="telephone=no" />
-<meta name="author" content="Ivan-FYF" />
+		
+<script src="/lib/mdui/mdui.min.js"></script>
+
+		<!-- lazyload -->
+		
+<script src="/lib/lazysizes.js"></script>
+
+		<!-- smooth-scrolling -->
+		
+<script src="/lib/smooth-scrolling.js"></script>
+
+		<!-- highlight -->
+		
+<link rel="stylesheet" href="/lib/highlight/atom-one-dark.min.css">
+
+		
+<script src="/lib/highlight/highlight.min.js"></script>
+
+		<!-- 预置 kiraicon -->
+		
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+
+		
+		<link
+			rel="shortcut icon"
+			href="https://kira.host/assets/Pictures/Others/116359b4ccf19917.jpg"
+			type="image/png"
+		/>
+		
+<link rel="stylesheet" href="/deps/css/APlayer.min.css">
+
+		
+		
+<script src="/deps/js/APlayer.min.js"></script>
+<script src="/deps/js/Meting.min.js"></script>
+
+	<meta name="generator" content="Hexo 8.1.1"></head>
+
+	<body>
+		<div
+			class="kira-background"
+			style="background-image: url('https://kira.host/assets/Pictures/Others/-f0d5cc34c6e5aa7_compressed.jpg')"
+		></div>
+		<div class="kira-header">
+    <a
+        class="kira-drawer-button mdui-ripple"
+        title="导航栏"
+        onclick="document.querySelector('.kira-sidebar-modal').classList.add('show');document.querySelector('.kira-sidebar#sidebar').classList.add('show');"
+    >
+        <i class="kirafont icon-menu"></i>
+    </a>
+    <a href="/" title="Ivan&#39;s Tech Blog">
+        <img
+			src="https://kira.host/assets/Pictures/Others/20220922230447.jpg"
+			alt="Ivan-FYF"
+		/>
+    </a>
+</div>
+		<div class="kira-body">
+			<div class="kira-sidebar" id="sidebar">
+	<div class="kira-avatar mdui-ripple">
+		<a target="_blank" rel="noopener" href="https://kira.host/assets/Pictures/Others/20220922230447.jpg" title="Ivan-FYF">
+			<img
+				src="https://kira.host/assets/Pictures/Others/20220922230447.jpg"
+				alt="Ivan-FYF"
+			/>
+		</a>
+	</div>
+	<div class="kira-count">
+		<div><span>文章</span>29</div>
+		<div><span>标签</span>0</div>
+		<div><span>分类</span>0</div>
+	</div>
+	<div class="kira-list">
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/"
+			title="�ص���ҳ"
+		>
+			<i
+				class="kirafont
+					
+						icon-home
+					"
+			></i>
+			<div class="kira-list-item-content">
+				�ص���ҳ
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/archive.html"
+			title="���¹鵵"
+		>
+			<i
+				class="kirafont
+					
+						icon-container
+					"
+			></i>
+			<div class="kira-list-item-content">
+				���¹鵵
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/about.html"
+			title="���ڱ���"
+		>
+			<i
+				class="kirafont
+					
+						icon-user
+					"
+			></i>
+			<div class="kira-list-item-content">
+				���ڱ���
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/friends.html"
+			title="�ҵ�����"
+		>
+			<i
+				class="kirafont
+					
+						icon-team
+					"
+			></i>
+			<div class="kira-list-item-content">
+				�ҵ�����
+			</div>
+		</a>
+		
+	</div>
+	<aside id="kira-sidebar">
+		
+			<div class="kira-widget-wrap">
+	<div class="kira-widget kira-social">
+		
+			<a
+				class="mdui-ripple"
+				href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=<ȥ�������ź��������QQ��>&website=www.oicqzone.com"
+				target="_blank"
+				mdui-tooltip="{content: 'QQ'}"
+				style="color: rgb(49, 174, 255); background-color: rgba(49, 174, 255, .1);"
+			>
+				<i
+					class="kirafont
+					
+						icon-QQ
+					"
+				></i>
+			</a>
+		
+			<a
+				class="mdui-ripple"
+				href="https://space.bilibili.com/<�ĳ����Bվuid>"
+				target="_blank"
+				mdui-tooltip="{content: '��������'}"
+				style="color: rgb(231, 106, 141); background-color: rgba(231, 106, 141, .15);"
+			>
+				<i
+					class="kirafont
+					
+						icon-bilibili
+					"
+				></i>
+			</a>
+		
+			<a
+				class="mdui-ripple"
+				href="https://github.com/<���github id>/"
+				target="_blank"
+				mdui-tooltip="{content: 'GitHub'}"
+				style="color: rgb(25, 23, 23); background-color: rgba(25, 23, 23, .15);"
+			>
+				<i
+					class="kirafont
+					
+						icon-github
+					"
+				></i>
+			</a>
+		
+			<a
+				class="mdui-ripple"
+				href="https://gitee.com/<���gitee id>"
+				target="_blank"
+				mdui-tooltip="{content: 'Gitee'}"
+				style="color: rgb(165, 15, 15); background-color: rgba(165, 15, 15, .15);"
+			>
+				<i
+					class="kirafont
+					
+						icon-gitee
+					"
+				></i>
+			</a>
+		
+	</div>
+</div>
+
+		
+			
+		
+			
+
+		
+			
+	<div class="kira-widget-wrap">
+		<h3 class="kira-widget-title">
+			文章归档
+		</h3>
+		<div class="kira-widget">
+			<ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/">2026</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/">2025</a><span class="archive-list-count">26</span></li></ul>
+		</div>
+	</div>
 
 
-
-<meta name="description" content="xv6 系统调用参数处理：提取、校验与安全传输xv6 处理系统调用参数的核心挑战是：既要从用户态获取参数，又要防止恶意&#x2F;错误的用户参数（如无效指针、越权地址）破坏内核安全。整个流程围绕「参数保存→基础提取→指针安全校验→数据传输」展开，以下结合源码和原理详细拆解。 一、核心背景：参数处理的核心问题 参数存储位置：用户态按 RISC-V C 调用约定，将系统调用参数放入 a0-a7 寄存器">
-<meta property="og:type" content="article">
-<meta property="og:title" content="xv6 系统调用参数处理：提取、校验与安全传输">
-<meta property="og:url" content="https://hellonnnnn.github.io/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0/index.html">
-<meta property="og:site_name" content="Ivan&#39;s Tech Blog">
-<meta property="og:description" content="xv6 系统调用参数处理：提取、校验与安全传输xv6 处理系统调用参数的核心挑战是：既要从用户态获取参数，又要防止恶意&#x2F;错误的用户参数（如无效指针、越权地址）破坏内核安全。整个流程围绕「参数保存→基础提取→指针安全校验→数据传输」展开，以下结合源码和原理详细拆解。 一、核心背景：参数处理的核心问题 参数存储位置：用户态按 RISC-V C 调用约定，将系统调用参数放入 a0-a7 寄存器">
-<meta property="og:locale">
-<meta property="article:published_time" content="2025-12-29T12:14:40.000Z">
-<meta property="article:modified_time" content="2025-12-29T12:15:24.706Z">
-<meta property="article:author" content="Ivan-FYF">
-<meta name="twitter:card" content="summary">
-
-<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
-
-
-    <link rel="alternate" href="/atom.xml" title="Ivan&#39;s Tech Blog" type="application/atom+xml">
-
-
-
-    <link rel="shortcut icon" href="/favicon.png">
-
-
-
-    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
-
-
-
-    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+		
+	</aside>
+	<div class="kira-copyright">
+		&copy; 2026
+		<a href="/">Ivan-FYF</a>
+		Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> &
+		<a href="https://github.com/ch1ny/kira-hexo/" target="_blank">Kira-Hexo</a>
+		<br />
+		
+		
+	</div>
+</div>
+<div
+	class="kira-sidebar-modal"
+	id="sidebar-modal"
+	onclick="(function(self) {
+		self.classList.remove('show');
+		document.querySelector('.kira-sidebar.show#sidebar').classList.remove('show');
+	})(this)"
+></div>
+			<div class="kira-content">
+				<div id="kira-top-header"></div>
+				<div class="kira-main-content">
+					
+<link rel="stylesheet" href="/css/kira-image.css">
 
 
+<script src="/js/kira-image.js"></script>
 
-    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
-    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
-
-
-
-<link rel="stylesheet" href="/css/style.css">
-
-
-
-
-<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-
-
-<title>xv6 系统调用参数处理：提取、校验与安全传输 | Ivan&#39;s Tech Blog</title>
-
-<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
-<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
-
-<script>
-    var yiliaConfig = {
-        fancybox: true,
-        animate: true,
-        isHome: false,
-        isPost: true,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
-        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
-        search: 
-    }
-</script>
-
-
-    <script> yiliaConfig.jquery_ui = [false]; </script>
-
-
-
-    <script> yiliaConfig.rootUrl = "\/";</script>
-
-
-
-
-
-
-<meta name="generator" content="Hexo 8.1.1"></head>
-<body>
-  <div id="container">
-    <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-    <header id="header" class="inner">
-        <a href="/" class="profilepic">
-            <img src="/img/avatar.png" class="animated zoomIn">
-        </a>
-        <hgroup>
-          <h1 class="header-author"><a href="/"></a></h1>
-        </hgroup>
-
-        
-
-        
-
-
-        
-            <div id="switch-btn" class="switch-btn">
-                <div class="icon">
-                    <div class="icon-ctn">
-                        <div class="icon-wrap icon-house" data-idx="0">
-                            <div class="birdhouse"></div>
-                            <div class="birdhouse_holes"></div>
-                        </div>
-                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
-                            <div class="ribbon"></div>
-                        </div>
-                        
-                        <div class="icon-wrap icon-link hide" data-idx="2">
-                            <div class="loopback_l"></div>
-                            <div class="loopback_r"></div>
-                        </div>
-                        
-                        
-                        <div class="icon-wrap icon-me hide" data-idx="3">
-                            <div class="user"></div>
-                            <div class="shoulder"></div>
-                        </div>
-                        
-                    </div>
-                    
+<div class="kira-image">
+    <div class="kira-image-modal">
+        <div class="kira-image-header">
+            <div class="kira-image-counter"></div>
+            <div class="kira-image-title"></div>
+            <div class="kira-image-operation">
+                <div class="kira-image-operation-button" id="kira-image-operation-button-zoom">
+                    <i class="kirafont icon-zoom-in"></i>
                 </div>
-                <div class="tips-box hide">
-                    <div class="tips-arrow"></div>
-                    <ul class="tips-inner">
-                        <li>菜单</li>
-                        <li>标签</li>
-                        
-                        <li>友情链接</li>
-                        
-                        
-                        <li>关于我</li>
-                        
-                    </ul>
+                <div class="kira-image-operation-button" id="kira-image-operation-button-close">
+                    <i class="kirafont icon-close"></i>
                 </div>
-            </div>
-        
-
-        <div id="switch-area" class="switch-area">
-            <div class="switch-wrap">
-                <section class="switch-part switch-part1">
-                    <nav class="header-menu">
-                        <ul>
-                        
-                            <li><a href="/">主页</a></li>
-                        
-                            <li><a href="/archives/">所有文章</a></li>
-                        
-                            <li><a href="/tags/">标签云</a></li>
-                        
-                            <li><a href="/about/">关于我</a></li>
-                        
-                        </ul>
-                    </nav>
-                    <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" href="mailto:123@123.com" title="Email"></a>
-                            
-                                <a class="fa GitHub" href="#" title="GitHub"></a>
-                            
-                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
-                            
-                        </ul>
-                    </nav>
-                </section>
-                
-                
-                <section class="switch-part switch-part2">
-                    <div class="widget tagcloud" id="js-tagcloud">
-                        
-                    </div>
-                </section>
-                
-                
-                
-                <section class="switch-part switch-part3">
-                    <div id="js-friends">
-                    
-                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
-                    
-                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub</a>
-                    
-                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="http://moxfive.xyz/">MOxFIVE</a>
-                    
-                    </div>
-                </section>
-                
-
-                
-                
-                <section class="switch-part switch-part4">
-                
-                    <div id="js-aboutme">专注于前端</div>
-                </section>
-                
             </div>
         </div>
-    </header>                
+        <div class="kira-image-container">
+            <div class="kira-image-prev-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-left"></i>
+                </div>
+            </div>
+            <div class="kira-image-list">
+                <div class="kira-image-prev">
+                    <img />
+                </div>
+                <div class="kira-image-now">
+                    <img />
+                </div>
+                <div class="kira-image-next">
+                    <img />
+                </div>
+            </div>
+            <div class="kira-image-next-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-    </div>
-    <div class="mid-col">
-      <nav id="mobile-nav">
-      <div class="overlay">
-          <div class="slider-trigger"></div>
-          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
-      </div>
-    <div class="intrude-less">
-        <header id="header" class="inner">
-            <a href="/" class="profilepic">
-                <img src="/img/avatar.png" class="animated zoomIn">
-            </a>
-            <hgroup>
-              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
-            </hgroup>
-            
-            <nav class="header-menu">
-                <ul>
-                
-                    <li><a href="/">主页</a></li>
-                
-                    <li><a href="/archives/">所有文章</a></li>
-                
-                    <li><a href="/tags/">标签云</a></li>
-                
-                    <li><a href="/about/">关于我</a></li>
-                
-                <div class="clearfix"></div>
-                </ul>
-            </nav>
-            <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" target="_blank" href="mailto:123@123.com" title="Email"></a>
-                            
-                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
-                            
-                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
-                            
-                        </ul>
-            </nav>
-        </header>                
-    </div>
-    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
-</nav>
-      <div class="body-wrap"><article id="post-第四章/xv6-系统调用参数" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0/" class="article-date">
-      <time datetime="2025-12-29T12:14:40.000Z" itemprop="datePublished">2025-12-29</time>
-</a>
+
+	
+<link rel="stylesheet" href="/css/kira-code-copy.css">
+
+	
+<script src="/js/kira-code-copy.js"></script>
 
 
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      xv6 系统调用参数处理：提取、校验与安全传输
-    </h1>
-  
-
-      </header>
-      
-      <div class="article-info article-info-post">
-        
-
-        
-        <div class="clearfix"></div>
-      </div>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h1 id="xv6-系统调用参数处理：提取、校验与安全传输"><a href="#xv6-系统调用参数处理：提取、校验与安全传输" class="headerlink" title="xv6 系统调用参数处理：提取、校验与安全传输"></a>xv6 系统调用参数处理：提取、校验与安全传输</h1><p>xv6 处理系统调用参数的核心挑战是：<strong>既要从用户态获取参数，又要防止恶意&#x2F;错误的用户参数（如无效指针、越权地址）破坏内核安全</strong>。整个流程围绕「参数保存→基础提取→指针安全校验→数据传输」展开，以下结合源码和原理详细拆解。</p>
-<h2 id="一、核心背景：参数处理的核心问题"><a href="#一、核心背景：参数处理的核心问题" class="headerlink" title="一、核心背景：参数处理的核心问题"></a>一、核心背景：参数处理的核心问题</h2><ol>
+<div class="kira-post">
+	<article>
+		
+		<div
+			class="kira-post-cover"
+			style="padding-bottom: '56.25%'"
+		>
+			<img
+				data-src="https://kira.host/assets/Pictures/Others/-f0d5cc34c6e5aa7_compressed.jpg"
+				data-sizes="auto"
+				alt="xv6 系统调用参数处理：提取、校验与安全传输"
+				class="lazyload kira-post-cover-image disabled-kira-image"
+			/>
+			<h1>xv6 系统调用参数处理：提取、校验与安全传输</h1>
+		</div>
+		
+		<div class="kira-post-meta kira-rainbow" style="margin:10px 0!important;">
+			<a><i class="kirafont icon-calendar-fill"></i>2025年12月29日</a>
+			<a><i class="kirafont icon-edit-fill"></i>2.7k 字</a>
+			<a><i class="kirafont icon-time-circle-fill"></i>大概 12 分钟</a>
+		</div>
+		<html><head></head><body><h1><span id="xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0%E5%A4%84%E7%90%86%E6%8F%90%E5%8F%96%E6%A0%A1%E9%AA%8C%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BC%A0%E8%BE%93">xv6 系统调用参数处理：提取、校验与安全传输</span></h1><p>xv6 处理系统调用参数的核心挑战是：<strong>既要从用户态获取参数，又要防止恶意/错误的用户参数（如无效指针、越权地址）破坏内核安全</strong>。整个流程围绕「参数保存→基础提取→指针安全校验→数据传输」展开，以下结合源码和原理详细拆解。</p>
+<h2><span id="%E4%B8%80%E6%A0%B8%E5%BF%83%E8%83%8C%E6%99%AF%E5%8F%82%E6%95%B0%E5%A4%84%E7%90%86%E7%9A%84%E6%A0%B8%E5%BF%83%E9%97%AE%E9%A2%98">一、核心背景：参数处理的核心问题</span></h2><ol>
 <li><strong>参数存储位置</strong>：用户态按 RISC-V C 调用约定，将系统调用参数放入 <code>a0-a7</code> 寄存器，系统调用号放入 <code>a7</code>；</li>
 <li><strong>隔离性约束</strong>：内核页表与用户页表完全独立（内核页表映射物理内存+内核代码，用户页表仅映射用户空间+蹦床页），内核不能直接用用户指针访问内存；</li>
 <li><strong>安全风险</strong>：用户可能传递「无效指针（如野指针）」「越权地址（如指向内核内存的地址）」，需校验地址合法性。</li>
 </ol>
-<h2 id="二、步骤1：用户参数的保存（寄存器-→-陷阱帧）"><a href="#二、步骤1：用户参数的保存（寄存器-→-陷阱帧）" class="headerlink" title="二、步骤1：用户参数的保存（寄存器 → 陷阱帧）"></a>二、步骤1：用户参数的保存（寄存器 → 陷阱帧）</h2><p>用户执行 <code>ecall</code> 触发陷阱后，<code>uservec</code> 汇编代码会将所有用户寄存器（包括 <code>a0-a7</code>）保存到当前进程的 <code>trapframe</code>（进程私有）中。陷阱帧中寄存器的存储偏移是固定的（与 RISC-V 寄存器一一对应）：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// kernel/proc.h: trapframe 结构体（寄存器存储偏移）</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">trapframe</span> &#123;</span></span><br><span class="line">  uint64 ra;   <span class="comment">// 0</span></span><br><span class="line">  uint64 sp;   <span class="comment">// 8</span></span><br><span class="line">  uint64 gp;   <span class="comment">// 16</span></span><br><span class="line">  <span class="comment">// ... 省略 t0-t6、s0-s11 等</span></span><br><span class="line">  uint64 a0;   <span class="comment">// 72 （第0个系统调用参数）</span></span><br><span class="line">  uint64 a1;   <span class="comment">// 80 （第1个系统调用参数）</span></span><br><span class="line">  uint64 a2;   <span class="comment">// 88 （第2个系统调用参数）</span></span><br><span class="line">  <span class="comment">// ... 直到 a7（128，系统调用号）</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2><span id="%E4%BA%8C%E6%AD%A5%E9%AA%A41%E7%94%A8%E6%88%B7%E5%8F%82%E6%95%B0%E7%9A%84%E4%BF%9D%E5%AD%98%E5%AF%84%E5%AD%98%E5%99%A8-%E2%86%92-%E9%99%B7%E9%98%B1%E5%B8%A7">二、步骤1：用户参数的保存（寄存器 → 陷阱帧）</span></h2><p>用户执行 <code>ecall</code> 触发陷阱后，<code>uservec</code> 汇编代码会将所有用户寄存器（包括 <code>a0-a7</code>）保存到当前进程的 <code>trapframe</code>（进程私有）中。陷阱帧中寄存器的存储偏移是固定的（与 RISC-V 寄存器一一对应）：</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// kernel/proc.h: trapframe 结构体（寄存器存储偏移）</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">trapframe</span> {</span><br>  uint64 ra;   <span class="hljs-comment">// 0</span><br>  uint64 sp;   <span class="hljs-comment">// 8</span><br>  uint64 gp;   <span class="hljs-comment">// 16</span><br>  <span class="hljs-comment">// ... 省略 t0-t6、s0-s11 等</span><br>  uint64 a0;   <span class="hljs-comment">// 72 （第0个系统调用参数）</span><br>  uint64 a1;   <span class="hljs-comment">// 80 （第1个系统调用参数）</span><br>  uint64 a2;   <span class="hljs-comment">// 88 （第2个系统调用参数）</span><br>  <span class="hljs-comment">// ... 直到 a7（128，系统调用号）</span><br>};<br></code></pre></td></tr></tbody></table></figure>
 <p>内核后续所有参数提取操作，都是直接读取 <code>trapframe</code> 中保存的寄存器值，而非用户态寄存器（内核无法直接访问用户态寄存器）。</p>
-<h2 id="三、步骤2：基础参数提取（argraw-argint-argaddr-argfd）"><a href="#三、步骤2：基础参数提取（argraw-argint-argaddr-argfd）" class="headerlink" title="三、步骤2：基础参数提取（argraw&#x2F;argint&#x2F;argaddr&#x2F;argfd）"></a>三、步骤2：基础参数提取（argraw&#x2F;argint&#x2F;argaddr&#x2F;argfd）</h2><p>内核提供一组基础函数，从 <code>trapframe</code> 中提取不同类型的参数，核心是 <code>argraw</code>（读取原始寄存器值），上层封装 <code>argint</code>（整数）、<code>argaddr</code>（指针）、<code>argfd</code>（文件描述符）。</p>
-<h3 id="1-核心基础：argraw（读取原始寄存器值）"><a href="#1-核心基础：argraw（读取原始寄存器值）" class="headerlink" title="1. 核心基础：argraw（读取原始寄存器值）"></a>1. 核心基础：argraw（读取原始寄存器值）</h3><p><code>argraw</code> 是所有参数提取函数的底层，作用是「根据参数序号，从 trapframe 中读取对应的用户寄存器值」：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// kernel/syscall.c:35 argraw 实现</span></span><br><span class="line"><span class="type">static</span> uint64 <span class="title function_">argraw</span><span class="params">(<span class="type">int</span> n)</span> &#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">proc</span> *<span class="title">p</span> =</span> myproc();</span><br><span class="line">  <span class="comment">// n=0 → a0（偏移72），n=1 → a1（偏移80），以此类推</span></span><br><span class="line">  <span class="keyword">switch</span> (n) &#123;</span><br><span class="line">  <span class="keyword">case</span> <span class="number">0</span>:  <span class="keyword">return</span> p-&gt;trapframe-&gt;a0;</span><br><span class="line">  <span class="keyword">case</span> <span class="number">1</span>:  <span class="keyword">return</span> p-&gt;trapframe-&gt;a1;</span><br><span class="line">  <span class="keyword">case</span> <span class="number">2</span>:  <span class="keyword">return</span> p-&gt;trapframe-&gt;a2;</span><br><span class="line">  <span class="keyword">case</span> <span class="number">3</span>:  <span class="keyword">return</span> p-&gt;trapframe-&gt;a3;</span><br><span class="line">  <span class="keyword">case</span> <span class="number">4</span>:  <span class="keyword">return</span> p-&gt;trapframe-&gt;a4;</span><br><span class="line">  <span class="keyword">case</span> <span class="number">5</span>:  <span class="keyword">return</span> p-&gt;trapframe-&gt;a5;</span><br><span class="line">  <span class="keyword">default</span>: panic(<span class="string">&quot;argraw&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2><span id="%E4%B8%89%E6%AD%A5%E9%AA%A42%E5%9F%BA%E7%A1%80%E5%8F%82%E6%95%B0%E6%8F%90%E5%8F%96argrawargintargaddrargfd">三、步骤2：基础参数提取（argraw/argint/argaddr/argfd）</span></h2><p>内核提供一组基础函数，从 <code>trapframe</code> 中提取不同类型的参数，核心是 <code>argraw</code>（读取原始寄存器值），上层封装 <code>argint</code>（整数）、<code>argaddr</code>（指针）、<code>argfd</code>（文件描述符）。</p>
+<h3><span id="1-%E6%A0%B8%E5%BF%83%E5%9F%BA%E7%A1%80argraw%E8%AF%BB%E5%8F%96%E5%8E%9F%E5%A7%8B%E5%AF%84%E5%AD%98%E5%99%A8%E5%80%BC">1. 核心基础：argraw（读取原始寄存器值）</span></h3><p><code>argraw</code> 是所有参数提取函数的底层，作用是「根据参数序号，从 trapframe 中读取对应的用户寄存器值」：</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// kernel/syscall.c:35 argraw 实现</span><br><span class="hljs-type">static</span> uint64 <span class="hljs-title function_">argraw</span><span class="hljs-params">(<span class="hljs-type">int</span> n)</span> {<br>  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">proc</span> *<span class="hljs-title">p</span> =</span> myproc();<br>  <span class="hljs-comment">// n=0 → a0（偏移72），n=1 → a1（偏移80），以此类推</span><br>  <span class="hljs-keyword">switch</span> (n) {<br>  <span class="hljs-keyword">case</span> <span class="hljs-number">0</span>:  <span class="hljs-keyword">return</span> p-&gt;trapframe-&gt;a0;<br>  <span class="hljs-keyword">case</span> <span class="hljs-number">1</span>:  <span class="hljs-keyword">return</span> p-&gt;trapframe-&gt;a1;<br>  <span class="hljs-keyword">case</span> <span class="hljs-number">2</span>:  <span class="hljs-keyword">return</span> p-&gt;trapframe-&gt;a2;<br>  <span class="hljs-keyword">case</span> <span class="hljs-number">3</span>:  <span class="hljs-keyword">return</span> p-&gt;trapframe-&gt;a3;<br>  <span class="hljs-keyword">case</span> <span class="hljs-number">4</span>:  <span class="hljs-keyword">return</span> p-&gt;trapframe-&gt;a4;<br>  <span class="hljs-keyword">case</span> <span class="hljs-number">5</span>:  <span class="hljs-keyword">return</span> p-&gt;trapframe-&gt;a5;<br>  <span class="hljs-keyword">default</span>: panic(<span class="hljs-string">"argraw"</span>);<br>  }<br>}<br></code></pre></td></tr></tbody></table></figure>
 <ul>
-<li>参数序号 <code>n</code> 对应系统调用的参数位置（如 <code>exec(path, argv)</code> 中，<code>path</code> 是 n&#x3D;0，<code>argv</code> 是 n&#x3D;1）；</li>
+<li>参数序号 <code>n</code> 对应系统调用的参数位置（如 <code>exec(path, argv)</code> 中，<code>path</code> 是 n=0，<code>argv</code> 是 n=1）；</li>
 <li>直接读取 <code>trapframe</code> 中保存的 <code>a0-a5</code>（xv6 系统调用最多6个参数），无校验，仅返回原始值。</li>
 </ul>
-<h3 id="2-argint：提取整数参数"><a href="#2-argint：提取整数参数" class="headerlink" title="2. argint：提取整数参数"></a>2. argint：提取整数参数</h3><p><code>argint</code> 封装 <code>argraw</code>，将原始值作为整数存入目标指针，无额外校验（整数参数无地址风险）：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// kernel/syscall.c: argint 实现</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">argint</span><span class="params">(<span class="type">int</span> n, <span class="type">int</span> *ip)</span> &#123;</span><br><span class="line">  *ip = argraw(n); <span class="comment">// 直接赋值</span></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="2-argint%E6%8F%90%E5%8F%96%E6%95%B4%E6%95%B0%E5%8F%82%E6%95%B0">2. argint：提取整数参数</span></h3><p><code>argint</code> 封装 <code>argraw</code>，将原始值作为整数存入目标指针，无额外校验（整数参数无地址风险）：</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// kernel/syscall.c: argint 实现</span><br><span class="hljs-type">int</span> <span class="hljs-title function_">argint</span><span class="hljs-params">(<span class="hljs-type">int</span> n, <span class="hljs-type">int</span> *ip)</span> {<br>  *ip = argraw(n); <span class="hljs-comment">// 直接赋值</span><br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>}<br></code></pre></td></tr></tbody></table></figure>
 <p><strong>使用场景</strong>：如 <code>exit(int status)</code> 系统调用，<code>status</code> 是整数，通过 <code>argint(0, &amp;status)</code> 提取。</p>
-<h3 id="3-argaddr：提取指针参数（初步校验）"><a href="#3-argaddr：提取指针参数（初步校验）" class="headerlink" title="3. argaddr：提取指针参数（初步校验）"></a>3. argaddr：提取指针参数（初步校验）</h3><p><code>argaddr</code> 提取用户指针（虚拟地址），并做基础合法性校验：<strong>地址必须小于 MAXVA（用户空间上限，如 0x80000000）</strong>，防止用户传递内核地址：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// kernel/syscall.c: argaddr 实现</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">argaddr</span><span class="params">(<span class="type">int</span> n, uint64 *ip)</span> &#123;</span><br><span class="line">  *ip = argraw(n);</span><br><span class="line">  <span class="comment">// 校验：地址必须在用户空间（MAXVA 是用户虚拟地址上限）</span></span><br><span class="line">  <span class="keyword">if</span>(*ip &gt;= MAXVA) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="3-argaddr%E6%8F%90%E5%8F%96%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E5%88%9D%E6%AD%A5%E6%A0%A1%E9%AA%8C">3. argaddr：提取指针参数（初步校验）</span></h3><p><code>argaddr</code> 提取用户指针（虚拟地址），并做基础合法性校验：<strong>地址必须小于 MAXVA（用户空间上限，如 0x80000000）</strong>，防止用户传递内核地址：</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// kernel/syscall.c: argaddr 实现</span><br><span class="hljs-type">int</span> <span class="hljs-title function_">argaddr</span><span class="hljs-params">(<span class="hljs-type">int</span> n, uint64 *ip)</span> {<br>  *ip = argraw(n);<br>  <span class="hljs-comment">// 校验：地址必须在用户空间（MAXVA 是用户虚拟地址上限）</span><br>  <span class="hljs-keyword">if</span>(*ip &gt;= MAXVA) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>}<br></code></pre></td></tr></tbody></table></figure>
 <p><strong>使用场景</strong>：如 <code>exec</code> 的 <code>argv</code> 参数是指针数组，通过 <code>argaddr(1, &amp;argv)</code> 提取并初检。</p>
-<h3 id="4-argfd：提取文件描述符（有效性校验）"><a href="#4-argfd：提取文件描述符（有效性校验）" class="headerlink" title="4. argfd：提取文件描述符（有效性校验）"></a>4. argfd：提取文件描述符（有效性校验）</h3><p><code>argfd</code> 提取文件描述符，并校验其有效性（是否打开、是否属于当前进程），返回对应的 <code>file</code> 结构体指针：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// kernel/syscall.c: argfd 实现</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">argfd</span><span class="params">(<span class="type">int</span> n, <span class="type">int</span> *fd, <span class="keyword">struct</span> file **f)</span> &#123;</span><br><span class="line">  <span class="type">int</span> ret;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">proc</span> *<span class="title">p</span> =</span> myproc();</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 第一步：提取文件描述符整数</span></span><br><span class="line">  <span class="keyword">if</span>(argint(n, fd) &lt; <span class="number">0</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">  <span class="comment">// 第二步：校验 fd 合法性（0 ≤ fd &lt; NOFILE，且对应 file 非空）</span></span><br><span class="line">  <span class="keyword">if</span>(*fd &lt; <span class="number">0</span> || *fd &gt;= NOFILE || (p-&gt;ofile[*fd] == <span class="number">0</span>)) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">  <span class="comment">// 第三步：增加 file 引用计数，防止被提前关闭</span></span><br><span class="line">  *f = p-&gt;ofile[*fd];</span><br><span class="line">  (*f)-&gt;ref++;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="4-argfd%E6%8F%90%E5%8F%96%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6%E6%9C%89%E6%95%88%E6%80%A7%E6%A0%A1%E9%AA%8C">4. argfd：提取文件描述符（有效性校验）</span></h3><p><code>argfd</code> 提取文件描述符，并校验其有效性（是否打开、是否属于当前进程），返回对应的 <code>file</code> 结构体指针：</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// kernel/syscall.c: argfd 实现</span><br><span class="hljs-type">int</span> <span class="hljs-title function_">argfd</span><span class="hljs-params">(<span class="hljs-type">int</span> n, <span class="hljs-type">int</span> *fd, <span class="hljs-keyword">struct</span> file **f)</span> {<br>  <span class="hljs-type">int</span> ret;<br>  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">proc</span> *<span class="hljs-title">p</span> =</span> myproc();<br>  <br>  <span class="hljs-comment">// 第一步：提取文件描述符整数</span><br>  <span class="hljs-keyword">if</span>(argint(n, fd) &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>  <span class="hljs-comment">// 第二步：校验 fd 合法性（0 ≤ fd &lt; NOFILE，且对应 file 非空）</span><br>  <span class="hljs-keyword">if</span>(*fd &lt; <span class="hljs-number">0</span> || *fd &gt;= NOFILE || (p-&gt;ofile[*fd] == <span class="hljs-number">0</span>)) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>  <span class="hljs-comment">// 第三步：增加 file 引用计数，防止被提前关闭</span><br>  *f = p-&gt;ofile[*fd];<br>  (*f)-&gt;ref++;<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>}<br></code></pre></td></tr></tbody></table></figure>
 <p><strong>使用场景</strong>：如 <code>read(int fd, void *buf, int n)</code>，通过 <code>argfd(0, &amp;fd, &amp;f)</code> 提取并校验文件描述符。</p>
-<h2 id="四、步骤3：指针参数的安全挑战（两大核心问题）"><a href="#四、步骤3：指针参数的安全挑战（两大核心问题）" class="headerlink" title="四、步骤3：指针参数的安全挑战（两大核心问题）"></a>四、步骤3：指针参数的安全挑战（两大核心问题）</h2><p>当系统调用参数是「用户空间指针」（如 <code>exec</code> 的 <code>path</code> 字符串指针、<code>read</code> 的 <code>buf</code> 指针）时，会面临两个关键问题：</p>
+<h2><span id="%E5%9B%9B%E6%AD%A5%E9%AA%A43%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E5%AE%89%E5%85%A8%E6%8C%91%E6%88%98%E4%B8%A4%E5%A4%A7%E6%A0%B8%E5%BF%83%E9%97%AE%E9%A2%98">四、步骤3：指针参数的安全挑战（两大核心问题）</span></h2><p>当系统调用参数是「用户空间指针」（如 <code>exec</code> 的 <code>path</code> 字符串指针、<code>read</code> 的 <code>buf</code> 指针）时，会面临两个关键问题：</p>
 <ol>
 <li><strong>地址合法性</strong>：用户可能传递「无效指针（如野指针）」「越权地址（如指向内核内存的地址 &gt; MAXVA）」；</li>
 <li><strong>页表隔离</strong>：内核页表与用户页表映射不同，内核不能直接用用户指针访问内存（用户指针在用户页表中有效，在内核页表中可能指向无关内存）。</li>
 </ol>
 <p>为解决这些问题，xv6 实现了 <code>walkaddr</code>（地址合法性校验）、<code>copyinstr</code>（从用户空间读数据）、<code>copyout</code>（向用户空间写数据）三个核心函数。</p>
-<h2 id="五、步骤4：安全数据传输函数（walkaddr-copyinstr-copyout）"><a href="#五、步骤4：安全数据传输函数（walkaddr-copyinstr-copyout）" class="headerlink" title="五、步骤4：安全数据传输函数（walkaddr&#x2F;copyinstr&#x2F;copyout）"></a>五、步骤4：安全数据传输函数（walkaddr&#x2F;copyinstr&#x2F;copyout）</h2><h3 id="1-walkaddr：遍历用户页表，验证地址合法性"><a href="#1-walkaddr：遍历用户页表，验证地址合法性" class="headerlink" title="1. walkaddr：遍历用户页表，验证地址合法性"></a>1. walkaddr：遍历用户页表，验证地址合法性</h3><p><code>walkaddr</code> 是核心安全函数，作用是「遍历用户页表，验证虚拟地址的合法性，并返回其对应的物理地址」（内核可直接访问物理地址）。</p>
-<h4 id="核心逻辑："><a href="#核心逻辑：" class="headerlink" title="核心逻辑："></a>核心逻辑：</h4><ul>
+<h2><span id="%E4%BA%94%E6%AD%A5%E9%AA%A44%E5%AE%89%E5%85%A8%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93%E5%87%BD%E6%95%B0walkaddrcopyinstrcopyout">五、步骤4：安全数据传输函数（walkaddr/copyinstr/copyout）</span></h2><h3><span id="1-walkaddr%E9%81%8D%E5%8E%86%E7%94%A8%E6%88%B7%E9%A1%B5%E8%A1%A8%E9%AA%8C%E8%AF%81%E5%9C%B0%E5%9D%80%E5%90%88%E6%B3%95%E6%80%A7">1. walkaddr：遍历用户页表，验证地址合法性</span></h3><p><code>walkaddr</code> 是核心安全函数，作用是「遍历用户页表，验证虚拟地址的合法性，并返回其对应的物理地址」（内核可直接访问物理地址）。</p>
+<h4><span id="%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91">核心逻辑：</span></h4><ul>
 <li>遍历用户页表（SV39 三级页表），找到虚拟地址对应的页表项（PTE）；</li>
 <li>校验：PTE 必须有效（PTE_V 位为1）、地址必须在用户空间（&lt; MAXVA）、权限符合用户态访问（PTE_U 位为1）；</li>
 <li>返回：物理地址的内核虚拟地址（内核页表映射所有物理内存，因此可直接访问）。</li>
 </ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// kernel/vm.c:95 walkaddr 实现</span></span><br><span class="line">uint64 <span class="title function_">walkaddr</span><span class="params">(<span class="type">pagetable_t</span> pagetable, uint64 va)</span> &#123;</span><br><span class="line">  <span class="type">pte_t</span> *pte;</span><br><span class="line">  uint64 pa;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 校验1：地址必须在用户空间（va &lt; MAXVA）</span></span><br><span class="line">  <span class="keyword">if</span>(va &gt;= MAXVA) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  <span class="comment">// 遍历用户页表，找到 va 对应的 PTE</span></span><br><span class="line">  pte = walk(pagetable, va, <span class="number">0</span>);</span><br><span class="line">  <span class="comment">// 校验2：PTE 必须存在（有效）</span></span><br><span class="line">  <span class="keyword">if</span>(pte == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  <span class="comment">// 校验3：PTE 必须允许用户态访问（PTE_U 位）</span></span><br><span class="line">  <span class="keyword">if</span>((*pte &amp; PTE_U) == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  <span class="comment">// 提取物理地址（PTE 的物理页号 &lt;&lt; 12）</span></span><br><span class="line">  pa = PTE2PA(*pte);</span><br><span class="line">  <span class="keyword">return</span> pa;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// kernel/vm.c:95 walkaddr 实现</span><br>uint64 <span class="hljs-title function_">walkaddr</span><span class="hljs-params">(<span class="hljs-type">pagetable_t</span> pagetable, uint64 va)</span> {<br>  <span class="hljs-type">pte_t</span> *pte;<br>  uint64 pa;<br><br>  <span class="hljs-comment">// 校验1：地址必须在用户空间（va &lt; MAXVA）</span><br>  <span class="hljs-keyword">if</span>(va &gt;= MAXVA) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>  <span class="hljs-comment">// 遍历用户页表，找到 va 对应的 PTE</span><br>  pte = walk(pagetable, va, <span class="hljs-number">0</span>);<br>  <span class="hljs-comment">// 校验2：PTE 必须存在（有效）</span><br>  <span class="hljs-keyword">if</span>(pte == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>  <span class="hljs-comment">// 校验3：PTE 必须允许用户态访问（PTE_U 位）</span><br>  <span class="hljs-keyword">if</span>((*pte &amp; PTE_U) == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>  <span class="hljs-comment">// 提取物理地址（PTE 的物理页号 &lt;&lt; 12）</span><br>  pa = PTE2PA(*pte);<br>  <span class="hljs-keyword">return</span> pa;<br>}<br></code></pre></td></tr></tbody></table></figure>
 <ul>
 <li><code>walk</code> 函数：纯软件实现页表遍历，返回 va 对应的 PTE 指针（三级页表逐层查找）；</li>
 <li><code>PTE2PA</code>：从 PTE 中提取物理页地址（PTE 的低 44 位是物理页号，左移 12 位得到物理地址）；</li>
 <li>内核通过返回的物理地址，可直接访问用户内存（内核页表映射所有物理内存）。</li>
 </ul>
-<h3 id="2-copyinstr：从用户空间读取字符串（安全）"><a href="#2-copyinstr：从用户空间读取字符串（安全）" class="headerlink" title="2. copyinstr：从用户空间读取字符串（安全）"></a>2. copyinstr：从用户空间读取字符串（安全）</h3><p><code>copyinstr</code> 基于 <code>walkaddr</code>，将用户空间的字符串复制到内核缓冲区，同时处理「字符串终止符（\0）」「最大长度限制」，防止缓冲区溢出：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// kernel/vm.c:406 copyinstr 实现</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">copyinstr</span><span class="params">(<span class="type">pagetable_t</span> pagetable, <span class="type">char</span> *dst, uint64 srcva, uint64 max)</span> &#123;</span><br><span class="line">  uint64 n, va0, pa0;</span><br><span class="line">  <span class="type">int</span> got_null = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span>(max &gt; <span class="number">0</span> &amp;&amp; !got_null)&#123;</span><br><span class="line">    <span class="comment">// 对齐到页边界，取当前页的虚拟地址</span></span><br><span class="line">    va0 = PGROUNDDOWN(srcva);</span><br><span class="line">    <span class="comment">// 校验用户地址，获取物理地址</span></span><br><span class="line">    pa0 = walkaddr(pagetable, va0);</span><br><span class="line">    <span class="keyword">if</span>(pa0 == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">// 计算当前页内的偏移</span></span><br><span class="line">    n = PGSIZE - (srcva - va0);</span><br><span class="line">    <span class="keyword">if</span>(n &gt; max) n = max;</span><br><span class="line">    <span class="comment">// 从物理地址复制到内核缓冲区（内核可直接访问 pa0）</span></span><br><span class="line">    <span class="type">char</span> *p = (<span class="type">char</span>*)(pa0 + (srcva - va0));</span><br><span class="line">    <span class="keyword">while</span>(n-- &gt; <span class="number">0</span>)&#123;</span><br><span class="line">      <span class="type">char</span> c = *p++;</span><br><span class="line">      *dst++ = c;</span><br><span class="line">      srcva++;</span><br><span class="line">      max--;</span><br><span class="line">      <span class="keyword">if</span>(c == <span class="string">&#x27;\0&#x27;</span>)&#123;</span><br><span class="line">        got_null = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span>(!got_null &amp;&amp; max == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">-1</span>; <span class="comment">// 无终止符，溢出</span></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="2-copyinstr%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E8%AF%BB%E5%8F%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%AE%89%E5%85%A8">2. copyinstr：从用户空间读取字符串（安全）</span></h3><p><code>copyinstr</code> 基于 <code>walkaddr</code>，将用户空间的字符串复制到内核缓冲区，同时处理「字符串终止符（\0）」「最大长度限制」，防止缓冲区溢出：</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// kernel/vm.c:406 copyinstr 实现</span><br><span class="hljs-type">int</span> <span class="hljs-title function_">copyinstr</span><span class="hljs-params">(<span class="hljs-type">pagetable_t</span> pagetable, <span class="hljs-type">char</span> *dst, uint64 srcva, uint64 max)</span> {<br>  uint64 n, va0, pa0;<br>  <span class="hljs-type">int</span> got_null = <span class="hljs-number">0</span>;<br><br>  <span class="hljs-keyword">while</span>(max &gt; <span class="hljs-number">0</span> &amp;&amp; !got_null){<br>    <span class="hljs-comment">// 对齐到页边界，取当前页的虚拟地址</span><br>    va0 = PGROUNDDOWN(srcva);<br>    <span class="hljs-comment">// 校验用户地址，获取物理地址</span><br>    pa0 = walkaddr(pagetable, va0);<br>    <span class="hljs-keyword">if</span>(pa0 == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    <span class="hljs-comment">// 计算当前页内的偏移</span><br>    n = PGSIZE - (srcva - va0);<br>    <span class="hljs-keyword">if</span>(n &gt; max) n = max;<br>    <span class="hljs-comment">// 从物理地址复制到内核缓冲区（内核可直接访问 pa0）</span><br>    <span class="hljs-type">char</span> *p = (<span class="hljs-type">char</span>*)(pa0 + (srcva - va0));<br>    <span class="hljs-keyword">while</span>(n-- &gt; <span class="hljs-number">0</span>){<br>      <span class="hljs-type">char</span> c = *p++;<br>      *dst++ = c;<br>      srcva++;<br>      max--;<br>      <span class="hljs-keyword">if</span>(c == <span class="hljs-string">'\0'</span>){<br>        got_null = <span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">break</span>;<br>      }<br>    }<br>  }<br>  <span class="hljs-keyword">if</span>(!got_null &amp;&amp; max == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>; <span class="hljs-comment">// 无终止符，溢出</span><br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>}<br></code></pre></td></tr></tbody></table></figure>
 <p><strong>核心特性</strong>：</p>
 <ul>
 <li>逐页复制：处理跨页的字符串（如字符串跨2个用户页）；</li>
 <li>终止符检测：遇到 <code>\0</code> 立即停止，符合 C 字符串规范；</li>
 <li>长度限制：最多复制 <code>max</code> 字节，防止内核缓冲区溢出。</li>
 </ul>
-<h3 id="3-copyout：向用户空间写入数据（安全）"><a href="#3-copyout：向用户空间写入数据（安全）" class="headerlink" title="3. copyout：向用户空间写入数据（安全）"></a>3. copyout：向用户空间写入数据（安全）</h3><p><code>copyout</code> 是 <code>copyinstr</code> 的反向操作，将内核数据复制到用户空间，同样通过 <code>walkaddr</code> 校验用户地址合法性：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// kernel/vm.c: copyout 实现</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">copyout</span><span class="params">(<span class="type">pagetable_t</span> pagetable, uint64 dstva, <span class="type">char</span> *src, uint64 len)</span> &#123;</span><br><span class="line">  uint64 n, va0, pa0;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span>(len &gt; <span class="number">0</span>)&#123;</span><br><span class="line">    va0 = PGROUNDDOWN(dstva);</span><br><span class="line">    pa0 = walkaddr(pagetable, va0);</span><br><span class="line">    <span class="keyword">if</span>(pa0 == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    n = PGSIZE - (dstva - va0);</span><br><span class="line">    <span class="keyword">if</span>(n &gt; len) n = len;</span><br><span class="line">    <span class="comment">// 内核数据 → 用户物理地址（内核可直接写 pa0）</span></span><br><span class="line">    memmove((<span class="type">void</span>*)(pa0 + (dstva - va0)), src, n);</span><br><span class="line">    len -= n;</span><br><span class="line">    src += n;</span><br><span class="line">    dstva += n;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="3-copyout%E5%90%91%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E5%86%99%E5%85%A5%E6%95%B0%E6%8D%AE%E5%AE%89%E5%85%A8">3. copyout：向用户空间写入数据（安全）</span></h3><p><code>copyout</code> 是 <code>copyinstr</code> 的反向操作，将内核数据复制到用户空间，同样通过 <code>walkaddr</code> 校验用户地址合法性：</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// kernel/vm.c: copyout 实现</span><br><span class="hljs-type">int</span> <span class="hljs-title function_">copyout</span><span class="hljs-params">(<span class="hljs-type">pagetable_t</span> pagetable, uint64 dstva, <span class="hljs-type">char</span> *src, uint64 len)</span> {<br>  uint64 n, va0, pa0;<br><br>  <span class="hljs-keyword">while</span>(len &gt; <span class="hljs-number">0</span>){<br>    va0 = PGROUNDDOWN(dstva);<br>    pa0 = walkaddr(pagetable, va0);<br>    <span class="hljs-keyword">if</span>(pa0 == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    n = PGSIZE - (dstva - va0);<br>    <span class="hljs-keyword">if</span>(n &gt; len) n = len;<br>    <span class="hljs-comment">// 内核数据 → 用户物理地址（内核可直接写 pa0）</span><br>    memmove((<span class="hljs-type">void</span>*)(pa0 + (dstva - va0)), src, n);<br>    len -= n;<br>    src += n;<br>    dstva += n;<br>  }<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>}<br></code></pre></td></tr></tbody></table></figure>
 <p><strong>使用场景</strong>：如 <code>read</code> 系统调用，内核将文件数据通过 <code>copyout</code> 写入用户提供的 <code>buf</code> 指针。</p>
-<h2 id="六、实战示例：exec-系统调用的参数处理全链路"><a href="#六、实战示例：exec-系统调用的参数处理全链路" class="headerlink" title="六、实战示例：exec 系统调用的参数处理全链路"></a>六、实战示例：exec 系统调用的参数处理全链路</h2><p><code>exec</code> 的 <code>path</code> 参数是用户空间字符串指针，其处理链路完整体现了上述所有函数的协作：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// kernel/exec.c: sys_exec → argstr → fetchstr → copyinstr</span></span><br><span class="line">uint64 <span class="title function_">sys_exec</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">  <span class="type">char</span> *path;</span><br><span class="line">  <span class="comment">// 步骤1：argstr 提取路径字符串（封装 fetchstr）</span></span><br><span class="line">  <span class="keyword">if</span>(argstr(<span class="number">0</span>, &amp;path) &lt; <span class="number">0</span>) <span class="keyword">return</span> <span class="number">-1</span>; </span><br><span class="line">  <span class="comment">// ... 后续处理</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// kernel/syscall.c: argstr 实现（提取字符串参数）</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">argstr</span><span class="params">(<span class="type">int</span> n, <span class="type">char</span> **cp)</span> &#123;</span><br><span class="line">  uint64 va;</span><br><span class="line">  <span class="comment">// 步骤2：argaddr 提取用户指针并初检</span></span><br><span class="line">  <span class="keyword">if</span>(argaddr(n, &amp;va) &lt; <span class="number">0</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">  <span class="comment">// 步骤3：fetchstr 读取用户字符串到内核缓冲区</span></span><br><span class="line">  <span class="keyword">return</span> fetchstr(va, cp);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// kernel/syscall.c:25 fetchstr 实现</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">fetchstr</span><span class="params">(uint64 va, <span class="type">char</span> **cp)</span> &#123;</span><br><span class="line">  <span class="type">char</span> *buf = kalloc(); <span class="comment">// 分配内核缓冲区</span></span><br><span class="line">  <span class="keyword">if</span>(buf == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">  <span class="comment">// 步骤4：copyinstr 安全读取用户字符串</span></span><br><span class="line">  <span class="keyword">if</span>(copyinstr(myproc()-&gt;pagetable, buf, va, MAXPATH) &lt; <span class="number">0</span>)&#123;</span><br><span class="line">    kfree(buf);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  *cp = buf;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2><span id="%E5%85%AD%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8Bexec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%8F%82%E6%95%B0%E5%A4%84%E7%90%86%E5%85%A8%E9%93%BE%E8%B7%AF">六、实战示例：exec 系统调用的参数处理全链路</span></h2><p><code>exec</code> 的 <code>path</code> 参数是用户空间字符串指针，其处理链路完整体现了上述所有函数的协作：</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// kernel/exec.c: sys_exec → argstr → fetchstr → copyinstr</span><br>uint64 <span class="hljs-title function_">sys_exec</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {<br>  <span class="hljs-type">char</span> *path;<br>  <span class="hljs-comment">// 步骤1：argstr 提取路径字符串（封装 fetchstr）</span><br>  <span class="hljs-keyword">if</span>(argstr(<span class="hljs-number">0</span>, &amp;path) &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>; <br>  <span class="hljs-comment">// ... 后续处理</span><br>}<br><br><span class="hljs-comment">// kernel/syscall.c: argstr 实现（提取字符串参数）</span><br><span class="hljs-type">int</span> <span class="hljs-title function_">argstr</span><span class="hljs-params">(<span class="hljs-type">int</span> n, <span class="hljs-type">char</span> **cp)</span> {<br>  uint64 va;<br>  <span class="hljs-comment">// 步骤2：argaddr 提取用户指针并初检</span><br>  <span class="hljs-keyword">if</span>(argaddr(n, &amp;va) &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>  <span class="hljs-comment">// 步骤3：fetchstr 读取用户字符串到内核缓冲区</span><br>  <span class="hljs-keyword">return</span> fetchstr(va, cp);<br>}<br><br><span class="hljs-comment">// kernel/syscall.c:25 fetchstr 实现</span><br><span class="hljs-type">int</span> <span class="hljs-title function_">fetchstr</span><span class="hljs-params">(uint64 va, <span class="hljs-type">char</span> **cp)</span> {<br>  <span class="hljs-type">char</span> *buf = kalloc(); <span class="hljs-comment">// 分配内核缓冲区</span><br>  <span class="hljs-keyword">if</span>(buf == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>  <span class="hljs-comment">// 步骤4：copyinstr 安全读取用户字符串</span><br>  <span class="hljs-keyword">if</span>(copyinstr(myproc()-&gt;pagetable, buf, va, MAXPATH) &lt; <span class="hljs-number">0</span>){<br>    kfree(buf);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>  }<br>  *cp = buf;<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>}<br></code></pre></td></tr></tbody></table></figure>
 <p><strong>链路总结</strong>：<br><code>argaddr</code>（初检指针）→ <code>copyinstr</code>（校验地址+读取字符串）→ <code>fetchstr</code>（封装内核缓冲区）→ <code>argstr</code>（返回内核字符串指针），全程确保用户指针合法、数据传输安全。</p>
-<h2 id="七、核心设计总结"><a href="#七、核心设计总结" class="headerlink" title="七、核心设计总结"></a>七、核心设计总结</h2><table>
+<h2><span id="%E4%B8%83%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E6%80%BB%E7%BB%93">七、核心设计总结</span></h2><table>
 <thead>
 <tr>
-<th>函数&#x2F;机制</th>
+<th>函数/机制</th>
 <th>核心作用</th>
 <th>解决的问题</th>
 </tr>
@@ -366,239 +408,90 @@
 <td>内核无法直接访问用户态寄存器</td>
 </tr>
 <tr>
-<td>argraw&#x2F;argint&#x2F;argfd</td>
+<td>argraw/argint/argfd</td>
 <td>提取基础类型参数</td>
-<td>快速获取整数&#x2F;文件描述符，初检合法性</td>
+<td>快速获取整数/文件描述符，初检合法性</td>
 </tr>
 <tr>
 <td>walkaddr</td>
 <td>遍历用户页表，验证地址并返回物理地址</td>
-<td>防止用户传递无效&#x2F;越权地址</td>
+<td>防止用户传递无效/越权地址</td>
 </tr>
 <tr>
-<td>copyinstr&#x2F;copyout</td>
-<td>安全传输用户&#x2F;内核数据</td>
+<td>copyinstr/copyout</td>
+<td>安全传输用户/内核数据</td>
 <td>页表隔离导致的直接访问失败、缓冲区溢出</td>
 </tr>
 </tbody></table>
 <p>xv6 的参数处理设计核心是「<strong>最小权限+分层校验</strong>」：</p>
 <ol>
-<li>基础参数：仅做类型&#x2F;范围初检；</li>
+<li>基础参数：仅做类型/范围初检；</li>
 <li>指针参数：通过页表遍历做深度合法性校验；</li>
-<li>数据传输：逐页复制+长度限制，防止溢出&#x2F;越权。</li>
+<li>数据传输：逐页复制+长度限制，防止溢出/越权。</li>
 </ol>
 <p>这种设计既保证了内核安全（隔离用户恶意操作），又适配了 RISC-V 页表架构（软件遍历页表），是嵌入式操作系统参数处理的典型范式。</p>
+</body></html>
+	</article>
 
-      
+	 
+    <div class="kira-post-copyright">
+        <strong>本文作者：</strong>Ivan-FYF<br>
+        <strong>本文链接：</strong><a href="https://hellonnnnn.github.io/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0/" title="https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2025&#x2F;12&#x2F;29&#x2F;第四章&#x2F;xv6-系统调用参数&#x2F;" target="_blank" rel="noopener">https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2025&#x2F;12&#x2F;29&#x2F;第四章&#x2F;xv6-系统调用参数&#x2F;</a><br>
+        
+            <strong>��Ȩ������</strong>���Ĳ��� <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> Э���������
+        
     </div>
-    
-  </div>
-  
-    
-    <div class="copyright">
-        <p><span>本文标题:</span><a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0/">xv6 系统调用参数处理：提取、校验与安全传输</a></p>
-        <p><span>文章作者:</span><a href="/" title="回到主页"></a></p>
-        <p><span>发布时间:</span>2025-12-29, 20:14:40</p>
-        <p><span>最后更新:</span>2025-12-29, 20:15:24</p>
-        <p>
-            <span>原始链接:</span><a class="post-url" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0/" title="xv6 系统调用参数处理：提取、校验与安全传输">https://hellonnnnn.github.io/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://hellonnnnn.github.io/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0/　　作者: " title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
-            <script> var clipboard = new Clipboard('.copy-path'); </script>
-        </p>
-        <p>
-            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
-        </p>
-    </div>
-
-
-
-    <nav id="article-nav">
-        
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">
-                    从内核空间陷入
-                </a>
-            </div>
-        
-        
-            <div id="article-nav-older" class="article-nav-title">
-                <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E4%B8%AD-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF/">
-                    xv6 中 exec 系统调用的完整调用链路
-                </a>
-            </div>
-        
-    </nav>
 
   
-</article>
+	<div class="kira-post-nav">
+		<nav class="post-nav">
+			
+		</nav>
+	</div>
+	
+	<div class="kira-post-meta kira-rainbow">
+		
+		
+	</div>
+	
+	<div class="kira-post-footer">
+		
 
-    <div id="toc" class="toc-article">
-        <strong class="toc-title">文章目录</strong>
-        
-            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0%E5%A4%84%E7%90%86%EF%BC%9A%E6%8F%90%E5%8F%96%E3%80%81%E6%A0%A1%E9%AA%8C%E4%B8%8E%E5%AE%89%E5%85%A8%E4%BC%A0%E8%BE%93"><span class="toc-number">1.</span> <span class="toc-text">xv6 系统调用参数处理：提取、校验与安全传输</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%A0%B8%E5%BF%83%E8%83%8C%E6%99%AF%EF%BC%9A%E5%8F%82%E6%95%B0%E5%A4%84%E7%90%86%E7%9A%84%E6%A0%B8%E5%BF%83%E9%97%AE%E9%A2%98"><span class="toc-number">1.1.</span> <span class="toc-text">一、核心背景：参数处理的核心问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%AD%A5%E9%AA%A41%EF%BC%9A%E7%94%A8%E6%88%B7%E5%8F%82%E6%95%B0%E7%9A%84%E4%BF%9D%E5%AD%98%EF%BC%88%E5%AF%84%E5%AD%98%E5%99%A8-%E2%86%92-%E9%99%B7%E9%98%B1%E5%B8%A7%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">二、步骤1：用户参数的保存（寄存器 → 陷阱帧）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%AD%A5%E9%AA%A42%EF%BC%9A%E5%9F%BA%E7%A1%80%E5%8F%82%E6%95%B0%E6%8F%90%E5%8F%96%EF%BC%88argraw-argint-argaddr-argfd%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">三、步骤2：基础参数提取（argraw&#x2F;argint&#x2F;argaddr&#x2F;argfd）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%A0%B8%E5%BF%83%E5%9F%BA%E7%A1%80%EF%BC%9Aargraw%EF%BC%88%E8%AF%BB%E5%8F%96%E5%8E%9F%E5%A7%8B%E5%AF%84%E5%AD%98%E5%99%A8%E5%80%BC%EF%BC%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. 核心基础：argraw（读取原始寄存器值）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-argint%EF%BC%9A%E6%8F%90%E5%8F%96%E6%95%B4%E6%95%B0%E5%8F%82%E6%95%B0"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. argint：提取整数参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-argaddr%EF%BC%9A%E6%8F%90%E5%8F%96%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%EF%BC%88%E5%88%9D%E6%AD%A5%E6%A0%A1%E9%AA%8C%EF%BC%89"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. argaddr：提取指针参数（初步校验）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-argfd%EF%BC%9A%E6%8F%90%E5%8F%96%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6%EF%BC%88%E6%9C%89%E6%95%88%E6%80%A7%E6%A0%A1%E9%AA%8C%EF%BC%89"><span class="toc-number">1.3.4.</span> <span class="toc-text">4. argfd：提取文件描述符（有效性校验）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%AD%A5%E9%AA%A43%EF%BC%9A%E6%8C%87%E9%92%88%E5%8F%82%E6%95%B0%E7%9A%84%E5%AE%89%E5%85%A8%E6%8C%91%E6%88%98%EF%BC%88%E4%B8%A4%E5%A4%A7%E6%A0%B8%E5%BF%83%E9%97%AE%E9%A2%98%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">四、步骤3：指针参数的安全挑战（两大核心问题）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%AD%A5%E9%AA%A44%EF%BC%9A%E5%AE%89%E5%85%A8%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93%E5%87%BD%E6%95%B0%EF%BC%88walkaddr-copyinstr-copyout%EF%BC%89"><span class="toc-number">1.5.</span> <span class="toc-text">五、步骤4：安全数据传输函数（walkaddr&#x2F;copyinstr&#x2F;copyout）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-walkaddr%EF%BC%9A%E9%81%8D%E5%8E%86%E7%94%A8%E6%88%B7%E9%A1%B5%E8%A1%A8%EF%BC%8C%E9%AA%8C%E8%AF%81%E5%9C%B0%E5%9D%80%E5%90%88%E6%B3%95%E6%80%A7"><span class="toc-number">1.5.1.</span> <span class="toc-text">1. walkaddr：遍历用户页表，验证地址合法性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%EF%BC%9A"><span class="toc-number">1.5.1.1.</span> <span class="toc-text">核心逻辑：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-copyinstr%EF%BC%9A%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E8%AF%BB%E5%8F%96%E5%AD%97%E7%AC%A6%E4%B8%B2%EF%BC%88%E5%AE%89%E5%85%A8%EF%BC%89"><span class="toc-number">1.5.2.</span> <span class="toc-text">2. copyinstr：从用户空间读取字符串（安全）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-copyout%EF%BC%9A%E5%90%91%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E5%86%99%E5%85%A5%E6%95%B0%E6%8D%AE%EF%BC%88%E5%AE%89%E5%85%A8%EF%BC%89"><span class="toc-number">1.5.3.</span> <span class="toc-text">3. copyout：向用户空间写入数据（安全）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9Aexec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%8F%82%E6%95%B0%E5%A4%84%E7%90%86%E5%85%A8%E9%93%BE%E8%B7%AF"><span class="toc-number">1.6.</span> <span class="toc-text">六、实战示例：exec 系统调用的参数处理全链路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E6%80%BB%E7%BB%93"><span class="toc-number">1.7.</span> <span class="toc-text">七、核心设计总结</span></a></li></ol></li></ol>
-        
-    </div>
-    <style>
-        .left-col .switch-btn,
-        .left-col .switch-area {
-            display: none;
-        }
-        .toc-level-3 i,
-        .toc-level-3 ol {
-            display: none !important;
-        }
-    </style>
+		
+	<div class="giscus"></div>
+  
+    <script src="https://giscus.app/client.js"
+      data-repo="-your github username-/-your giscus repo-"
+      data-repo-id="-your giscus repo ID-"
+      data-category="Announcements"
+      data-category-id="-giscus category id-"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="light"
+      data-lang="en"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async  
+    ></script>
+  
 
-    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
-
-    <script>
-        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
-    </script>
-
-
-
-    
-<div class="share">
-    
-        <div class="bdsharebuttonbox">
-            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
-            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
-            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
-            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
-            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
-            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
-            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
-        </div>
-        <script>
-            window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"xv6 系统调用参数处理：提取、校验与安全传输　| Ivan's Tech Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-        </script>
-    
-
-    
+	</div>
+	
 </div>
 
-
-
-
-
-
-
-    
-
-
-
-
-    <div class="scroll" id="post-nav-button">
-        
-            <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/" title="上一篇: 从内核空间陷入">
-                <i class="fa fa-angle-left"></i>
-            </a>
-        
-
-        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
-
-        
-            <a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E4%B8%AD-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF/" title="下一篇: xv6 中 exec 系统调用的完整调用链路">
-                <i class="fa fa-angle-right"></i>
-            </a>
-        
-    </div>
-
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/01/22/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E4%B8%80%E5%A4%A9/">算法训练营第一天</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/01/21/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E8%B9%A6%E5%BA%8A%E9%A1%B5/">蹦床页</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/01/21/unbuntu%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%82%A8%E4%B8%8D%E8%B6%B3/">unbuntu系统存储不足</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/trap-c%E8%AF%A6%E8%A7%A3/">trap.c详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8%EF%BC%9Axv6-%E6%9E%81%E7%AE%80%E5%A4%84%E7%90%86-vs-%E7%9C%9F%E5%AE%9E-OS-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/">页面错误异常：xv6 极简处理 vs 真实 OS 的高级应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从内核空间陷入</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%82%E6%95%B0/">xv6 系统调用参数处理：提取、校验与安全传输</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/xv6-%E4%B8%AD-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF/">xv6 中 exec 系统调用的完整调用链路</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E9%99%B7%E5%85%A5/">从用户空间陷入</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/28/%E7%AC%AC%E5%9B%9B%E7%AB%A0/RISC-V%E9%99%B7%E5%85%A5%E6%9C%BA%E5%88%B6/">陷阱指令和系统调用 核心解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 exec 系统调用核心逻辑总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-sbrk-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%88%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E6%89%A9%E7%BC%A9%E5%AE%B9%EF%BC%89%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/">xv6 sbrk 系统调用（进程内存扩缩容）核心逻辑总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 进程地址空间总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/25/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E9%87%8A%E6%94%BE%E6%9C%BA%E5%88%B6%E6%80%BB%E7%BB%93/">xv6 物理内存分配与释放机制总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/xv6-%E5%86%85%E6%A0%B8%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%80%BB%E7%BB%93/">xv6 内核地址空间总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/satp/">satp</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E8%BD%AC%E5%8C%96/">虚拟地址到物理地址的转化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/copyin-copyout%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/">copyin/copyout详细介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3/">系统调用正确理解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E5%89%8D%E4%B8%A4%E7%AB%A0%E6%80%BB%E7%BB%93/">前两章总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%9D%A2%E7%BB%8F/">第二章面经</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%B8%80%E7%AB%A0/shell%E7%9A%84%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">shell的运行过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/xv6%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84/">xv6内核架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/22/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B/">添加系统调用的过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/21/%E7%AC%AC%E4%BA%8C%E7%AB%A0/%E7%AC%AC%E4%BA%8C%E7%AB%A0/">第二章</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/git%E4%BD%BF%E7%94%A8/">git使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/20/%E7%AC%AC%E4%B8%80%E7%AB%A0/Unix-Linux-%E7%AE%A1%E9%81%93%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">Unix/Linux 管道的工作原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/18/%E7%AC%AC%E4%B8%80%E7%AB%A0/fork+exec%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B/">xv6-labs-2020 lab1</a></li></ul>
-
-
-
-
-    <script>
-        
-    </script>
+				</div>
+			</div>
+			<div class="kira-right-column">
+	<a onclick="document.querySelector('#kira-top-header').scrollIntoView({behavior: 'smooth'});" class="kira-backtotop" aria-label="回到顶部" title="回到顶部">
+		<button class="mdui-fab mdui-ripple">
+			<i class="kirafont icon-caret-up"></i>
+		</button>
+	</a>
 </div>
-      <footer id="footer">
-    <div class="outer">
-        <div id="footer-info">
-            <div class="footer-left">
-                <i class="fa fa-copyright"></i> 
-                2016-2026 Ivan-FYF
-            </div>
-            <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
-            </div>
-        </div>
-        
-            <div class="visit">
-                
-                    <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
-                        </span>
-                    </span>
-                
-                
-                    <span>| </span>
-                
-                
-                    <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
-                        </span>
-                    </span>
-                
-            </div>
-        
-    </div>
-</footer>
-    </div>
-    
-<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            var iPad = window.navigator.userAgent.indexOf('iPad');
-            if (iPad > -1 || $(".left-col").css("display") === "none") {
-                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
-                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
-                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
-            }
-            else {
-                var backgroundnum = 5;
-                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
-                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
-            }
-        })
-    </script>
-
-
-
-
-
-<div class="scroll" id="scroll">
-    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
-</div>
-<script>
-    // Open in New Window
-    
-        var oOpenInNew = {
-            
-            
-            
-            
-            
-            
-             archives: ".archive-article-title", 
-             miniArchives: "a.post-list-link", 
-            
-             friends: "#js-friends a", 
-             socail: ".social a" 
-        }
-        for (var x in oOpenInNew) {
-            $(oOpenInNew[x]).attr("target", "_blank");
-        }
-    
-</script>
-
-<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
-</script>
-  </div>
-</body>
+		</div>
+	</body>
 </html>
