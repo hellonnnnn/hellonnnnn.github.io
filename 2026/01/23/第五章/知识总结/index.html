@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html 
+	lang="zh-Hans">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		
+<link rel="stylesheet" href="/css/layout.css">
+
+		
+		<title> 知识总结 -  Ivan&#39;s Tech Blog</title>
+		<!-- <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" /> -->
+		<!-- <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script> -->
+		
+<link rel="stylesheet" href="/lib/mdui/mdui.min.css">
+
+		
+<script src="/lib/mdui/mdui.min.js"></script>
+
+		<!-- lazyload -->
+		
+<script src="/lib/lazysizes.js"></script>
+
+		<!-- smooth-scrolling -->
+		
+<script src="/lib/smooth-scrolling.js"></script>
+
+		<!-- highlight -->
+		
+<link rel="stylesheet" href="/lib/highlight/atom-one-dark.min.css">
+
+		
+<script src="/lib/highlight/highlight.min.js"></script>
+
+		<!-- 预置 kiraicon -->
+		
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+
+		
+		<link
+			rel="shortcut icon"
+			href="https://kira.host/assets/Pictures/Others/116359b4ccf19917.jpg"
+			type="image/png"
+		/>
+		
+<link rel="stylesheet" href="/deps/css/APlayer.min.css">
+
+		
+		
+<script src="/deps/js/APlayer.min.js"></script>
+<script src="/deps/js/Meting.min.js"></script>
+
+	<meta name="generator" content="Hexo 8.1.1"></head>
+
+	<body>
+		<div
+			class="kira-background"
+			style="background-image: url('/img/background4.jpg')"
+		></div>
+		<div class="kira-header">
+    <a
+        class="kira-drawer-button mdui-ripple"
+        title="导航栏"
+        onclick="document.querySelector('.kira-sidebar-modal').classList.add('show');document.querySelector('.kira-sidebar#sidebar').classList.add('show');"
+    >
+        <i class="kirafont icon-menu"></i>
+    </a>
+    <a href="/" title="Ivan&#39;s Tech Blog">
+        <img
+			src="/img/background5.jpg"
+			alt="Ivan-FYF"
+		/>
+    </a>
+</div>
+		<div class="kira-body">
+			<div class="kira-sidebar" id="sidebar">
+	<div class="kira-avatar mdui-ripple">
+		<a href="/img/background5.jpg" title="Ivan-FYF">
+			<img
+				src="/img/background5.jpg"
+				alt="Ivan-FYF"
+			/>
+		</a>
+	</div>
+	<div class="kira-count">
+		<div><span>文章</span>32</div>
+		<div><span>标签</span>7</div>
+		<div><span>分类</span>3</div>
+	</div>
+	<div class="kira-list">
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/"
+			title="回到首页"
+		>
+			<i
+				class="kirafont
+					
+						icon-home
+					"
+			></i>
+			<div class="kira-list-item-content">
+				回到首页
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/archive.html"
+			title="文章归档"
+		>
+			<i
+				class="kirafont
+					
+						icon-container
+					"
+			></i>
+			<div class="kira-list-item-content">
+				文章归档
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/about/"
+			title="关于本人"
+		>
+			<i
+				class="kirafont
+					
+						icon-user
+					"
+			></i>
+			<div class="kira-list-item-content">
+				关于本人
+			</div>
+		</a>
+		
+	</div>
+	<aside id="kira-sidebar">
+		
+			<div class="kira-widget-wrap">
+	<div class="kira-widget kira-social">
+		
+			<a
+				class="mdui-ripple"
+				href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=2933852809&website=www.oicqzone.com"
+				target="_blank"
+				mdui-tooltip="{content: 'QQ'}"
+				style="color: rgb(49, 174, 255); background-color: rgba(49, 174, 255, .1);"
+			>
+				<i
+					class="kirafont
+					
+						icon-QQ
+					"
+				></i>
+			</a>
+		
+			<a
+				class="mdui-ripple"
+				href="https://github.com/<hellonnnnn>/"
+				target="_blank"
+				mdui-tooltip="{content: 'GitHub'}"
+				style="color: rgb(25, 23, 23); background-color: rgba(25, 23, 23, .15);"
+			>
+				<i
+					class="kirafont
+					
+						icon-github
+					"
+				></i>
+			</a>
+		
+	</div>
+</div>
+
+		
+			
+  <div class="kira-widget-wrap">
+    <h3 class="kira-widget-title">分类</h3>
+    <div class="kira-widget">
+      <ul class="category-list">
+        
+        
+
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/os项目/">
+              <img 
+                src="/img/background1.jpg" 
+                alt="os项目" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              os项目
+            </a>
+            <span class="category-list-count">30</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/八股/">
+              <img 
+                src="/img/background3.jpg" 
+                alt="八股" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              八股
+            </a>
+            <span class="category-list-count">1</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/算法/">
+              <img 
+                src="/img/background2.jpg" 
+                alt="算法" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              算法
+            </a>
+            <span class="category-list-count">1</span>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+		
+			
+	<div class="kira-widget-wrap">
+		<div id="randomtagcloud" class="kira-widget tagcloud kira-rainbow">
+			<a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%80/" style="font-size: 15px;">xv6操作系统项目实验一</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%89/" style="font-size: 17.5px;">xv6操作系统项目实验三</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%8C/" style="font-size: 17.5px;">xv6操作系统项目实验二</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%94/" style="font-size: 12.5px;">xv6操作系统项目实验五</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%9B%9B/" style="font-size: 20px;">xv6操作系统项目实验四</a> <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" style="font-size: 10px;">基础知识</a> <a href="/tags/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5/" style="font-size: 10px;">算法训练营</a>
+
+		</div>
+		
+	</div>
+
+
+		
+			
+	<div class="kira-widget-wrap">
+		<h3 class="kira-widget-title">
+			文章归档
+		</h3>
+		<div class="kira-widget">
+			<ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/">2026</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/">2025</a><span class="archive-list-count">26</span></li></ul>
+		</div>
+	</div>
+
+
+		
+	</aside>
+	<!-- 保留空的版权容器，修复布局 -->
+    	<div class="kira-copyright">
+    </div>
+</div> <!-- 侧边栏的闭合div，必须保留 -->
+	<!-- <div class="kira-copyright">
+		&copy; 2026
+		<a href="/">Ivan-FYF</a>
+		Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> &
+		<a href="https://github.com/ch1ny/kira-hexo/" target="_blank">Kira-Hexo</a>
+		<br />
+		
+		
+	</div>
+</div> -->
+<div
+	class="kira-sidebar-modal"
+	id="sidebar-modal"
+	onclick="(function(self) {
+		self.classList.remove('show');
+		document.querySelector('.kira-sidebar.show#sidebar').classList.remove('show');
+	})(this)"
+></div>
+			<div class="kira-content">
+				<div id="kira-top-header"></div>
+				<div class="kira-main-content">
+					
+<link rel="stylesheet" href="/css/kira-image.css">
+
+
+<script src="/js/kira-image.js"></script>
+
+<div class="kira-image">
+    <div class="kira-image-modal">
+        <div class="kira-image-header">
+            <div class="kira-image-counter"></div>
+            <div class="kira-image-title"></div>
+            <div class="kira-image-operation">
+                <div class="kira-image-operation-button" id="kira-image-operation-button-zoom">
+                    <i class="kirafont icon-zoom-in"></i>
+                </div>
+                <div class="kira-image-operation-button" id="kira-image-operation-button-close">
+                    <i class="kirafont icon-close"></i>
+                </div>
+            </div>
+        </div>
+        <div class="kira-image-container">
+            <div class="kira-image-prev-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-left"></i>
+                </div>
+            </div>
+            <div class="kira-image-list">
+                <div class="kira-image-prev">
+                    <img />
+                </div>
+                <div class="kira-image-now">
+                    <img />
+                </div>
+                <div class="kira-image-next">
+                    <img />
+                </div>
+            </div>
+            <div class="kira-image-next-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+	
+<link rel="stylesheet" href="/css/kira-code-copy.css">
+
+	
+<script src="/js/kira-code-copy.js"></script>
+
+
+<div class="kira-post">
+	<article>
+		
+		<div
+			class="kira-post-cover"
+			style="padding-bottom: '56.25%'"
+		>
+			<img
+				data-src="/img/background4.jpg"
+				data-sizes="auto"
+				alt="知识总结"
+				class="lazyload kira-post-cover-image disabled-kira-image"
+			/>
+			<h1>知识总结</h1>
+		</div>
+		
+		<div class="kira-post-meta kira-rainbow" style="margin:10px 0!important;">
+			<a><i class="kirafont icon-calendar-fill"></i>2026年01月23日</a>
+			<a><i class="kirafont icon-edit-fill"></i>3.4k 字</a>
+			<a><i class="kirafont icon-time-circle-fill"></i>大概 14 分钟</a>
+		</div>
+		<html><head></head><body><h1><span id="xv6-labs-2020-%E6%83%B0%E6%80%A7%E5%88%86%E9%85%8D%E5%86%99%E6%97%B6%E6%8B%B7%E8%B4%9Dcow%E5%AE%9E%E9%AA%8C%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93">XV6-labs-2020 惰性分配+写时拷贝（COW）实验核心知识点总结</span></h1><p>本次实验聚焦XV6-RISC-V内核<strong>内存管理性能优化</strong>，实现两大经典OS内存管理特性，核心围绕**「页表PTE标志位控制」+「页面错误异常驱动」<strong>的</strong>按需处理**思想展开，所有改造均为内核增量适配，不破坏原生框架，以下为纯实验知识点梳理，无工具链相关内容。</p>
+<h2><span id="%E4%B8%80%E5%AE%9E%E9%AA%8C%E6%A0%B8%E5%BF%83%E8%83%8C%E6%99%AF%E5%8E%9F%E7%94%9Fxv6%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%BC%BA%E9%99%B7">一、实验核心背景：原生XV6的内存管理缺陷</span></h2><p>原生XV6-RISC-V的内存分配和进程创建逻辑存在<strong>资源无意义消耗</strong>的问题，是本次实验优化的核心切入点：</p>
+<ol>
+<li><strong><code>sbrk()</code>系统调用</strong>：进程申请动态内存时，立即为虚拟地址分配物理页并建立映射，即使进程申请大内存但暂不访问，物理页仍被占用，造成<strong>内存浪费</strong>；</li>
+<li><strong><code>fork()</code>进程创建</strong>：无条件全量拷贝父进程所有物理页到子进程，而多数场景下fork后子进程会立即执行<code>exec</code>加载新程序，原拷贝的物理页会被直接丢弃，造成<strong>无意义拷贝+性能损耗</strong>。</li>
+</ol>
+<h2><span id="%E4%BA%8C%E6%83%B0%E6%80%A7%E5%88%86%E9%85%8Dlazy-allocation%E5%BB%B6%E8%BF%9F%E7%89%A9%E7%90%86%E9%A1%B5%E5%88%86%E9%85%8D%E6%8C%89%E9%9C%80%E6%98%A0%E5%B0%84">二、惰性分配（Lazy Allocation）：延迟物理页分配，按需映射</span></h2><h3><span id="1-%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3">1. 核心设计思想</span></h3><p><strong>虚拟地址先行，物理地址延迟</strong>——<code>sbrk(n&gt;0)</code>仅扩展进程的虚拟地址空间（修改进程<code>sz</code>字段，堆上界上移），<strong>不分配任何物理页、不建立有效页表映射</strong>；仅当进程<strong>访问未分配的惰性虚拟地址</strong>（触发页面错误），或<strong>通过系统调用传递该地址</strong>（内核需访问）时，内核才<strong>动态按需</strong>为该地址分配物理页并建立合法映射，避免提前分配的资源浪费。</p>
+<h3><span id="2-%E6%A0%B8%E5%BF%83%E4%BE%9D%E8%B5%96%E6%9C%BA%E5%88%B6">2. 核心依赖机制</span></h3><ul>
+<li><strong>页表PTE标志位</strong>：通过置空<strong>有效位（PTE_V）</strong> 标记惰性地址（PTE_V=0，页表无效），让进程访问时触发异常；</li>
+<li><strong>页面错误陷阱</strong>：RISC-V架构中，访问无效PTE会触发<strong>13号（加载/读错误）/15号（存储/写错误）</strong> 陷阱，内核在<code>usertrap</code>中捕获并处理；</li>
+<li><strong>陷阱寄存器</strong>：<code>r_scause()</code>获取异常原因、<code>r_stval()</code>获取<strong>故障虚拟地址</strong>（页面错误的核心参数）、<code>r_sepc()</code>保存异常发生时的程序计数器。</li>
+</ul>
+<h3><span id="3-%E5%85%B3%E9%94%AE%E5%86%85%E6%A0%B8%E5%87%BD%E6%95%B0%E6%94%B9%E9%80%A05%E5%A4%84%E6%A0%B8%E5%BF%83%E5%A2%9E%E9%87%8F%E9%80%82%E9%85%8D">3. 关键内核函数改造（5处核心，增量适配）</span></h3><p>所有改造均保留原生逻辑，仅添加惰性分配相关的过滤、判断和动态映射逻辑：</p>
+<table>
+<thead>
+<tr>
+<th>改造函数</th>
+<th>核心改造点 &amp; 目的</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>sys_sbrk()</code></td>
+<td>移除立即分配物理页的逻辑，n&gt;0时仅修改<code>p-&gt;sz</code>；n&lt;0时合法收缩内存，释放有效物理页</td>
+</tr>
+<tr>
+<td><code>usertrap()</code></td>
+<td>捕获13/15号页面错误，验证故障地址为<strong>合法惰性地址</strong>后，动态分配物理页并建立映射</td>
+</tr>
+<tr>
+<td><code>argaddr()</code></td>
+<td>系统调用参数解析时，为未映射的合法惰性地址提前分配物理页，避免内核访问时触发panic</td>
+</tr>
+<tr>
+<td><code>uvmcopy()</code></td>
+<td>过滤父进程的无效PTE（PTE_V=0），仅拷贝有效映射，子进程惰性地址自行触发分配</td>
+</tr>
+<tr>
+<td><code>uvmunmap()</code></td>
+<td>过滤无效PTE，仅释放有效PTE（PTE_V=1）对应的物理页，避免非法释放未分配的惰性地址</td>
+</tr>
+</tbody></table>
+<h3><span id="4-%E5%90%88%E6%B3%95%E6%83%B0%E6%80%A7%E5%9C%B0%E5%9D%80%E5%88%A4%E6%96%AD%E4%B8%89%E6%9D%A1%E4%BB%B6%E7%BC%BA%E4%B8%80%E4%B8%8D%E5%8F%AF">4. 合法惰性地址判断三条件（缺一不可）</span></h3><p>内核处理页面错误时，需严格验证故障地址为<strong>进程堆区的惰性地址</strong>，避免处理非法地址（如栈、代码区、超出申请范围的地址）：</p>
+<ol>
+<li>故障地址 ≥ 进程堆下界（<code>p-&gt;end</code>，区分代码/数据区与堆区）；</li>
+<li>故障地址 &lt; 进程堆上界（<code>p-&gt;sz</code>，已通过<code>sbrk</code>申请的虚拟地址）；</li>
+<li>故障地址 &gt; 栈边界（<code>PGROUNDUP(sp)-1</code>，区分堆区与栈区，避免处理栈溢出地址）。</li>
+</ol>
+<h3><span id="5-%E5%AE%8C%E6%95%B4%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B">5. 完整执行流程</span></h3><ol>
+<li><strong>申请</strong>：进程调用<code>sbrk(n)</code>，<code>sys_sbrk</code>仅扩展<code>p-&gt;sz</code>，页表保持PTE_V=0，无物理页操作；</li>
+<li><strong>访问触发异常</strong>：进程访问惰性地址，触发13/15号页面错误，内核进入<code>usertrap</code>；</li>
+<li><strong>地址验证</strong>：提取故障地址，验证为合法惰性地址；</li>
+<li><strong>动态映射</strong>：分配物理页并清零，调用<code>mappages</code>建立虚拟→物理映射（PTE_V=1，权限R+W+U）；</li>
+<li><strong>恢复执行</strong>：映射成功后，内核返回用户态，进程从异常处继续执行，此时地址已合法；</li>
+<li><strong>释放</strong>：进程收缩内存/退出时，<code>uvmunmap</code>过滤无效PTE，仅释放已分配的有效物理页，无内存泄漏。</li>
+</ol>
+<h2><span id="%E4%B8%89%E5%86%99%E6%97%B6%E6%8B%B7%E8%B4%9Dcopy-on-writecow%E5%BB%B6%E8%BF%9F%E7%89%A9%E7%90%86%E9%A1%B5%E6%8B%B7%E8%B4%9D%E6%8C%89%E9%9C%80%E5%85%B1%E4%BA%AB">三、写时拷贝（Copy-On-Write，COW）：延迟物理页拷贝，按需共享</span></h2><p>基于惰性分配改造基础实现，是<code>fork()</code>的核心优化，与惰性分配无缝兼容，核心解决<code>fork()</code>全量拷贝的性能问题。</p>
+<h3><span id="1-%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3">1. 核心设计思想</span></h3><p><strong>共享物理页，只读映射，写操作触发拷贝</strong>——<code>fork()</code>时<strong>不拷贝任何物理页</strong>，父子进程<strong>共享</strong>父进程的所有有效物理页；同时将父子进程对应页表的<strong>写权限位（PTE_W）</strong> 清空（PTE_W=0，只读映射），保留有效位（PTE_V=1）；当父/子进程对共享页执行<strong>写操作</strong>时，触发写权限页面错误，内核为故障进程<strong>单独分配物理页并拷贝原页数据</strong>，将新页映射为可写，实现“按需拷贝”，仅在真正需要修改时才解耦父子进程的内存。</p>
+<h3><span id="2-%E6%A0%B8%E5%BF%83%E4%BE%9D%E8%B5%96%E6%9C%BA%E5%88%B6">2. 核心依赖机制</span></h3><p>在惰性分配依赖的基础上，新增<strong>物理页引用计数</strong>，是COW实现的关键：</p>
+<ul>
+<li><strong>页表PTE标志位</strong>：PTE_V=1（有效）+ PTE_W=0（只读），标记共享页，写操作触发15号错误；</li>
+<li><strong>15号写权限陷阱</strong>：访问只读PTE执行写操作，触发RISC-V 15号陷阱，内核在<code>usertrap</code>中优先处理；</li>
+<li><strong>物理页引用计数</strong>：为每个物理页维护一个引用计数（refcnt），记录当前共享该页的进程数，实现共享页的生命周期管理。</li>
+</ul>
+<h3><span id="3-%E6%A0%B8%E5%BF%83%E5%9F%BA%E7%A1%80%E7%89%A9%E7%90%86%E9%A1%B5%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0%E8%AE%BE%E8%AE%A1kallocc">3. 核心基础：物理页引用计数设计（<code>kalloc.c</code>）</span></h3><p>新增全局<code>refcnt</code>数组，为每个物理页分配一个计数项，核心规则：</p>
+<ol>
+<li><strong>分配时初始化</strong>：<code>kalloc()</code>分配物理页时，将其refcnt置为1（仅当前进程引用）；</li>
+<li><strong>共享时加1</strong>：<code>fork()</code>共享物理页时，调用<code>ref_inc()</code>将对应页的refcnt+1；</li>
+<li><strong>释放时减1</strong>：<code>kfree()</code>释放物理页时，refcnt先减1，<strong>仅当refcnt=0时</strong>，才真正释放物理页（无进程共享），避免提前释放共享页导致野指针；</li>
+<li><strong>解耦时减1</strong>：进程对共享页执行写操作，拷贝新页后，解除对原共享页的映射，调用<code>kfree()</code>将原页refcnt减1。</li>
+</ol>
+<h3><span id="4-%E5%85%B3%E9%94%AE%E5%86%85%E6%A0%B8%E5%87%BD%E6%95%B0%E6%94%B9%E9%80%A0%E6%A0%B8%E5%BF%834%E5%A4%84">4. 关键内核函数改造（核心4处）</span></h3><table>
+<thead>
+<tr>
+<th>改造函数</th>
+<th>核心改造点 &amp; 目的</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>uvmcopy()</code></td>
+<td>移除全量拷贝逻辑，子进程直接映射父进程物理页；父子PTE均置为只读；共享页refcnt+1</td>
+</tr>
+<tr>
+<td><code>usertests()</code></td>
+<td>优先处理15号COW写错误，验证为共享页后，分配新页拷贝数据，重映射为可写，原页refcnt-1</td>
+</tr>
+<tr>
+<td><code>kalloc()</code>/<code>kfree()</code></td>
+<td>新增引用计数的初始化、减1逻辑，kfree仅在refcnt=0时真正释放物理页</td>
+</tr>
+<tr>
+<td><code>uvmunmap()</code></td>
+<td>复用惰性分配的过滤逻辑，释放时调用kfree，由引用计数处理共享页的释放</td>
+</tr>
+</tbody></table>
+<h3><span id="5-%E5%AE%8C%E6%95%B4%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B">5. 完整执行流程</span></h3><ol>
+<li><strong>fork共享</strong>：父进程调用<code>fork()</code>，<code>uvmcopy</code>遍历父进程有效PTE，父子共享物理页，PTE均置为只读，共享页refcnt+1（如从1→2）；</li>
+<li><strong>只读访问</strong>：父子进程对共享页的<strong>读操作</strong>正常执行，无异常、不拷贝；</li>
+<li><strong>写操作触发异常</strong>：某进程对共享页执行写操作，触发15号写权限陷阱，内核进入<code>usertrap</code>；</li>
+<li><strong>按需拷贝</strong>：内核为故障进程分配新物理页，拷贝原共享页数据，解除该进程对原共享页的映射（原页refcnt-1）；</li>
+<li><strong>重映射可写</strong>：将新物理页映射为故障进程的可写页（PTE_W=1），进程后续写操作在新页执行，与另一进程解耦；</li>
+<li><strong>资源释放</strong>：进程<code>exec</code>/退出时，<code>uvmunmap</code>释放所有映射，kfree对共享页refcnt减1，仅当refcnt=0时真正释放物理页。</li>
+</ol>
+<h2><span id="%E5%9B%9B%E6%83%B0%E6%80%A7%E5%88%86%E9%85%8D%E4%B8%8Ecow%E7%9A%84%E6%A0%B8%E5%BF%83%E5%85%B1%E6%80%A7--%E5%85%B3%E9%94%AE%E5%B7%AE%E5%BC%82">四、惰性分配与COW的核心共性 &amp; 关键差异</span></h2><p>两大特性均为XV6内存管理的<strong>按需优化手段</strong>，实现思路高度契合，且改造点互不冲突、可叠加部署，核心差异在于优化目标和异常触发逻辑：</p>
+<h3><span id="1-%E6%A0%B8%E5%BF%83%E5%85%B1%E6%80%A7%E7%8E%B0%E4%BB%A3os%E6%8C%89%E9%9C%80%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%9A%84%E7%BB%8F%E5%85%B8%E7%89%B9%E5%BE%81">1. 核心共性（现代OS按需内存管理的经典特征）</span></h3><ol>
+<li><strong>异常驱动</strong>：均通过<strong>主动触发陷阱异常</strong>，将物理页的“分配/拷贝”延迟到<strong>真正需要时</strong>执行；</li>
+<li><strong>PTE控制</strong>：均通过修改<strong>页表PTE标志位</strong>（PTE_V/PTE_W），让页表处于“预期异常状态”；</li>
+<li><strong>增量改造</strong>：均基于原生内核函数扩展，不重写核心逻辑，保持与原有程序的兼容性；</li>
+<li><strong>资源优化</strong>：均避免“提前操作”带来的资源浪费，提升内存使用效率和内核性能；</li>
+<li><strong>地址验证</strong>：处理异常时均需严格验证故障地址的合法性，避免内核panic或非法访问。</li>
+</ol>
+<h3><span id="2-%E5%85%B3%E9%94%AE%E5%B7%AE%E5%BC%82%E6%A0%B8%E5%BF%83%E5%8C%BA%E5%88%86%E7%82%B9">2. 关键差异（核心区分点）</span></h3><table>
+<thead>
+<tr>
+<th>对比维度</th>
+<th>惰性分配（Lazy Allocation）</th>
+<th>写时拷贝（COW）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>核心优化目标</td>
+<td>优化<code>sbrk()</code>内存申请，避免物理页提前分配</td>
+<td>优化<code>fork()</code>进程创建，避免物理页无意义拷贝</td>
+</tr>
+<tr>
+<td>页表PTE状态</td>
+<td>无效（PTE_V=0，无任何映射）</td>
+<td>有效只读（PTE_V=1、PTE_W=0，共享映射）</td>
+</tr>
+<tr>
+<td>触发异常类型</td>
+<td>13号（读）/15号（写）<strong>地址无效错误</strong></td>
+<td>仅15号（写）<strong>权限错误</strong>（读操作无异常）</td>
+</tr>
+<tr>
+<td>异常处理逻辑</td>
+<td>仅分配物理页+建立映射，无数据拷贝</td>
+<td>分配物理页+<strong>拷贝原页数据</strong>+重映射为可写</td>
+</tr>
+<tr>
+<td>核心依赖</td>
+<td>页面错误陷阱+合法地址判断</td>
+<td>页面错误陷阱+<strong>物理页引用计数</strong></td>
+</tr>
+<tr>
+<td>资源操作</td>
+<td>仅涉及<strong>物理页分配/释放</strong></td>
+<td>涉及<strong>物理页共享/拷贝/释放</strong></td>
+</tr>
+<tr>
+<td>地址属性</td>
+<td>未分配的<strong>虚拟惰性地址</strong>（无对应物理页）</td>
+<td>已分配的<strong>共享物理页</strong>（有对应物理页）</td>
+</tr>
+</tbody></table>
+<h2><span id="%E4%BA%94%E5%AE%9E%E9%AA%8C%E6%A0%B8%E5%BF%83%E5%BA%95%E5%B1%82%E6%9C%BA%E5%88%B6xv6%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E9%99%B7%E9%98%B1%E5%A4%84%E7%90%86">五、实验核心底层机制（XV6内存管理+陷阱处理）</span></h2><p>本次实验的所有改造均基于XV6-RISC-V的两大核心机制，是理解特性实现的基础：</p>
+<h3><span id="1-xv6%E4%B8%89%E7%BA%A7%E9%A1%B5%E8%A1%A8%E6%9C%BA%E5%88%B6">1. XV6三级页表机制</span></h3><ul>
+<li>XV6采用<strong>三级页表</strong>管理虚拟地址到物理地址的映射，通过<code>walk()</code>函数查找虚拟地址对应的PTE项，<code>mappages()</code>函数建立映射；</li>
+<li>页表权限遵循<strong>最小权限原则</strong>，堆区地址权限为R+W+U（无执行PTE_X），共享页临时置为R+U（无写PTE_W）；</li>
+<li>地址操作宏：<code>PGROUNDDOWN(va)</code>（虚拟地址向下页对齐）、<code>PGROUNDUP(va)</code>（向上页对齐），XV6中页面大小固定为PGSIZE=4096。</li>
+</ul>
+<h3><span id="2-xv6%E7%94%A8%E6%88%B7%E6%80%81%E9%99%B7%E9%98%B1%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B">2. XV6用户态陷阱处理流程</span></h3><ol>
+<li>进程触发陷阱（系统调用/页面错误/时钟中断），硬件自动保存上下文到<code>trapframe</code>，跳转到内核态<code>usertrap</code>函数；</li>
+<li><code>usertrap</code>通过<code>r_scause()</code>判断陷阱类型，分别处理系统调用（8号）、设备中断、页面错误（13/15号）；</li>
+<li>处理完成后，若进程未被杀死，调用<code>usertrapret()</code>恢复上下文，返回用户态继续执行；</li>
+<li>页面错误处理的核心：<strong>先判断异常类型→提取故障地址→验证合法性→按需处理→恢复执行</strong>。</li>
+</ol>
+<h2><span id="%E5%85%AD%E5%AE%9E%E9%AA%8C%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99%E4%B8%8E%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">六、实验核心设计原则与注意事项</span></h2><h3><span id="1-%E5%86%85%E6%A0%B8%E6%94%B9%E9%80%A0%E7%9A%84%E6%A0%B8%E5%BF%83%E5%8E%9F%E5%88%99">1. 内核改造的核心原则</span></h3><ul>
+<li><strong>边界处理</strong>：严格考虑<strong>非页对齐地址</strong>（需通过<code>PGROUNDDOWN</code>对齐后映射）、<strong>合法地址范围</strong>（堆/栈/代码区严格区分）；</li>
+<li><strong>资源安全</strong>：动态分配物理页后，若映射失败需及时释放（避免内存泄漏）；物理内存耗尽时，标记进程为<code>killed</code>，避免内核挂死；</li>
+<li><strong>过滤无效PTE</strong>：所有涉及页表遍历、释放、拷贝的函数，均需过滤无效PTE，避免解引用空指针或非法释放；</li>
+<li><strong>权限正确</strong>：建立映射时严格设置PTE权限，堆区为R+W+U，共享页临时为R+U，避免权限过大导致安全问题。</li>
+</ul>
+<h3><span id="2-%E4%B8%A4%E5%A4%A7%E7%89%B9%E6%80%A7%E7%9A%84%E5%8D%8F%E5%90%8C%E9%80%BB%E8%BE%91">2. 两大特性的协同逻辑</span></h3><p>COW基于惰性分配的改造基础实现，fork时<code>uvmcopy</code>会<strong>同时过滤父进程的惰性无效PTE（PTE_V=0）</strong>，仅对有效PTE（PTE_V=1）做共享处理；子进程访问惰性地址时，触发独立的惰性分配逻辑，与COW共享页无任何冲突，实现“惰性分配管未访问地址，COW管已访问地址”的双重优化。</p>
+<h2><span id="%E4%B8%83%E5%AE%9E%E9%AA%8C%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9%E5%8D%87%E5%8D%8E">七、实验核心知识点升华</span></h2><ol>
+<li><strong>按需处理思想</strong>：是现代操作系统内存管理的核心优化思路——将非必要的资源操作（分配/拷贝）延迟到<strong>实际使用时</strong>，最大化提升资源利用率；</li>
+<li><strong>异常的正向应用</strong>：陷阱/异常不仅是处理“错误”的机制，也可被<strong>主动利用</strong>实现内核高级特性（惰性分配、COW、缺页中断等）；</li>
+<li><strong>共享资源管理</strong>：物理页引用计数是<strong>共享资源生命周期管理</strong>的经典方法，核心是“引用计数不为0时，资源不可释放”，避免多进程共享时的资源冲突；</li>
+<li><strong>内核增量开发</strong>：OS内核开发需遵循“增量适配”原则，基于现有框架扩展功能，减少对原有逻辑的修改，保证内核的稳定性和兼容性。</li>
+</ol>
+</body></html>
+	</article>
+
+	 
+    <div class="kira-post-copyright">
+        <strong>本文作者：</strong>Ivan-FYF<br>
+        <strong>本文链接：</strong><a href="https://hellonnnnn.github.io/2026/01/23/%E7%AC%AC%E4%BA%94%E7%AB%A0/%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/" title="https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;01&#x2F;23&#x2F;第五章&#x2F;知识总结&#x2F;" target="_blank" rel="noopener">https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;01&#x2F;23&#x2F;第五章&#x2F;知识总结&#x2F;</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+        
+    </div>
+
+  
+	<div class="kira-post-nav">
+		<nav class="post-nav">
+			      
+			<!-- 先找到与当前文字相同的目录 -->
+			                                                                                          
+			<!-- 在找到当前文章所在的 index -->
+			                                                                                                                    
+			<!-- 上一篇文章 -->
+			<div class="old">
+				<span>上一章</span>
+				<a href="/2026/01/23/%E7%AC%AC%E4%BA%94%E7%AB%A0/XV6-%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8/"> XV6 页面错误异常</a>
+			</div>
+			              
+		</nav>
+	</div>
+	
+	<div class="kira-post-meta kira-rainbow">
+		
+			<a class="kirafont icon-container-fill -link" href="/categories/os%E9%A1%B9%E7%9B%AE/">os项目</a>
+		
+		
+			<a class="kirafont icon-tag-fill -none-link" href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%94/" rel="tag">xv6操作系统项目实验五</a>
+		
+	</div>
+	
+	<div class="kira-post-footer">
+		
+
+		
+	<div class="giscus"></div>
+  
+    <script src="https://giscus.app/client.js"
+      data-repo="hellonnnnn/hellonnnnn.github.io"
+      data-repo-id="R_kgDOQqLdWw"
+      data-category="Announcements"
+      data-category-id="DIC_kwDOQqLdW84C1Rqg"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="light"
+      data-lang="zh-CN"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async  
+    ></script>
+  
+
+	</div>
+	
+</div>
+
+				</div>
+			</div>
+			<div class="kira-right-column">
+	<a onclick="document.querySelector('#kira-top-header').scrollIntoView({behavior: 'smooth'});" class="kira-backtotop" aria-label="回到顶部" title="回到顶部">
+		<button class="mdui-fab mdui-ripple">
+			<i class="kirafont icon-caret-up"></i>
+		</button>
+	</a>
+</div>
+
+		</div>
+	</body>
+</html>

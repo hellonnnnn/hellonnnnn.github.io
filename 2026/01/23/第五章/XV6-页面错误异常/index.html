@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="/css/layout.css">
 
 		
-		<title> unbuntu系统存储不足 -  Ivan&#39;s Tech Blog</title>
+		<title> XV6 页面错误异常 -  Ivan&#39;s Tech Blog</title>
 		<!-- <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" /> -->
 		<!-- <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script> -->
 		
@@ -341,25 +341,201 @@
 			<img
 				data-src="/img/background4.jpg"
 				data-sizes="auto"
-				alt="unbuntu系统存储不足"
+				alt="XV6 页面错误异常"
 				class="lazyload kira-post-cover-image disabled-kira-image"
 			/>
-			<h1>unbuntu系统存储不足</h1>
+			<h1>XV6 页面错误异常</h1>
 		</div>
 		
 		<div class="kira-post-meta kira-rainbow" style="margin:10px 0!important;">
-			<a><i class="kirafont icon-calendar-fill"></i>2026年01月21日</a>
-			<a><i class="kirafont icon-edit-fill"></i>78 字</a>
-			<a><i class="kirafont icon-time-circle-fill"></i>大概 1 分钟</a>
+			<a><i class="kirafont icon-calendar-fill"></i>2026年01月23日</a>
+			<a><i class="kirafont icon-edit-fill"></i>730 字</a>
+			<a><i class="kirafont icon-time-circle-fill"></i>大概 3 分钟</a>
 		</div>
-		<html><head></head><body><h3><span id="%E9%95%BF%E6%9C%9F%E7%BB%B4%E6%8A%A4%E5%BB%BA%E8%AE%AE">长期维护建议</span></h3><p>为了避免以后再出现空间不足的问题，可以定期执行以下命令清理：</p>
-<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 一键清理 APT 缓存+无用依赖+Snap 旧版本</span><br><span class="hljs-built_in">sudo</span> apt clean &amp;&amp; <span class="hljs-built_in">sudo</span> apt autoremove --purge -y &amp;&amp; <span class="hljs-built_in">sudo</span> snap remove --purge $(snap list --all | awk <span class="hljs-string">'/disabled/{print $1" "$3}'</span>) 2&gt;/dev/null<br></code></pre></td></tr></tbody></table></figure></body></html>
+		<html><head></head><body><hr>
+<h2><span id="">{}</span></h2><h2><span id="2-%E6%83%B0%E6%80%A7%E5%88%86%E9%85%8Dlazy-allocation%E5%90%8E%E7%9A%84%E9%A1%B5%E8%A1%A8%E7%8A%B6%E6%80%81">2. 惰性分配（Lazy Allocation）后的页表状态</span></h2><h3><span id="1%E5%88%9D%E5%A7%8B%E7%8A%B6%E6%80%81%E8%B0%83%E7%94%A8-sbrk-%E6%89%A9%E5%B1%95%E5%A0%86">（1）初始状态（调用 sbrk 扩展堆）</span></h3><ul>
+<li><p><strong>虚拟地址</strong>已经增加（p-&gt;sz 增大）</p>
+</li>
+<li><p><strong>物理页尚未分配</strong></p>
+</li>
+<li><p><strong>页表未映射 PTE_V=0</strong>，walk/pte 返回 0</p>
+</li>
+<li><p><strong>特点</strong>：</p>
+<ul>
+<li>进程可以“申请”任意大小的 heap，但占用物理内存为 0</li>
+<li>节省内存</li>
+</ul>
+</li>
+</ul>
+<h3><span id="2%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%AE%BF%E9%97%AE%E6%9C%AA%E5%88%86%E9%85%8D%E9%A1%B5page-fault">（2）第一次访问未分配页（page fault）</span></h3><ul>
+<li><p>用户访问未分配的虚拟地址 → CPU 触发 <strong>page fault</strong>（scause=13/15）</p>
+</li>
+<li><p><strong>usertrap()</strong> 检测到地址合法（<code>faulting_addr &lt; p-&gt;sz</code>）</p>
+</li>
+<li><p>调用 <strong>kalloc() 分配物理页</strong> → mappages 映射到页表</p>
+</li>
+<li><p>页表 PTE 更新：</p>
+<ul>
+<li>PTE_V = 1</li>
+<li>PTE_R | PTE_W | PTE_U 权限</li>
+</ul>
+</li>
+<li><p><strong>特点</strong>：</p>
+<ul>
+<li>只分配访问过的页</li>
+<li>页表中未访问页仍为 0</li>
+</ul>
+</li>
+</ul>
+<h3><span id="3%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E8%AE%BF%E9%97%AE-lazy-%E9%A1%B5">（3）系统调用访问 lazy 页</span></h3><ul>
+<li>copyin/copyout/copyinstr 访问地址，如果物理页未分配</li>
+<li>调用 <code>lazy_alloc()</code> 分配物理页</li>
+<li>页表更新同上</li>
+</ul>
+<h3><span id="4%E9%87%8A%E6%94%BE%E5%86%85%E5%AD%98uvmunmap--uvmdealloc">（4）释放内存（uvmunmap / uvmdealloc）</span></h3><ul>
+<li><p>遍历页表</p>
+</li>
+<li><p>已分配页：释放物理页，PTE=0</p>
+</li>
+<li><p>未分配页（PTE_V=0）：跳过</p>
+</li>
+<li><p><strong>特点</strong>：</p>
+<ul>
+<li>避免 panic</li>
+<li>支持 shrink 堆或释放进程</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2><span id="3-%E5%86%99%E6%97%B6%E5%A4%8D%E5%88%B6cow%E4%B8%8B%E7%9A%84%E9%A1%B5%E8%A1%A8%E7%8A%B6%E6%80%81">3. 写时复制（COW）下的页表状态</span></h2><h3><span id="1fork-%E6%97%B6">（1）fork 时</span></h3><ul>
+<li><p>调用 <code>uvmcopy()</code> 复制页表</p>
+</li>
+<li><p><strong>COW 原理</strong>：</p>
+<ul>
+<li><p>对于已分配页（PTE_V=1）：</p>
+<ul>
+<li>标记为只读（去掉 PTE_W）</li>
+<li>设置共享物理页</li>
+</ul>
+</li>
+<li><p>对于未分配页（PTE_V=0）：</p>
+<ul>
+<li><strong>不分配物理页</strong></li>
+<li>子进程页表同样为 0</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3><span id="2%E5%AD%90%E8%BF%9B%E7%A8%8B%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%86%99">（2）子进程第一次写</span></h3><ul>
+<li><p>写访问只读页 → CPU 触发 page fault（scause=15）</p>
+</li>
+<li><p><strong>内核处理</strong>：</p>
+<ul>
+<li><p>调用 kalloc() 分配新物理页</p>
+</li>
+<li><p>拷贝原物理页内容到新页（memmove）</p>
+</li>
+<li><p>更新 PTE：</p>
+<ul>
+<li>PTE_W = 1</li>
+<li>PTE_U = 1</li>
+<li>PTE_V = 1</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>原进程页表</strong>仍指向旧物理页</p>
+</li>
+<li><p><strong>特点</strong>：</p>
+<ul>
+<li>避免 fork 时复制整个 heap</li>
+<li>只在写时才复制页，提高效率</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2><span id="4-%E9%A1%B5%E8%A1%A8%E4%BD%BF%E7%94%A8%E7%8A%B6%E6%80%81%E6%80%BB%E7%BB%93%E8%A1%A8">4. 页表使用状态总结表</span></h2><table>
+<thead>
+<tr>
+<th>页表类型 / 状态</th>
+<th>PTE_V</th>
+<th>PTE_W</th>
+<th>PTE_R</th>
+<th>PTE_U</th>
+<th>对应物理页</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>未访问 lazy 页</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>无</td>
+<td>仅虚拟地址存在，物理页未分配</td>
+</tr>
+<tr>
+<td>已访问 lazy 页</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>分配</td>
+<td>用户首次访问后分配物理页</td>
+</tr>
+<tr>
+<td>COW 页（fork 后）</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>共享</td>
+<td>子进程和父进程只读共享物理页</td>
+</tr>
+<tr>
+<td>COW 写后页</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>新分配</td>
+<td>写入后，子进程拥有独立物理页</td>
+</tr>
+<tr>
+<td>已释放页</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>已释放</td>
+<td>heap shrink 或进程退出</td>
+</tr>
+</tbody></table>
+<hr>
+<h2><span id="5-%E6%B5%81%E7%A8%8B%E7%A4%BA%E6%84%8F">5. 流程示意</span></h2><ol>
+<li><strong>sbrk() / heap grow</strong> → 虚拟地址增加 → 页表 PTE_V=0</li>
+<li><strong>用户访问 lazy 页</strong> → page fault → kalloc() → mappages() → PTE_V=1</li>
+<li><strong>fork()</strong> → 复制页表 → 已分配页标记只读 → 未分配页保持 0</li>
+<li><strong>子进程写 COW 页</strong> → page fault → 分配新物理页 → 更新 PTE_W=1</li>
+</ol>
+<hr>
+<h2><span id="6-%E6%80%BB%E7%BB%93">6. 总结</span></h2><ul>
+<li><strong>惰性分配</strong>：延迟物理页分配，节省内存，PTE_V=0 表示未分配。</li>
+<li><strong>写时复制</strong>：fork 时不立即复制物理页，通过 PTE_W=0 + page fault 实现按需复制。</li>
+<li>页表中 <strong>PTE_V=0 的页</strong> 表示虚拟地址存在但未分配物理页。</li>
+<li>系统调用访问这些页必须支持 <strong>lazy allocation</strong>。</li>
+<li><strong>释放页</strong> 时要区分已分配和未分配页，避免 panic。</li>
+</ul>
+<hr>
+</body></html>
 	</article>
 
 	 
     <div class="kira-post-copyright">
         <strong>本文作者：</strong>Ivan-FYF<br>
-        <strong>本文链接：</strong><a href="https://hellonnnnn.github.io/2026/01/21/%E7%AC%AC%E4%B8%80%E7%AB%A0/unbuntu%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%82%A8%E4%B8%8D%E8%B6%B3/" title="https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;01&#x2F;21&#x2F;第一章&#x2F;unbuntu系统存储不足&#x2F;" target="_blank" rel="noopener">https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;01&#x2F;21&#x2F;第一章&#x2F;unbuntu系统存储不足&#x2F;</a><br>
+        <strong>本文链接：</strong><a href="https://hellonnnnn.github.io/2026/01/23/%E7%AC%AC%E4%BA%94%E7%AB%A0/XV6-%E9%A1%B5%E9%9D%A2%E9%94%99%E8%AF%AF%E5%BC%82%E5%B8%B8/" title="https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;01&#x2F;23&#x2F;第五章&#x2F;XV6-页面错误异常&#x2F;" target="_blank" rel="noopener">https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;01&#x2F;23&#x2F;第五章&#x2F;XV6-页面错误异常&#x2F;</a><br>
         
             <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
         
@@ -370,21 +546,21 @@
 		<nav class="post-nav">
 			      
 			<!-- 先找到与当前文字相同的目录 -->
-			                                                                                 
+			                                                                                       
 			<!-- 在找到当前文章所在的 index -->
-			                                                                                                        
+			                                                                                                                
 			<!-- 上一篇文章 -->
 			<div class="old">
 				<span>上一章</span>
-				<a href="/2025/12/29/%E7%AC%AC%E5%9B%9B%E7%AB%A0/trap-c%E8%AF%A6%E8%A7%A3/"> trap.c详解</a>
+				<a href="/2026/01/21/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E8%B9%A6%E5%BA%8A%E9%A1%B5/"> 蹦床页</a>
 			</div>
 			       
 			<!-- 下一篇文章 -->
 			<div class="new">
 				<span>下一章</span>
-				<a href="/2026/01/21/%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E8%B9%A6%E5%BA%8A%E9%A1%B5/"> 蹦床页</a>
+				<a href="/2026/01/23/%E7%AC%AC%E4%BA%94%E7%AB%A0/%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/"> 知识总结</a>
 			</div>
-			                            
+			              
 		</nav>
 	</div>
 	
@@ -393,7 +569,7 @@
 			<a class="kirafont icon-container-fill -link" href="/categories/os%E9%A1%B9%E7%9B%AE/">os项目</a>
 		
 		
-			<a class="kirafont icon-tag-fill -none-link" href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%80/" rel="tag">xv6操作系统项目实验一</a>
+			<a class="kirafont icon-tag-fill -none-link" href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%94/" rel="tag">xv6操作系统项目实验五</a>
 		
 	</div>
 	
