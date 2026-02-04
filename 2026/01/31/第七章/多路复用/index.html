@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html 
+	lang="zh-Hans">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		
+<link rel="stylesheet" href="/css/layout.css">
+
+		
+		<title> 多路复用 -  Ivan&#39;s Tech Blog</title>
+		<!-- <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" /> -->
+		<!-- <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script> -->
+		
+<link rel="stylesheet" href="/lib/mdui/mdui.min.css">
+
+		
+<script src="/lib/mdui/mdui.min.js"></script>
+
+		<!-- lazyload -->
+		
+<script src="/lib/lazysizes.js"></script>
+
+		<!-- smooth-scrolling -->
+		
+<script src="/lib/smooth-scrolling.js"></script>
+
+		<!-- highlight -->
+		
+<link rel="stylesheet" href="/lib/highlight/atom-one-dark.min.css">
+
+		
+<script src="/lib/highlight/highlight.min.js"></script>
+
+		<!-- 预置 kiraicon -->
+		
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+
+		
+		<link
+			rel="shortcut icon"
+			href="https://kira.host/assets/Pictures/Others/116359b4ccf19917.jpg"
+			type="image/png"
+		/>
+		
+<link rel="stylesheet" href="/deps/css/APlayer.min.css">
+
+		
+		
+<script src="/deps/js/APlayer.min.js"></script>
+<script src="/deps/js/Meting.min.js"></script>
+
+	<meta name="generator" content="Hexo 8.1.1"></head>
+
+	<body>
+		<div
+			class="kira-background"
+			style="background-image: url('/img/background4.jpg')"
+		></div>
+		<div class="kira-header">
+    <a
+        class="kira-drawer-button mdui-ripple"
+        title="导航栏"
+        onclick="document.querySelector('.kira-sidebar-modal').classList.add('show');document.querySelector('.kira-sidebar#sidebar').classList.add('show');"
+    >
+        <i class="kirafont icon-menu"></i>
+    </a>
+    <a href="/" title="Ivan&#39;s Tech Blog">
+        <img
+			src="/img/background5.jpg"
+			alt="Ivan-FYF"
+		/>
+    </a>
+</div>
+		<div class="kira-body">
+			<div class="kira-sidebar" id="sidebar">
+	<div class="kira-avatar mdui-ripple">
+		<a href="/img/background5.jpg" title="Ivan-FYF">
+			<img
+				src="/img/background5.jpg"
+				alt="Ivan-FYF"
+			/>
+		</a>
+	</div>
+	<div class="kira-count">
+		<div><span>文章</span>37</div>
+		<div><span>标签</span>9</div>
+		<div><span>分类</span>3</div>
+	</div>
+	<div class="kira-list">
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/"
+			title="回到首页"
+		>
+			<i
+				class="kirafont
+					
+						icon-home
+					"
+			></i>
+			<div class="kira-list-item-content">
+				回到首页
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/archive.html"
+			title="文章归档"
+		>
+			<i
+				class="kirafont
+					
+						icon-container
+					"
+			></i>
+			<div class="kira-list-item-content">
+				文章归档
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/about/"
+			title="关于本人"
+		>
+			<i
+				class="kirafont
+					
+						icon-user
+					"
+			></i>
+			<div class="kira-list-item-content">
+				关于本人
+			</div>
+		</a>
+		
+	</div>
+	<aside id="kira-sidebar">
+		
+			<div class="kira-widget-wrap">
+	<div class="kira-widget kira-social">
+		
+			<a
+				class="mdui-ripple"
+				href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=2933852809&website=www.oicqzone.com"
+				target="_blank"
+				mdui-tooltip="{content: 'QQ'}"
+				style="color: rgb(49, 174, 255); background-color: rgba(49, 174, 255, .1);"
+			>
+				<i
+					class="kirafont
+					
+						icon-QQ
+					"
+				></i>
+			</a>
+		
+			<a
+				class="mdui-ripple"
+				href="https://github.com/<hellonnnnn>/"
+				target="_blank"
+				mdui-tooltip="{content: 'GitHub'}"
+				style="color: rgb(25, 23, 23); background-color: rgba(25, 23, 23, .15);"
+			>
+				<i
+					class="kirafont
+					
+						icon-github
+					"
+				></i>
+			</a>
+		
+	</div>
+</div>
+
+		
+			
+  <div class="kira-widget-wrap">
+    <h3 class="kira-widget-title">分类</h3>
+    <div class="kira-widget">
+      <ul class="category-list">
+        
+        
+
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/os项目/">
+              <img 
+                src="/img/background1.jpg" 
+                alt="os项目" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              os项目
+            </a>
+            <span class="category-list-count">35</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/八股/">
+              <img 
+                src="/img/background3.jpg" 
+                alt="八股" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              八股
+            </a>
+            <span class="category-list-count">1</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/算法/">
+              <img 
+                src="/img/background2.jpg" 
+                alt="算法" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              算法
+            </a>
+            <span class="category-list-count">1</span>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+		
+			
+	<div class="kira-widget-wrap">
+		<div id="randomtagcloud" class="kira-widget tagcloud kira-rainbow">
+			<a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%80/" style="font-size: 16px;">xv6操作系统项目实验一</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%83/" style="font-size: 14px;">xv6操作系统项目实验七</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%89/" style="font-size: 18px;">xv6操作系统项目实验三</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%8C/" style="font-size: 18px;">xv6操作系统项目实验二</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%94/" style="font-size: 12px;">xv6操作系统项目实验五</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%85%AD/" style="font-size: 10px;">xv6操作系统项目实验六</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%9B%9B/" style="font-size: 20px;">xv6操作系统项目实验四</a> <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" style="font-size: 10px;">基础知识</a> <a href="/tags/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5/" style="font-size: 10px;">算法训练营</a>
+
+		</div>
+		
+	</div>
+
+
+		
+			
+	<div class="kira-widget-wrap">
+		<h3 class="kira-widget-title">
+			文章归档
+		</h3>
+		<div class="kira-widget">
+			<ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/">2026</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/">2025</a><span class="archive-list-count">26</span></li></ul>
+		</div>
+	</div>
+
+
+		
+	</aside>
+	<!-- 保留空的版权容器，修复布局 -->
+    	<div class="kira-copyright">
+    </div>
+</div> <!-- 侧边栏的闭合div，必须保留 -->
+	<!-- <div class="kira-copyright">
+		&copy; 2026
+		<a href="/">Ivan-FYF</a>
+		Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> &
+		<a href="https://github.com/ch1ny/kira-hexo/" target="_blank">Kira-Hexo</a>
+		<br />
+		
+		
+	</div>
+</div> -->
+<div
+	class="kira-sidebar-modal"
+	id="sidebar-modal"
+	onclick="(function(self) {
+		self.classList.remove('show');
+		document.querySelector('.kira-sidebar.show#sidebar').classList.remove('show');
+	})(this)"
+></div>
+			<div class="kira-content">
+				<div id="kira-top-header"></div>
+				<div class="kira-main-content">
+					
+<link rel="stylesheet" href="/css/kira-image.css">
+
+
+<script src="/js/kira-image.js"></script>
+
+<div class="kira-image">
+    <div class="kira-image-modal">
+        <div class="kira-image-header">
+            <div class="kira-image-counter"></div>
+            <div class="kira-image-title"></div>
+            <div class="kira-image-operation">
+                <div class="kira-image-operation-button" id="kira-image-operation-button-zoom">
+                    <i class="kirafont icon-zoom-in"></i>
+                </div>
+                <div class="kira-image-operation-button" id="kira-image-operation-button-close">
+                    <i class="kirafont icon-close"></i>
+                </div>
+            </div>
+        </div>
+        <div class="kira-image-container">
+            <div class="kira-image-prev-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-left"></i>
+                </div>
+            </div>
+            <div class="kira-image-list">
+                <div class="kira-image-prev">
+                    <img />
+                </div>
+                <div class="kira-image-now">
+                    <img />
+                </div>
+                <div class="kira-image-next">
+                    <img />
+                </div>
+            </div>
+            <div class="kira-image-next-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+	
+<link rel="stylesheet" href="/css/kira-code-copy.css">
+
+	
+<script src="/js/kira-code-copy.js"></script>
+
+
+<div class="kira-post">
+	<article>
+		
+		<div
+			class="kira-post-cover"
+			style="padding-bottom: '56.25%'"
+		>
+			<img
+				data-src="/img/background4.jpg"
+				data-sizes="auto"
+				alt="多路复用"
+				class="lazyload kira-post-cover-image disabled-kira-image"
+			/>
+			<h1>多路复用</h1>
+		</div>
+		
+		<div class="kira-post-meta kira-rainbow" style="margin:10px 0!important;">
+			<a><i class="kirafont icon-calendar-fill"></i>2026年01月31日</a>
+			<a><i class="kirafont icon-edit-fill"></i>1.6k 字</a>
+			<a><i class="kirafont icon-time-circle-fill"></i>大概 6 分钟</a>
+		</div>
+		<html><head></head><body><h3><span id="%E4%B8%80xv6%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E7%9A%84%E6%A0%B8%E5%BF%83%E5%AE%9E%E7%8E%B0%E9%80%BB%E8%BE%91">一、xv6多路复用的核心实现逻辑</span></h3><p>先明确：xv6的多路复用本质是**“协作式切换 + 抢占式切换”结合**，对应你提到的两种场景，整体逻辑可拆解为：</p>
+<h4><span id="1-%E5%8D%8F%E4%BD%9C%E5%BC%8F%E5%88%87%E6%8D%A2%E4%B8%BB%E5%8A%A8%E8%AE%A9%E5%87%BAcpusleepwakeup%E6%9C%BA%E5%88%B6">1. 协作式切换（主动让出CPU）：sleep/wakeup机制</span></h4><p>适用于进程主动等待（如I/O、子进程退出、sleep系统调用），核心是“进程主动放弃CPU，等待条件满足后被唤醒”：</p>
+<ul>
+<li><strong>sleep</strong>：进程调用<code>sleep(chan, lock)</code>时，会将自己标记为<code>SLEEPING</code>状态，从CPU的进程队列中移除，然后调用<code>swtch</code>切换到调度器进程（scheduler）；</li>
+<li><strong>wakeup</strong>：当等待的条件满足（如I/O完成），内核调用<code>wakeup(chan)</code>，找到所有等待该条件的进程，将其状态改为<code>RUNNABLE</code>，加入调度队列；</li>
+<li><strong>切换触发</strong>：进程主动放弃CPU，无强制中断，属于“协作式”，依赖进程自身调用sleep类接口。</li>
+</ul>
+<h4><span id="2-%E6%8A%A2%E5%8D%A0%E5%BC%8F%E5%88%87%E6%8D%A2%E5%BC%BA%E5%88%B6%E8%AE%A9%E5%87%BAcpu%E5%AE%9A%E6%97%B6%E5%99%A8%E4%B8%AD%E6%96%AD">2. 抢占式切换（强制让出CPU）：定时器中断</span></h4><p>适用于“长时间计算不主动睡眠”的进程（如死循环的计算型进程），核心是“内核通过硬件中断强制剥夺CPU”：</p>
+<ul>
+<li><strong>定时器中断</strong>：每个CPU核心会周期性触发定时器中断（如100Hz，每10ms一次），中断处理函数会标记当前进程为“需要被抢占”；</li>
+<li><strong>中断返回时切换</strong>：中断处理完成后，内核检查当前进程是否需要抢占，若需要则调用<code>yield</code>，最终通过<code>swtch</code>切换到调度器进程；</li>
+<li><strong>核心目的</strong>：防止单个进程独占CPU，保证所有进程公平执行，是“抢占式”的核心。</li>
+</ul>
+<h4><span id="3-%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2swtch%E5%88%87%E6%8D%A2%E7%9A%84%E6%A0%B8%E5%BF%83%E8%BD%BD%E4%BD%93">3. 上下文切换（swtch）：切换的核心载体</span></h4><p>无论是协作式还是抢占式切换，最终都依赖<code>swtch</code>函数完成<strong>CPU上下文的保存与恢复</strong>：</p>
+<ul>
+<li>保存：将当前进程的寄存器（PC、栈指针、通用寄存器）保存到进程的<code>context</code>结构体中；</li>
+<li>恢复：从目标进程的<code>context</code>中恢复寄存器，跳转到目标进程的执行位置；</li>
+<li>特点：<code>swtch</code>是纯汇编实现（riscv架构下在<code>kernel/swtch.S</code>），是xv6中最底层、最“不透明”的代码，因为需要直接操作硬件寄存器。</li>
+</ul>
+<h3><span id="%E4%BA%8Cxv6%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E7%9A%846%E5%A4%A7%E6%A0%B8%E5%BF%83%E6%8C%91%E6%88%98%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF">二、xv6多路复用的6大核心挑战及解决思路</span></h3><p>你提到的6个挑战是xv6进程调度的核心难点，下面逐一拆解xv6的应对方案：</p>
+<table>
+<thead>
+<tr>
+<th>挑战</th>
+<th>xv6的解决思路</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. 如何实现上下文切换？</td>
+<td>- 设计<code>context</code>结构体存储进程的CPU寄存器状态；<br>- 用汇编实现<code>swtch</code>函数，完成寄存器的保存/恢复；<br>- 切换时先切换内核栈（每个进程有独立内核栈），再恢复寄存器，保证进程执行上下文不混乱。</td>
+</tr>
+<tr>
+<td>2. 如何透明地强制切换？</td>
+<td>- 利用RISC-V的定时器中断（CLINT外设），每个CPU核心周期性触发中断；<br>- 中断处理函数<code>timerintr</code>标记进程的<code>need_resched</code>标志；<br>- 中断返回用户态前检查该标志，若为1则调用<code>yield</code>触发切换；<br>- 对用户进程完全透明：用户进程感知不到中断和切换，只觉得自己“连续执行”。</td>
+</tr>
+<tr>
+<td>3. 多核切换的锁竞争？</td>
+<td>- 全局<code>ptable.lock</code>（进程表锁）：保护进程状态（如RUNNABLE/SLEEPING）、进程队列的修改；<br>- 每个CPU核心有独立的<code>runq</code>（就绪队列）：减少多核间的锁竞争；<br>- 自旋锁（<code>spinlock</code>）保护临界区：如修改进程状态、操作就绪队列时加锁，避免多核同时修改导致数据不一致。</td>
+</tr>
+<tr>
+<td>4. 进程退出时释放资源？</td>
+<td>- 进程调用<code>exit</code>时，先标记自己为<code>ZOMBIE</code>（僵尸态），释放大部分资源（如页表、打开的文件）；<br>- 保留内核栈和<code>proc</code>结构体，因为当前进程还在使用内核栈执行<code>exit</code>逻辑；<br>- 父进程调用<code>wait</code>时，清理子进程的内核栈和<code>proc</code>结构体；<br>- 若父进程提前退出，<code>init</code>进程会接管所有子进程的<code>wait</code>，确保资源最终释放。</td>
+</tr>
+<tr>
+<td>5. 多核标记当前进程？</td>
+<td>- 每个CPU核心有一个<code>cpu</code>结构体（<code>kernel/proc.c</code>），其中<code>proc</code>字段指向当前正在执行的进程；<br>- 切换进程时，更新<code>cpu-&gt;proc</code>为目标进程；<br>- 系统调用/中断处理时，通过<code>myproc()</code>函数（读取<code>cpu-&gt;proc</code>）获取当前进程，确保操作的是对应进程的内核状态（如页表、文件描述符）。</td>
+</tr>
+<tr>
+<td>6. sleep/wakeup的竞争（避免唤醒丢失）？</td>
+<td>- <code>sleep</code>的核心规则：<strong>先加锁保护等待条件，再检查条件，最后sleep</strong>（“检查-睡眠”原子性）；<br>- <code>sleep</code>参数必须传入锁：调用<code>sleep(chan, lock)</code>时，内核会先释放该锁，再将进程睡眠，唤醒时重新加锁；<br>- 示例：若进程检查“管道有数据”后、睡眠前，数据刚好到达并触发wakeup，此时进程还未进入睡眠队列，会导致唤醒丢失；加锁后，“检查条件+进入睡眠队列”是原子操作，避免该问题。</td>
+</tr>
+</tbody></table>
+<h3><span id="%E4%B8%89%E5%85%B3%E9%94%AE%E8%A1%A5%E5%85%85%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E4%B8%8E%E5%86%85%E5%AD%98%E8%99%9A%E6%8B%9F%E5%8C%96%E7%9A%84%E7%B1%BB%E6%AF%94">三、关键补充：多路复用与内存虚拟化的类比</span></h3><p>你提到“多路复用像内存分配器制造内存独占错觉”，这个类比的核心对应关系：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>内存虚拟化（独占内存错觉）</th>
+<th>CPU多路复用（独占CPU错觉）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>核心手段</td>
+<td>硬件页表+内核内存分配器，将物理内存映射为进程的虚拟内存</td>
+<td>上下文切换+调度器，将CPU时间片分配给不同进程</td>
+</tr>
+<tr>
+<td>关键技术</td>
+<td>页表映射（共享/拷贝物理页）、COW</td>
+<td>sleep/wakeup（主动切换）、定时器中断（抢占切换）</td>
+</tr>
+<tr>
+<td>核心错觉</td>
+<td>每个进程认为自己拥有连续的虚拟内存空间</td>
+<td>每个进程认为自己独占CPU，连续执行</td>
+</tr>
+<tr>
+<td>底层保障</td>
+<td>硬件MMU（内存管理单元）</td>
+<td>硬件中断+内核调度器</td>
+</tr>
+</tbody></table>
+<h3><span id="%E6%80%BB%E7%BB%93">总结</span></h3><ol>
+<li>xv6的多路复用通过“协作式（sleep/wakeup）+ 抢占式（定时器中断）”两种切换方式，实现CPU的分时共享，制造进程独占CPU的错觉；</li>
+<li>核心挑战集中在上下文切换实现、抢占透明性、多核锁竞争、资源释放、唤醒丢失等，xv6通过汇编级上下文切换、定时器中断、自旋锁、僵尸进程、CPU核心专属进程标记等机制解决；</li>
+<li>多路复用与内存虚拟化的设计思路一致：通过“硬件支持+内核抽象”，用底层共享的物理资源（CPU/内存），为上层进程提供“独占”的抽象视图。</li>
+</ol>
+</body></html>
+	</article>
+
+	 
+    <div class="kira-post-copyright">
+        <strong>本文作者：</strong>Ivan-FYF<br>
+        <strong>本文链接：</strong><a href="https://hellonnnnn.github.io/2026/01/31/%E7%AC%AC%E4%B8%83%E7%AB%A0/%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/" title="https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;01&#x2F;31&#x2F;第七章&#x2F;多路复用&#x2F;" target="_blank" rel="noopener">https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;01&#x2F;31&#x2F;第七章&#x2F;多路复用&#x2F;</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+        
+    </div>
+
+  
+	<div class="kira-post-nav">
+		<nav class="post-nav">
+			  
+			<!-- 先找到与当前文字相同的目录 -->
+			                                                                                                   
+			<!-- 在找到当前文章所在的 index -->
+			                                                                                                                                
+			<!-- 上一篇文章 -->
+			<div class="old">
+				<span>上一章</span>
+				<a href="/2026/01/31/%E7%AC%AC%E4%B8%83%E7%AB%A0/xv6-%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2/"> xv6 的上下文切换</a>
+			</div>
+			       
+			<!-- 下一篇文章 -->
+			<div class="new">
+				<span>下一章</span>
+				<a href="/2026/01/31/%E7%AC%AC%E4%B8%83%E7%AB%A0/xv6-%E8%B0%83%E5%BA%A6%E5%99%A8/"> xv6 调度器</a>
+			</div>
+			                         
+		</nav>
+	</div>
+	
+	<div class="kira-post-meta kira-rainbow">
+		
+			<a class="kirafont icon-container-fill -link" href="/categories/os%E9%A1%B9%E7%9B%AE/">os项目</a>
+		
+		
+			<a class="kirafont icon-tag-fill -none-link" href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%83/" rel="tag">xv6操作系统项目实验七</a>
+		
+	</div>
+	
+	<div class="kira-post-footer">
+		
+
+		
+	<div class="giscus"></div>
+  
+    <script src="https://giscus.app/client.js"
+      data-repo="hellonnnnn/hellonnnnn.github.io"
+      data-repo-id="R_kgDOQqLdWw"
+      data-category="Announcements"
+      data-category-id="DIC_kwDOQqLdW84C1Rqg"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="light"
+      data-lang="zh-CN"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async  
+    ></script>
+  
+
+	</div>
+	
+</div>
+
+				</div>
+			</div>
+			<div class="kira-right-column">
+	<a onclick="document.querySelector('#kira-top-header').scrollIntoView({behavior: 'smooth'});" class="kira-backtotop" aria-label="回到顶部" title="回到顶部">
+		<button class="mdui-fab mdui-ripple">
+			<i class="kirafont icon-caret-up"></i>
+		</button>
+	</a>
+</div>
+
+		</div>
+	</body>
+</html>

@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html 
+	lang="zh-Hans">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		
+<link rel="stylesheet" href="/css/layout.css">
+
+		
+		<title> fork写时拷贝的优缺点 -  Ivan&#39;s Tech Blog</title>
+		<!-- <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" /> -->
+		<!-- <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script> -->
+		
+<link rel="stylesheet" href="/lib/mdui/mdui.min.css">
+
+		
+<script src="/lib/mdui/mdui.min.js"></script>
+
+		<!-- lazyload -->
+		
+<script src="/lib/lazysizes.js"></script>
+
+		<!-- smooth-scrolling -->
+		
+<script src="/lib/smooth-scrolling.js"></script>
+
+		<!-- highlight -->
+		
+<link rel="stylesheet" href="/lib/highlight/atom-one-dark.min.css">
+
+		
+<script src="/lib/highlight/highlight.min.js"></script>
+
+		<!-- 预置 kiraicon -->
+		
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+
+		
+		<link
+			rel="shortcut icon"
+			href="https://kira.host/assets/Pictures/Others/116359b4ccf19917.jpg"
+			type="image/png"
+		/>
+		
+<link rel="stylesheet" href="/deps/css/APlayer.min.css">
+
+		
+		
+<script src="/deps/js/APlayer.min.js"></script>
+<script src="/deps/js/Meting.min.js"></script>
+
+	<meta name="generator" content="Hexo 8.1.1"></head>
+
+	<body>
+		<div
+			class="kira-background"
+			style="background-image: url('/img/background4.jpg')"
+		></div>
+		<div class="kira-header">
+    <a
+        class="kira-drawer-button mdui-ripple"
+        title="导航栏"
+        onclick="document.querySelector('.kira-sidebar-modal').classList.add('show');document.querySelector('.kira-sidebar#sidebar').classList.add('show');"
+    >
+        <i class="kirafont icon-menu"></i>
+    </a>
+    <a href="/" title="Ivan&#39;s Tech Blog">
+        <img
+			src="/img/background5.jpg"
+			alt="Ivan-FYF"
+		/>
+    </a>
+</div>
+		<div class="kira-body">
+			<div class="kira-sidebar" id="sidebar">
+	<div class="kira-avatar mdui-ripple">
+		<a href="/img/background5.jpg" title="Ivan-FYF">
+			<img
+				src="/img/background5.jpg"
+				alt="Ivan-FYF"
+			/>
+		</a>
+	</div>
+	<div class="kira-count">
+		<div><span>文章</span>37</div>
+		<div><span>标签</span>9</div>
+		<div><span>分类</span>3</div>
+	</div>
+	<div class="kira-list">
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/"
+			title="回到首页"
+		>
+			<i
+				class="kirafont
+					
+						icon-home
+					"
+			></i>
+			<div class="kira-list-item-content">
+				回到首页
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/archive.html"
+			title="文章归档"
+		>
+			<i
+				class="kirafont
+					
+						icon-container
+					"
+			></i>
+			<div class="kira-list-item-content">
+				文章归档
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/about/"
+			title="关于本人"
+		>
+			<i
+				class="kirafont
+					
+						icon-user
+					"
+			></i>
+			<div class="kira-list-item-content">
+				关于本人
+			</div>
+		</a>
+		
+	</div>
+	<aside id="kira-sidebar">
+		
+			<div class="kira-widget-wrap">
+	<div class="kira-widget kira-social">
+		
+			<a
+				class="mdui-ripple"
+				href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=2933852809&website=www.oicqzone.com"
+				target="_blank"
+				mdui-tooltip="{content: 'QQ'}"
+				style="color: rgb(49, 174, 255); background-color: rgba(49, 174, 255, .1);"
+			>
+				<i
+					class="kirafont
+					
+						icon-QQ
+					"
+				></i>
+			</a>
+		
+			<a
+				class="mdui-ripple"
+				href="https://github.com/<hellonnnnn>/"
+				target="_blank"
+				mdui-tooltip="{content: 'GitHub'}"
+				style="color: rgb(25, 23, 23); background-color: rgba(25, 23, 23, .15);"
+			>
+				<i
+					class="kirafont
+					
+						icon-github
+					"
+				></i>
+			</a>
+		
+	</div>
+</div>
+
+		
+			
+  <div class="kira-widget-wrap">
+    <h3 class="kira-widget-title">分类</h3>
+    <div class="kira-widget">
+      <ul class="category-list">
+        
+        
+
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/os项目/">
+              <img 
+                src="/img/background1.jpg" 
+                alt="os项目" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              os项目
+            </a>
+            <span class="category-list-count">35</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/八股/">
+              <img 
+                src="/img/background3.jpg" 
+                alt="八股" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              八股
+            </a>
+            <span class="category-list-count">1</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/算法/">
+              <img 
+                src="/img/background2.jpg" 
+                alt="算法" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              算法
+            </a>
+            <span class="category-list-count">1</span>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+		
+			
+	<div class="kira-widget-wrap">
+		<div id="randomtagcloud" class="kira-widget tagcloud kira-rainbow">
+			<a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%80/" style="font-size: 16px;">xv6操作系统项目实验一</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%83/" style="font-size: 14px;">xv6操作系统项目实验七</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%89/" style="font-size: 18px;">xv6操作系统项目实验三</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%8C/" style="font-size: 18px;">xv6操作系统项目实验二</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%94/" style="font-size: 12px;">xv6操作系统项目实验五</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%85%AD/" style="font-size: 10px;">xv6操作系统项目实验六</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%9B%9B/" style="font-size: 20px;">xv6操作系统项目实验四</a> <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" style="font-size: 10px;">基础知识</a> <a href="/tags/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5/" style="font-size: 10px;">算法训练营</a>
+
+		</div>
+		
+	</div>
+
+
+		
+			
+	<div class="kira-widget-wrap">
+		<h3 class="kira-widget-title">
+			文章归档
+		</h3>
+		<div class="kira-widget">
+			<ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/">2026</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/">2025</a><span class="archive-list-count">26</span></li></ul>
+		</div>
+	</div>
+
+
+		
+	</aside>
+	<!-- 保留空的版权容器，修复布局 -->
+    	<div class="kira-copyright">
+    </div>
+</div> <!-- 侧边栏的闭合div，必须保留 -->
+	<!-- <div class="kira-copyright">
+		&copy; 2026
+		<a href="/">Ivan-FYF</a>
+		Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> &
+		<a href="https://github.com/ch1ny/kira-hexo/" target="_blank">Kira-Hexo</a>
+		<br />
+		
+		
+	</div>
+</div> -->
+<div
+	class="kira-sidebar-modal"
+	id="sidebar-modal"
+	onclick="(function(self) {
+		self.classList.remove('show');
+		document.querySelector('.kira-sidebar.show#sidebar').classList.remove('show');
+	})(this)"
+></div>
+			<div class="kira-content">
+				<div id="kira-top-header"></div>
+				<div class="kira-main-content">
+					
+<link rel="stylesheet" href="/css/kira-image.css">
+
+
+<script src="/js/kira-image.js"></script>
+
+<div class="kira-image">
+    <div class="kira-image-modal">
+        <div class="kira-image-header">
+            <div class="kira-image-counter"></div>
+            <div class="kira-image-title"></div>
+            <div class="kira-image-operation">
+                <div class="kira-image-operation-button" id="kira-image-operation-button-zoom">
+                    <i class="kirafont icon-zoom-in"></i>
+                </div>
+                <div class="kira-image-operation-button" id="kira-image-operation-button-close">
+                    <i class="kirafont icon-close"></i>
+                </div>
+            </div>
+        </div>
+        <div class="kira-image-container">
+            <div class="kira-image-prev-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-left"></i>
+                </div>
+            </div>
+            <div class="kira-image-list">
+                <div class="kira-image-prev">
+                    <img />
+                </div>
+                <div class="kira-image-now">
+                    <img />
+                </div>
+                <div class="kira-image-next">
+                    <img />
+                </div>
+            </div>
+            <div class="kira-image-next-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+	
+<link rel="stylesheet" href="/css/kira-code-copy.css">
+
+	
+<script src="/js/kira-code-copy.js"></script>
+
+
+<div class="kira-post">
+	<article>
+		
+		<div
+			class="kira-post-cover"
+			style="padding-bottom: '56.25%'"
+		>
+			<img
+				data-src="/img/background4.jpg"
+				data-sizes="auto"
+				alt="fork写时拷贝的优缺点"
+				class="lazyload kira-post-cover-image disabled-kira-image"
+			/>
+			<h1>fork写时拷贝的优缺点</h1>
+		</div>
+		
+		<div class="kira-post-meta kira-rainbow" style="margin:10px 0!important;">
+			<a><i class="kirafont icon-calendar-fill"></i>2026年01月31日</a>
+			<a><i class="kirafont icon-edit-fill"></i>1.3k 字</a>
+			<a><i class="kirafont icon-time-circle-fill"></i>大概 5 分钟</a>
+		</div>
+		<html><head></head><body><h3><span id="%E4%B8%80%E5%86%99%E6%97%B6%E5%A4%8D%E5%88%B6cow%E7%9A%84%E6%A0%B8%E5%BF%83%E4%BC%98%E7%82%B9">一、写时复制（COW）的核心优点</span></h3><p>COW是<code>fork</code>优化的核心机制，相比传统“fork时立即复制所有物理页”的方式，优势集中在<strong>效率、资源、灵活性</strong>三个维度：</p>
+<h4><span id="1-%E5%A4%A7%E5%B9%85%E6%8F%90%E5%8D%87fork%E6%89%A7%E8%A1%8C%E6%95%88%E7%8E%87%E9%99%8D%E4%BD%8E%E5%90%AF%E5%8A%A8%E5%BB%B6%E8%BF%9F">1. 大幅提升<code>fork</code>执行效率，降低启动延迟</span></h4><ul>
+<li>传统<code>fork</code>：需要把父进程的所有物理内存页完整拷贝到新的物理页，再映射到子进程页表，拷贝大量内存会导致<code>fork</code>耗时极长（尤其是父进程内存占用大时）。</li>
+<li>COW机制（如xv6的<code>uvmcopy</code>）：仅复制页表映射关系，共享物理页，不拷贝实际数据——<code>fork</code>过程只需要遍历页表、修改权限（只读+COW标记）、增加引用计数，执行时间从“毫秒级”降到“微秒级”，进程创建速度提升一个数量级。</li>
+<li>典型场景：<code>fork+exec</code>（创建进程后立即执行新程序），传统<code>fork</code>拷贝的内存会被<code>exec</code>立即释放，完全浪费；COW则几乎无开销，完美适配这类高频场景。</li>
+</ul>
+<h4><span id="2-%E6%98%BE%E8%91%97%E8%8A%82%E7%9C%81%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E8%B5%84%E6%BA%90">2. 显著节省物理内存资源</span></h4><ul>
+<li>传统<code>fork</code>：父子进程各自拥有独立的物理页，即使数据完全相同，也会占用双倍内存（比如父进程占用1GB内存，fork后立即占用2GB）。</li>
+<li>COW机制：只有当父子进程<strong>真正写入</strong>某页时，才会复制该页的物理内存；只读页面（如代码段、只读数据段）会永久共享，无需拷贝。</li>
+<li>示例：多个进程共享同一个程序（如bash）的代码段，COW让它们只占用一份物理内存，大幅降低系统内存压力。</li>
+</ul>
+<h4><span id="3-%E5%AE%9E%E7%8E%B0%E6%8C%89%E9%9C%80%E5%88%86%E9%85%8D%E9%81%BF%E5%85%8D%E6%97%A0%E6%95%88%E5%86%85%E5%AD%98%E6%8B%B7%E8%B4%9D">3. 实现“按需分配”，避免无效内存拷贝</span></h4><p>内核遵循“延迟分配”的设计原则：只有进程真正需要写内存时，才分配新的物理页。</p>
+<ul>
+<li>若<code>fork</code>后的子进程仅读取数据（不写入），则永远不会拷贝物理页，全程共享，内存零浪费；</li>
+<li>若子进程<code>fork</code>后立即退出（如短生命周期进程），COW完全避免了无意义的内存拷贝，是极致的资源优化。</li>
+</ul>
+<h3><span id="%E4%BA%8C%E5%86%99%E6%97%B6%E5%A4%8D%E5%88%B6cow%E7%9A%84%E6%A0%B8%E5%BF%83%E7%BC%BA%E7%82%B9">二、写时复制（COW）的核心缺点</span></h3><p>COW的代价主要集中在<strong>额外开销、实现复杂度</strong>上，是“空间换时间”的典型权衡：</p>
+<h4><span id="1-%E5%86%99%E6%93%8D%E4%BD%9C%E8%A7%A6%E5%8F%91%E9%A1%B5%E9%94%99%E8%AF%AF%E5%B8%A6%E6%9D%A5%E9%A2%9D%E5%A4%96%E5%BC%80%E9%94%80">1. 写操作触发页错误，带来额外开销</span></h4><ul>
+<li>当进程写入COW标记的页面时，会触发CPU的<strong>页错误（Page Fault）</strong>，内核需要进入中断处理流程：<ol>
+<li>检查页表项的COW标记和引用计数；</li>
+<li>若引用计数&gt;1，分配新物理页、拷贝原页数据；</li>
+<li>更新当前进程页表（指向新页、恢复写权限）；</li>
+<li>引用计数减1，返回用户态继续执行。</li>
+</ol>
+</li>
+<li>这个过程包含“上下文切换+内存拷贝+页表更新”，单次页错误开销虽小，但如果进程<code>fork</code>后立即对大量页面写操作（如数据库进程、大数据处理进程），多次页错误的总开销可能超过传统<code>fork</code>的一次性拷贝。</li>
+</ul>
+<h4><span id="2-%E5%86%85%E6%A0%B8%E5%AE%9E%E7%8E%B0%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%A4%A7%E5%B9%85%E6%8F%90%E5%8D%87">2. 内核实现复杂度大幅提升</span></h4><ul>
+<li>需维护物理页的<strong>引用计数</strong>（如xv6的<code>ref.cnt</code>数组）：要处理多进程并发修改计数的竞争（需自旋锁保护），计数错误会导致内存泄漏、双重释放或野指针；</li>
+<li>需完善页错误处理逻辑：区分“COW页错误”和“非法访问错误”，避免误处理；</li>
+<li>需处理边界场景：如COW页被交换到磁盘（swap）、多个进程同时写同一个COW页的竞争，增加了内核代码的维护成本（新手易写出bug，比如引用计数未正确加减）。</li>
+</ul>
+<h4><span id="3-%E6%9E%81%E7%AB%AF%E5%9C%BA%E6%99%AF%E4%B8%8B%E6%80%A7%E8%83%BD%E5%8F%8D%E9%99%8D%E4%B8%94%E5%AD%98%E5%9C%A8%E5%86%85%E5%AD%98%E7%A2%8E%E7%89%87%E5%8C%96%E9%A3%8E%E9%99%A9">3. 极端场景下性能反降，且存在内存碎片化风险</span></h4><ul>
+<li>性能反降：若<code>fork</code>后的进程对几乎所有页面执行写操作，COW会触发大量页错误，每次错误都要走内核态处理，总开销可能高于传统<code>fork</code>的一次性拷贝；</li>
+<li>内存碎片化：频繁的COW页拷贝会将连续的物理内存分割成多个小页，长期运行会增加内存碎片，导致内核难以分配大块连续物理内存（如DMA设备所需的连续内存）。</li>
+</ul>
+<h4><span id="4-%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0%E7%AE%A1%E7%90%86%E7%9A%84%E6%BD%9C%E5%9C%A8%E9%A3%8E%E9%99%A9">4. 引用计数管理的潜在风险</span></h4><ul>
+<li>若引用计数维护不当（如xv6中<code>kaddrefcnt</code>/<code>kfreeref</code>调用错误），会导致：<ul>
+<li>计数为0但页仍被使用 → 内存被错误释放，进程崩溃；</li>
+<li>计数不为0但无进程使用 → 内存泄漏，系统可用内存减少。</li>
+</ul>
+</li>
+</ul>
+<h3><span id="%E6%80%BB%E7%BB%93">总结</span></h3><ol>
+<li><strong>核心优势</strong>：COW让<code>fork</code>更高效（无需立即拷贝内存）、更省内存（按需拷贝），是现代操作系统<code>fork</code>的默认实现方式；</li>
+<li><strong>核心缺点</strong>：写操作触发页错误带来额外开销，内核实现复杂度提升，极端写密集场景下性能可能下降；</li>
+<li><strong>设计权衡</strong>：COW是“延迟开销换即时效率”，在绝大多数场景（如<code>fork+exec</code>）下收益远大于代价，是操作系统内存管理的经典优化手段。</li>
+</ol>
+</body></html>
+	</article>
+
+	 
+    <div class="kira-post-copyright">
+        <strong>本文作者：</strong>Ivan-FYF<br>
+        <strong>本文链接：</strong><a href="https://hellonnnnn.github.io/2026/01/31/%E7%AC%AC%E5%85%AD%E7%AB%A0/fork%E5%86%99%E6%97%B6%E6%8B%B7%E8%B4%9D%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9/" title="https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;01&#x2F;31&#x2F;第六章&#x2F;fork写时拷贝的优缺点&#x2F;" target="_blank" rel="noopener">https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;01&#x2F;31&#x2F;第六章&#x2F;fork写时拷贝的优缺点&#x2F;</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+        
+    </div>
+
+  
+	<div class="kira-post-nav">
+		<nav class="post-nav">
+			  
+			<!-- 先找到与当前文字相同的目录 -->
+			                                                                                             
+			<!-- 在找到当前文章所在的 index -->
+			                                                                                                                        
+			<!-- 上一篇文章 -->
+			<div class="old">
+				<span>上一章</span>
+				<a href="/2026/01/23/%E7%AC%AC%E4%BA%94%E7%AB%A0/%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/"> 知识总结</a>
+			</div>
+			       
+			<!-- 下一篇文章 -->
+			<div class="new">
+				<span>下一章</span>
+				<a href="/2026/01/31/%E7%AC%AC%E4%B8%83%E7%AB%A0/xv6-%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2/"> xv6 的上下文切换</a>
+			</div>
+			                                       
+		</nav>
+	</div>
+	
+	<div class="kira-post-meta kira-rainbow">
+		
+			<a class="kirafont icon-container-fill -link" href="/categories/os%E9%A1%B9%E7%9B%AE/">os项目</a>
+		
+		
+			<a class="kirafont icon-tag-fill -none-link" href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%85%AD/" rel="tag">xv6操作系统项目实验六</a>
+		
+	</div>
+	
+	<div class="kira-post-footer">
+		
+
+		
+	<div class="giscus"></div>
+  
+    <script src="https://giscus.app/client.js"
+      data-repo="hellonnnnn/hellonnnnn.github.io"
+      data-repo-id="R_kgDOQqLdWw"
+      data-category="Announcements"
+      data-category-id="DIC_kwDOQqLdW84C1Rqg"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="light"
+      data-lang="zh-CN"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async  
+    ></script>
+  
+
+	</div>
+	
+</div>
+
+				</div>
+			</div>
+			<div class="kira-right-column">
+	<a onclick="document.querySelector('#kira-top-header').scrollIntoView({behavior: 'smooth'});" class="kira-backtotop" aria-label="回到顶部" title="回到顶部">
+		<button class="mdui-fab mdui-ripple">
+			<i class="kirafont icon-caret-up"></i>
+		</button>
+	</a>
+</div>
+
+		</div>
+	</body>
+</html>

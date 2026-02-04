@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html 
+	lang="zh-Hans">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		
+<link rel="stylesheet" href="/css/layout.css">
+
+		
+		<title> xv6 的上下文切换 -  Ivan&#39;s Tech Blog</title>
+		<!-- <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" /> -->
+		<!-- <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script> -->
+		
+<link rel="stylesheet" href="/lib/mdui/mdui.min.css">
+
+		
+<script src="/lib/mdui/mdui.min.js"></script>
+
+		<!-- lazyload -->
+		
+<script src="/lib/lazysizes.js"></script>
+
+		<!-- smooth-scrolling -->
+		
+<script src="/lib/smooth-scrolling.js"></script>
+
+		<!-- highlight -->
+		
+<link rel="stylesheet" href="/lib/highlight/atom-one-dark.min.css">
+
+		
+<script src="/lib/highlight/highlight.min.js"></script>
+
+		<!-- 预置 kiraicon -->
+		
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+
+		
+		<link
+			rel="shortcut icon"
+			href="https://kira.host/assets/Pictures/Others/116359b4ccf19917.jpg"
+			type="image/png"
+		/>
+		
+<link rel="stylesheet" href="/deps/css/APlayer.min.css">
+
+		
+		
+<script src="/deps/js/APlayer.min.js"></script>
+<script src="/deps/js/Meting.min.js"></script>
+
+	<meta name="generator" content="Hexo 8.1.1"></head>
+
+	<body>
+		<div
+			class="kira-background"
+			style="background-image: url('/img/background4.jpg')"
+		></div>
+		<div class="kira-header">
+    <a
+        class="kira-drawer-button mdui-ripple"
+        title="导航栏"
+        onclick="document.querySelector('.kira-sidebar-modal').classList.add('show');document.querySelector('.kira-sidebar#sidebar').classList.add('show');"
+    >
+        <i class="kirafont icon-menu"></i>
+    </a>
+    <a href="/" title="Ivan&#39;s Tech Blog">
+        <img
+			src="/img/background5.jpg"
+			alt="Ivan-FYF"
+		/>
+    </a>
+</div>
+		<div class="kira-body">
+			<div class="kira-sidebar" id="sidebar">
+	<div class="kira-avatar mdui-ripple">
+		<a href="/img/background5.jpg" title="Ivan-FYF">
+			<img
+				src="/img/background5.jpg"
+				alt="Ivan-FYF"
+			/>
+		</a>
+	</div>
+	<div class="kira-count">
+		<div><span>文章</span>37</div>
+		<div><span>标签</span>9</div>
+		<div><span>分类</span>3</div>
+	</div>
+	<div class="kira-list">
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/"
+			title="回到首页"
+		>
+			<i
+				class="kirafont
+					
+						icon-home
+					"
+			></i>
+			<div class="kira-list-item-content">
+				回到首页
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/archive.html"
+			title="文章归档"
+		>
+			<i
+				class="kirafont
+					
+						icon-container
+					"
+			></i>
+			<div class="kira-list-item-content">
+				文章归档
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/about/"
+			title="关于本人"
+		>
+			<i
+				class="kirafont
+					
+						icon-user
+					"
+			></i>
+			<div class="kira-list-item-content">
+				关于本人
+			</div>
+		</a>
+		
+	</div>
+	<aside id="kira-sidebar">
+		
+			<div class="kira-widget-wrap">
+	<div class="kira-widget kira-social">
+		
+			<a
+				class="mdui-ripple"
+				href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=2933852809&website=www.oicqzone.com"
+				target="_blank"
+				mdui-tooltip="{content: 'QQ'}"
+				style="color: rgb(49, 174, 255); background-color: rgba(49, 174, 255, .1);"
+			>
+				<i
+					class="kirafont
+					
+						icon-QQ
+					"
+				></i>
+			</a>
+		
+			<a
+				class="mdui-ripple"
+				href="https://github.com/<hellonnnnn>/"
+				target="_blank"
+				mdui-tooltip="{content: 'GitHub'}"
+				style="color: rgb(25, 23, 23); background-color: rgba(25, 23, 23, .15);"
+			>
+				<i
+					class="kirafont
+					
+						icon-github
+					"
+				></i>
+			</a>
+		
+	</div>
+</div>
+
+		
+			
+  <div class="kira-widget-wrap">
+    <h3 class="kira-widget-title">分类</h3>
+    <div class="kira-widget">
+      <ul class="category-list">
+        
+        
+
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/os项目/">
+              <img 
+                src="/img/background1.jpg" 
+                alt="os项目" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              os项目
+            </a>
+            <span class="category-list-count">35</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/八股/">
+              <img 
+                src="/img/background3.jpg" 
+                alt="八股" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              八股
+            </a>
+            <span class="category-list-count">1</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/算法/">
+              <img 
+                src="/img/background2.jpg" 
+                alt="算法" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              算法
+            </a>
+            <span class="category-list-count">1</span>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+		
+			
+	<div class="kira-widget-wrap">
+		<div id="randomtagcloud" class="kira-widget tagcloud kira-rainbow">
+			<a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%80/" style="font-size: 16px;">xv6操作系统项目实验一</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%83/" style="font-size: 14px;">xv6操作系统项目实验七</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%89/" style="font-size: 18px;">xv6操作系统项目实验三</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%8C/" style="font-size: 18px;">xv6操作系统项目实验二</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%94/" style="font-size: 12px;">xv6操作系统项目实验五</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%85%AD/" style="font-size: 10px;">xv6操作系统项目实验六</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%9B%9B/" style="font-size: 20px;">xv6操作系统项目实验四</a> <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" style="font-size: 10px;">基础知识</a> <a href="/tags/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5/" style="font-size: 10px;">算法训练营</a>
+
+		</div>
+		
+	</div>
+
+
+		
+			
+	<div class="kira-widget-wrap">
+		<h3 class="kira-widget-title">
+			文章归档
+		</h3>
+		<div class="kira-widget">
+			<ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/">2026</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/">2025</a><span class="archive-list-count">26</span></li></ul>
+		</div>
+	</div>
+
+
+		
+	</aside>
+	<!-- 保留空的版权容器，修复布局 -->
+    	<div class="kira-copyright">
+    </div>
+</div> <!-- 侧边栏的闭合div，必须保留 -->
+	<!-- <div class="kira-copyright">
+		&copy; 2026
+		<a href="/">Ivan-FYF</a>
+		Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> &
+		<a href="https://github.com/ch1ny/kira-hexo/" target="_blank">Kira-Hexo</a>
+		<br />
+		
+		
+	</div>
+</div> -->
+<div
+	class="kira-sidebar-modal"
+	id="sidebar-modal"
+	onclick="(function(self) {
+		self.classList.remove('show');
+		document.querySelector('.kira-sidebar.show#sidebar').classList.remove('show');
+	})(this)"
+></div>
+			<div class="kira-content">
+				<div id="kira-top-header"></div>
+				<div class="kira-main-content">
+					
+<link rel="stylesheet" href="/css/kira-image.css">
+
+
+<script src="/js/kira-image.js"></script>
+
+<div class="kira-image">
+    <div class="kira-image-modal">
+        <div class="kira-image-header">
+            <div class="kira-image-counter"></div>
+            <div class="kira-image-title"></div>
+            <div class="kira-image-operation">
+                <div class="kira-image-operation-button" id="kira-image-operation-button-zoom">
+                    <i class="kirafont icon-zoom-in"></i>
+                </div>
+                <div class="kira-image-operation-button" id="kira-image-operation-button-close">
+                    <i class="kirafont icon-close"></i>
+                </div>
+            </div>
+        </div>
+        <div class="kira-image-container">
+            <div class="kira-image-prev-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-left"></i>
+                </div>
+            </div>
+            <div class="kira-image-list">
+                <div class="kira-image-prev">
+                    <img />
+                </div>
+                <div class="kira-image-now">
+                    <img />
+                </div>
+                <div class="kira-image-next">
+                    <img />
+                </div>
+            </div>
+            <div class="kira-image-next-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+	
+<link rel="stylesheet" href="/css/kira-code-copy.css">
+
+	
+<script src="/js/kira-code-copy.js"></script>
+
+
+<div class="kira-post">
+	<article>
+		
+		<div
+			class="kira-post-cover"
+			style="padding-bottom: '56.25%'"
+		>
+			<img
+				data-src="/img/background4.jpg"
+				data-sizes="auto"
+				alt="xv6 的上下文切换"
+				class="lazyload kira-post-cover-image disabled-kira-image"
+			/>
+			<h1>xv6 的上下文切换</h1>
+		</div>
+		
+		<div class="kira-post-meta kira-rainbow" style="margin:10px 0!important;">
+			<a><i class="kirafont icon-calendar-fill"></i>2026年01月31日</a>
+			<a><i class="kirafont icon-edit-fill"></i>1.6k 字</a>
+			<a><i class="kirafont icon-time-circle-fill"></i>大概 7 分钟</a>
+		</div>
+		<html><head></head><body><h3><span id="%E4%B8%80%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2%E7%9A%84%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%A2%B3%E7%90%86">一、上下文切换的核心逻辑梳理</span></h3><p>先用一句话总结：<strong>xv6的上下文切换本质是通过<code>swtch</code>函数保存当前线程的CPU寄存器状态到<code>struct context</code>，再恢复目标线程的寄存器状态，从而让CPU从当前线程的执行流切换到目标线程的执行流</strong>。</p>
+<p>结合你提到的“cc切换到ls”场景，整体流程可简化为：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs mermaid">graph TD<br>    A[cc用户进程触发中断/系统调用] --&gt; B[进入cc的内核线程，执行usertrap/yield/sched]<br>    B --&gt; C[调用swtch，保存cc的内核寄存器到cc的context]<br>    C --&gt; D[恢复调度器线程的context，切换到调度器栈]<br>    D --&gt; E[调度器选择ls进程（RUNNABLE）]<br>    E --&gt; F[调用swtch，保存调度器的context到cpu-&gt;context]<br>    F --&gt; G[恢复ls的内核寄存器，切换到ls的内核栈]<br>    G --&gt; H[执行ls的内核线程剩余逻辑，恢复ls的trapframe]<br>    H --&gt; I[返回到ls的用户空间，继续执行ls]<br></code></pre></td></tr></tbody></table></figure>
+
+<h3><span id="%E4%BA%8Cswtch%E5%87%BD%E6%95%B0%E7%9A%84%E6%A0%B8%E5%BF%83%E7%BB%86%E8%8A%82%E6%8B%86%E8%A7%A3">二、<code>swtch</code>函数的核心细节拆解</span></h3><h4><span id="1-struct-context%E5%AF%84%E5%AD%98%E5%99%A8%E7%9A%84%E4%BF%9D%E5%AD%98%E5%AE%B9%E5%99%A8">1. <code>struct context</code>：寄存器的“保存容器”</span></h4><p>xv6在<code>kernel/proc.h</code>中定义了上下文结构体，仅保存<strong>被调用方保存寄存器（callee-saved）</strong>：</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// kernel/proc.h</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">context</span> {</span><br>  uint64 ra;  <span class="hljs-comment">// 返回地址（关键：保存swtch的返回地址）</span><br>  uint64 sp;  <span class="hljs-comment">// 栈指针（切换栈的核心）</span><br>  uint64 s0;<br>  uint64 s1;<br>  uint64 s2;<br>  uint64 s3;<br>  uint64 s4;<br>  uint64 s5;<br>  uint64 s6;<br>  uint64 s7;<br>  uint64 s8;<br>  uint64 s9;<br>  uint64 s10;<br>  uint64 s11;<br>};<br></code></pre></td></tr></tbody></table></figure>
+<ul>
+<li><strong>为何只保存这些寄存器？</strong><br>RISC-V调用约定中：<ul>
+<li>被调用方保存寄存器（<code>s0-s11</code>、<code>ra</code>、<code>sp</code>）：被调用函数（如<code>swtch</code>）必须保存这些寄存器，调用返回后调用方（如<code>sched</code>）的这些寄存器值不能变；</li>
+<li>调用方保存寄存器（<code>a0-a7</code>、<code>t0-t6</code>）：调用函数前，调用方需自行保存这些寄存器（<code>sched</code>调用<code>swtch</code>前已保存在栈上），<code>swtch</code>无需处理。</li>
+</ul>
+</li>
+</ul>
+<h4><span id="2-swtchs%E6%B1%87%E7%BC%96%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%AF%84%E5%AD%98%E5%99%A8%E4%BF%9D%E5%AD%98%E6%81%A2%E5%A4%8D">2. <code>swtch.S</code>：汇编实现的寄存器保存/恢复</span></h4><p><code>swtch</code>是纯汇编函数（<code>kernel/swtch.S</code>），核心逻辑如下（RISC-V架构）：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs asm"># 输入参数：a0=old context指针，a1=new context指针<br>.globl swtch<br>swtch:<br>  # 1. 保存当前寄存器到old context（a0）<br>  sd ra, 0(a0)   # ra -&gt; old-&gt;ra<br>  sd sp, 8(a0)   # sp -&gt; old-&gt;sp<br>  sd s0, 16(a0)<br>  sd s1, 24(a0)<br>  # ... 省略s2-s11的保存（每个占8字节） ...<br><br>  # 2. 从new context（a1）恢复寄存器<br>  ld ra, 0(a1)   # new-&gt;ra -&gt; ra<br>  ld sp, 8(a1)   # new-&gt;sp -&gt; sp（切换栈！）<br>  ld s0, 16(a1)<br>  ld s1, 24(a1)<br>  # ... 省略s2-s11的恢复 ...<br><br>  ret            # 返回到new context的ra（关键！）<br></code></pre></td></tr></tbody></table></figure>
+<ul>
+<li><strong>核心关键点</strong>：<br>① <code>sd sp, 8(a0)</code>/<code>ld sp, 8(a1)</code>：切换栈指针，从当前线程的栈（如cc的内核栈）切换到目标线程的栈（如调度器栈）；<br>② <code>sd ra, 0(a0)</code>/<code>ld ra, 0(a1)</code>：保存/恢复返回地址，<code>ret</code>指令会跳转到新的<code>ra</code>，而非调用<code>swtch</code>的原地址；<br>③ <code>ret</code>的作用：不是返回到调用<code>swtch</code>的<code>sched</code>，而是返回到目标线程之前调用<code>swtch</code>时保存的<code>ra</code>（如调度器的<code>scheduler</code>函数）。</li>
+</ul>
+<h4><span id="3-%E8%B0%83%E5%BA%A6%E5%99%A8%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%89%B9%E6%AE%8A%E8%A7%92%E8%89%B2">3. 调度器线程的特殊角色</span></h4><p>每个CPU有专属的调度器线程（栈+context），原因如你所述：<strong>不能在进程内核栈上执行调度器，否则多核场景下可能出现同一个栈被多个CPU使用的灾难</strong>。</p>
+<ul>
+<li>调度器启动时：<code>scheduler</code>函数调用<code>swtch</code>，将自己的context保存到<code>cpu-&gt;context</code>，切换到第一个进程的context；</li>
+<li>进程让出CPU时：<code>sched</code>调用<code>swtch</code>，将进程context保存到<code>p-&gt;context</code>，恢复<code>cpu-&gt;context</code>（调度器的context），此时<code>swtch</code>返回后会回到<code>scheduler</code>函数，而非<code>sched</code>。</li>
+</ul>
+<h3><span id="%E4%B8%89%E5%85%B3%E9%94%AE%E5%9C%BA%E6%99%AFcc%E5%88%87%E6%8D%A2%E5%88%B0ls%E7%9A%84swtch%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B">三、关键场景：cc切换到ls的<code>swtch</code>执行过程</span></h3><p>结合你提到的例子，拆解<code>swtch</code>的两次调用：</p>
+<h4><span id="%E7%AC%AC%E4%B8%80%E6%AD%A5cc%E8%BF%9B%E7%A8%8B%E5%88%87%E6%8D%A2%E5%88%B0%E8%B0%83%E5%BA%A6%E5%99%A8">第一步：cc进程切换到调度器</span></h4><ol>
+<li><code>cc</code>的内核线程执行<code>sched</code>函数，调用<code>swtch(&amp;p-&gt;context, &amp;cpu-&gt;context)</code>；</li>
+<li><code>swtch</code>将<code>cc</code>的<code>ra</code>（指向<code>sched</code>中<code>swtch</code>的下一行）、<code>sp</code>（cc的内核栈指针）等寄存器保存到<code>cc-&gt;context</code>；</li>
+<li><code>swtch</code>从<code>cpu-&gt;context</code>（调度器的context）恢复寄存器：<ul>
+<li><code>ra</code>：指向<code>scheduler</code>函数中之前调用<code>swtch</code>的下一行；</li>
+<li><code>sp</code>：调度器的栈指针；</li>
+</ul>
+</li>
+<li><code>swtch</code>执行<code>ret</code>，跳转到<code>scheduler</code>函数继续执行（而非<code>sched</code>），此时CPU在调度器栈上运行。</li>
+</ol>
+<h4><span id="%E7%AC%AC%E4%BA%8C%E6%AD%A5%E8%B0%83%E5%BA%A6%E5%99%A8%E5%88%87%E6%8D%A2%E5%88%B0ls%E8%BF%9B%E7%A8%8B">第二步：调度器切换到ls进程</span></h4><ol>
+<li>调度器找到<code>ls</code>进程（RUNNABLE），调用<code>swtch(&amp;cpu-&gt;context, &amp;ls-&gt;context)</code>；</li>
+<li><code>swtch</code>将调度器的<code>ra</code>（指向<code>scheduler</code>中<code>swtch</code>的下一行）、<code>sp</code>（调度器栈指针）保存到<code>cpu-&gt;context</code>；</li>
+<li><code>swtch</code>从<code>ls-&gt;context</code>恢复寄存器：<ul>
+<li><code>ra</code>：指向<code>ls</code>之前调用<code>swtch</code>的返回地址（如<code>sched</code>的下一行）；</li>
+<li><code>sp</code>：<code>ls</code>的内核栈指针；</li>
+</ul>
+</li>
+<li><code>swtch</code>执行<code>ret</code>，跳转到<code>ls</code>的<code>sched</code>函数继续执行，恢复<code>ls</code>的<code>trapframe</code>后返回到<code>ls</code>的用户空间。</li>
+</ol>
+<h3><span id="%E5%9B%9B%E5%AE%B9%E6%98%93%E6%B7%B7%E6%B7%86%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E6%BE%84%E6%B8%85">四、容易混淆的核心概念澄清</span></h3><h4><span id="1-context-vs-trapframe">1. <code>context</code> vs <code>trapframe</code></span></h4><table>
+<thead>
+<tr>
+<th>结构体</th>
+<th>作用</th>
+<th>保存内容</th>
+<th>使用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>context</code></td>
+<td>内核线程间切换</td>
+<td>被调用方保存的内核寄存器（ra/sp/s0-s11）</td>
+<td>进程内核线程 ↔ 调度器线程切换</td>
+</tr>
+<tr>
+<td><code>trapframe</code></td>
+<td>用户/内核态切换</td>
+<td>用户态寄存器（pc/sp/a0等）、内核态临时寄存器</td>
+<td>中断/系统调用进入内核、从内核返回用户态</td>
+</tr>
+</tbody></table>
+<h4><span id="2-%E4%B8%BA%E4%BD%95swtch%E4%B8%8D%E4%BF%9D%E5%AD%98%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8pc">2. 为何<code>swtch</code>不保存程序计数器（pc）？</span></h4><ul>
+<li><code>pc</code>是CPU当前执行的指令地址，无法直接保存，但<code>ra</code>寄存器间接替代了<code>pc</code>的作用：<ul>
+<li>调用<code>swtch</code>时，<code>ra</code>会被设置为调用<code>swtch</code>的下一条指令地址；</li>
+<li>恢复<code>ra</code>后，<code>ret</code>指令会跳转到该地址，等价于恢复了程序执行流。</li>
+</ul>
+</li>
+</ul>
+<h4><span id="3-%E5%A4%9A%E6%A0%B8%E5%9C%BA%E6%99%AF%E4%B8%8B%E7%9A%84%E5%AE%89%E5%85%A8%E4%BF%9D%E9%9A%9C">3. 多核场景下的安全保障</span></h4><ul>
+<li>每个CPU有专属的<code>cpu</code>结构体，包含专属的调度器栈和<code>context</code>；</li>
+<li>进程表锁（<code>ptable.lock</code>）保护进程状态修改，避免多核同时操作同一个进程的<code>context</code>；</li>
+<li>调度器只操作当前CPU的就绪队列（<code>runq</code>），减少锁竞争。</li>
+</ul>
+<h3><span id="%E6%80%BB%E7%BB%93">总结</span></h3><ol>
+<li><code>swtch</code>是上下文切换的核心，通过汇编保存/恢复被调用方寄存器，核心是切换<code>sp</code>（栈指针）和<code>ra</code>（返回地址），实现执行流和栈的双重切换；</li>
+<li>调度器线程有专属栈和<code>context</code>，避免与进程内核栈冲突，是多核安全的关键；</li>
+<li>上下文切换分两步：进程→调度器、调度器→新进程，两次<code>swtch</code>分别保存/恢复不同的<code>context</code>，最终实现用户进程的切换；</li>
+<li><code>context</code>保存内核线程的寄存器，<code>trapframe</code>保存用户态寄存器，二者配合完成“用户态→内核态→调度器→新内核态→新用户态”的完整切换。</li>
+</ol>
+</body></html>
+	</article>
+
+	 
+    <div class="kira-post-copyright">
+        <strong>本文作者：</strong>Ivan-FYF<br>
+        <strong>本文链接：</strong><a href="https://hellonnnnn.github.io/2026/01/31/%E7%AC%AC%E4%B8%83%E7%AB%A0/xv6-%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2/" title="https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;01&#x2F;31&#x2F;第七章&#x2F;xv6-的上下文切换&#x2F;" target="_blank" rel="noopener">https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;01&#x2F;31&#x2F;第七章&#x2F;xv6-的上下文切换&#x2F;</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+        
+    </div>
+
+  
+	<div class="kira-post-nav">
+		<nav class="post-nav">
+			  
+			<!-- 先找到与当前文字相同的目录 -->
+			                                                                                                
+			<!-- 在找到当前文章所在的 index -->
+			                                                                                                                            
+			<!-- 上一篇文章 -->
+			<div class="old">
+				<span>上一章</span>
+				<a href="/2026/01/31/%E7%AC%AC%E5%85%AD%E7%AB%A0/fork%E5%86%99%E6%97%B6%E6%8B%B7%E8%B4%9D%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9/"> fork写时拷贝的优缺点</a>
+			</div>
+			       
+			<!-- 下一篇文章 -->
+			<div class="new">
+				<span>下一章</span>
+				<a href="/2026/01/31/%E7%AC%AC%E4%B8%83%E7%AB%A0/%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/"> 多路复用</a>
+			</div>
+			                                
+		</nav>
+	</div>
+	
+	<div class="kira-post-meta kira-rainbow">
+		
+			<a class="kirafont icon-container-fill -link" href="/categories/os%E9%A1%B9%E7%9B%AE/">os项目</a>
+		
+		
+			<a class="kirafont icon-tag-fill -none-link" href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%83/" rel="tag">xv6操作系统项目实验七</a>
+		
+	</div>
+	
+	<div class="kira-post-footer">
+		
+
+		
+	<div class="giscus"></div>
+  
+    <script src="https://giscus.app/client.js"
+      data-repo="hellonnnnn/hellonnnnn.github.io"
+      data-repo-id="R_kgDOQqLdWw"
+      data-category="Announcements"
+      data-category-id="DIC_kwDOQqLdW84C1Rqg"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="light"
+      data-lang="zh-CN"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async  
+    ></script>
+  
+
+	</div>
+	
+</div>
+
+				</div>
+			</div>
+			<div class="kira-right-column">
+	<a onclick="document.querySelector('#kira-top-header').scrollIntoView({behavior: 'smooth'});" class="kira-backtotop" aria-label="回到顶部" title="回到顶部">
+		<button class="mdui-fab mdui-ripple">
+			<i class="kirafont icon-caret-up"></i>
+		</button>
+	</a>
+</div>
+
+		</div>
+	</body>
+</html>
