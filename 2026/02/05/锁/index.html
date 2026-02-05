@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html 
+	lang="zh-Hans">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		
+<link rel="stylesheet" href="/css/layout.css">
+
+		
+		<title> 锁 -  Ivan&#39;s Tech Blog</title>
+		<!-- <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" /> -->
+		<!-- <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script> -->
+		
+<link rel="stylesheet" href="/lib/mdui/mdui.min.css">
+
+		
+<script src="/lib/mdui/mdui.min.js"></script>
+
+		<!-- lazyload -->
+		
+<script src="/lib/lazysizes.js"></script>
+
+		<!-- smooth-scrolling -->
+		
+<script src="/lib/smooth-scrolling.js"></script>
+
+		<!-- highlight -->
+		
+<link rel="stylesheet" href="/lib/highlight/atom-one-dark.min.css">
+
+		
+<script src="/lib/highlight/highlight.min.js"></script>
+
+		<!-- 预置 kiraicon -->
+		
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+
+		
+		<link
+			rel="shortcut icon"
+			href="https://kira.host/assets/Pictures/Others/116359b4ccf19917.jpg"
+			type="image/png"
+		/>
+		
+<link rel="stylesheet" href="/deps/css/APlayer.min.css">
+
+		
+		
+<script src="/deps/js/APlayer.min.js"></script>
+<script src="/deps/js/Meting.min.js"></script>
+
+	<meta name="generator" content="Hexo 8.1.1"></head>
+
+	<body>
+		<div
+			class="kira-background"
+			style="background-image: url('/img/background4.jpg')"
+		></div>
+		<div class="kira-header">
+    <a
+        class="kira-drawer-button mdui-ripple"
+        title="导航栏"
+        onclick="document.querySelector('.kira-sidebar-modal').classList.add('show');document.querySelector('.kira-sidebar#sidebar').classList.add('show');"
+    >
+        <i class="kirafont icon-menu"></i>
+    </a>
+    <a href="/" title="Ivan&#39;s Tech Blog">
+        <img
+			src="/img/background5.jpg"
+			alt="Ivan-FYF"
+		/>
+    </a>
+</div>
+		<div class="kira-body">
+			<div class="kira-sidebar" id="sidebar">
+	<div class="kira-avatar mdui-ripple">
+		<a href="/img/background5.jpg" title="Ivan-FYF">
+			<img
+				src="/img/background5.jpg"
+				alt="Ivan-FYF"
+			/>
+		</a>
+	</div>
+	<div class="kira-count">
+		<div><span>文章</span>44</div>
+		<div><span>标签</span>10</div>
+		<div><span>分类</span>3</div>
+	</div>
+	<div class="kira-list">
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/"
+			title="回到首页"
+		>
+			<i
+				class="kirafont
+					
+						icon-home
+					"
+			></i>
+			<div class="kira-list-item-content">
+				回到首页
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/archive.html"
+			title="文章归档"
+		>
+			<i
+				class="kirafont
+					
+						icon-container
+					"
+			></i>
+			<div class="kira-list-item-content">
+				文章归档
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/about/"
+			title="关于本人"
+		>
+			<i
+				class="kirafont
+					
+						icon-user
+					"
+			></i>
+			<div class="kira-list-item-content">
+				关于本人
+			</div>
+		</a>
+		
+	</div>
+	<aside id="kira-sidebar">
+		
+			<div class="kira-widget-wrap">
+	<div class="kira-widget kira-social">
+		
+			<a
+				class="mdui-ripple"
+				href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=2933852809&website=www.oicqzone.com"
+				target="_blank"
+				mdui-tooltip="{content: 'QQ'}"
+				style="color: rgb(49, 174, 255); background-color: rgba(49, 174, 255, .1);"
+			>
+				<i
+					class="kirafont
+					
+						icon-QQ
+					"
+				></i>
+			</a>
+		
+			<a
+				class="mdui-ripple"
+				href="https://github.com/<hellonnnnn>/"
+				target="_blank"
+				mdui-tooltip="{content: 'GitHub'}"
+				style="color: rgb(25, 23, 23); background-color: rgba(25, 23, 23, .15);"
+			>
+				<i
+					class="kirafont
+					
+						icon-github
+					"
+				></i>
+			</a>
+		
+	</div>
+</div>
+
+		
+			
+  <div class="kira-widget-wrap">
+    <h3 class="kira-widget-title">分类</h3>
+    <div class="kira-widget">
+      <ul class="category-list">
+        
+        
+
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/os项目/">
+              <img 
+                src="/img/background1.jpg" 
+                alt="os项目" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              os项目
+            </a>
+            <span class="category-list-count">41</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/八股/">
+              <img 
+                src="/img/background3.jpg" 
+                alt="八股" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              八股
+            </a>
+            <span class="category-list-count">1</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/算法/">
+              <img 
+                src="/img/background2.jpg" 
+                alt="算法" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              算法
+            </a>
+            <span class="category-list-count">1</span>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+		
+			
+	<div class="kira-widget-wrap">
+		<div id="randomtagcloud" class="kira-widget tagcloud kira-rainbow">
+			<a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%80/" style="font-size: 16px;">xv6操作系统项目实验一</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%83/" style="font-size: 14px;">xv6操作系统项目实验七</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%89/" style="font-size: 18px;">xv6操作系统项目实验三</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%8C/" style="font-size: 18px;">xv6操作系统项目实验二</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%94/" style="font-size: 12px;">xv6操作系统项目实验五</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%85%AB/" style="font-size: 14px;">xv6操作系统项目实验八</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%85%AD/" style="font-size: 10px;">xv6操作系统项目实验六</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%9B%9B/" style="font-size: 20px;">xv6操作系统项目实验四</a> <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" style="font-size: 10px;">基础知识</a> <a href="/tags/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5/" style="font-size: 10px;">算法训练营</a>
+
+		</div>
+		
+	</div>
+
+
+		
+			
+	<div class="kira-widget-wrap">
+		<h3 class="kira-widget-title">
+			文章归档
+		</h3>
+		<div class="kira-widget">
+			<ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/">2026</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/">2025</a><span class="archive-list-count">26</span></li></ul>
+		</div>
+	</div>
+
+
+		
+	</aside>
+	<!-- 保留空的版权容器，修复布局 -->
+    	<div class="kira-copyright">
+    </div>
+</div> <!-- 侧边栏的闭合div，必须保留 -->
+	<!-- <div class="kira-copyright">
+		&copy; 2026
+		<a href="/">Ivan-FYF</a>
+		Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> &
+		<a href="https://github.com/ch1ny/kira-hexo/" target="_blank">Kira-Hexo</a>
+		<br />
+		
+		
+	</div>
+</div> -->
+<div
+	class="kira-sidebar-modal"
+	id="sidebar-modal"
+	onclick="(function(self) {
+		self.classList.remove('show');
+		document.querySelector('.kira-sidebar.show#sidebar').classList.remove('show');
+	})(this)"
+></div>
+			<div class="kira-content">
+				<div id="kira-top-header"></div>
+				<div class="kira-main-content">
+					
+<link rel="stylesheet" href="/css/kira-image.css">
+
+
+<script src="/js/kira-image.js"></script>
+
+<div class="kira-image">
+    <div class="kira-image-modal">
+        <div class="kira-image-header">
+            <div class="kira-image-counter"></div>
+            <div class="kira-image-title"></div>
+            <div class="kira-image-operation">
+                <div class="kira-image-operation-button" id="kira-image-operation-button-zoom">
+                    <i class="kirafont icon-zoom-in"></i>
+                </div>
+                <div class="kira-image-operation-button" id="kira-image-operation-button-close">
+                    <i class="kirafont icon-close"></i>
+                </div>
+            </div>
+        </div>
+        <div class="kira-image-container">
+            <div class="kira-image-prev-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-left"></i>
+                </div>
+            </div>
+            <div class="kira-image-list">
+                <div class="kira-image-prev">
+                    <img />
+                </div>
+                <div class="kira-image-now">
+                    <img />
+                </div>
+                <div class="kira-image-next">
+                    <img />
+                </div>
+            </div>
+            <div class="kira-image-next-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+	
+<link rel="stylesheet" href="/css/kira-code-copy.css">
+
+	
+<script src="/js/kira-code-copy.js"></script>
+
+
+<div class="kira-post">
+	<article>
+		
+		<div
+			class="kira-post-cover"
+			style="padding-bottom: '56.25%'"
+		>
+			<img
+				data-src="/img/background4.jpg"
+				data-sizes="auto"
+				alt="锁"
+				class="lazyload kira-post-cover-image disabled-kira-image"
+			/>
+			<h1>锁</h1>
+		</div>
+		
+		<div class="kira-post-meta kira-rainbow" style="margin:10px 0!important;">
+			<a><i class="kirafont icon-calendar-fill"></i>2026年02月05日</a>
+			<a><i class="kirafont icon-edit-fill"></i>1.6k 字</a>
+			<a><i class="kirafont icon-time-circle-fill"></i>大概 7 分钟</a>
+		</div>
+		<html><head></head><body><h2><span id="%E4%B8%80%E4%B8%BA%E4%BB%80%E4%B9%88%E7%9C%8B%E8%B5%B7%E6%9D%A5%E6%AD%A3%E7%A1%AE%E7%9A%84-acquire-%E6%98%AF%E9%94%99%E7%9A%84">一、为什么“看起来正确”的 acquire 是错的？</span></h2><p>朴素实现：</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">if</span> (lk-&gt;locked == <span class="hljs-number">0</span>) {<br>    lk-&gt;locked = <span class="hljs-number">1</span>;<br>}<br></code></pre></td></tr></tbody></table></figure>
+
+<h3><span id="%E2%9D%8C-%E9%97%AE%E9%A2%98%E6%9C%AC%E8%B4%A8">❌ 问题本质</span></h3><p>在 <strong>多核</strong> 情况下，这两步不是原子的：</p>
+<ol>
+<li>读 <code>lk-&gt;locked</code></li>
+<li>写 <code>lk-&gt;locked</code></li>
+</ol>
+<p>可能发生：</p>
+<ul>
+<li>CPU0 读到 <code>locked == 0</code></li>
+<li>CPU1 读到 <code>locked == 0</code></li>
+<li>两个 CPU 都写 <code>locked = 1</code></li>
+</ul>
+<p>👉 <strong>两个 CPU 同时“拿到”锁</strong><br>👉 互斥性（mutual exclusion）被破坏</p>
+<p>📌 <strong>结论</strong>：</p>
+<blockquote>
+<p>“检查 + 设置”必须是一个<strong>不可分割的原子操作</strong></p>
+</blockquote>
+<hr>
+<h2><span id="%E4%BA%8C%E7%A1%AC%E4%BB%B6%E6%98%AF%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E8%BF%99%E4%B8%AA%E9%97%AE%E9%A2%98%E7%9A%84">二、硬件是如何解决这个问题的？</span></h2><h3><span id="risc-v-%E6%8F%90%E4%BE%9B%E7%9A%84%E5%8E%9F%E5%AD%90%E6%8C%87%E4%BB%A4amoswap">RISC-V 提供的原子指令：<code>amoswap</code></span></h3><p>语义（一次完成）：</p>
+<figure class="highlight abnf"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs abnf"><span class="hljs-attribute">tmp</span> <span class="hljs-operator">=</span> *addr<span class="hljs-comment">;</span><br>*addr <span class="hljs-operator">=</span> reg<span class="hljs-comment">;</span><br><span class="hljs-attribute">reg</span> <span class="hljs-operator">=</span> tmp<span class="hljs-comment">;</span><br></code></pre></td></tr></tbody></table></figure>
+
+<p>关键点：</p>
+<ul>
+<li><p><strong>原子性保证</strong></p>
+</li>
+<li><p>在 swap 期间：</p>
+<ul>
+<li>其他 CPU <strong>无法插入访问</strong></li>
+</ul>
+</li>
+<li><p>等价于：</p>
+<ul>
+<li>“测试并设置（test-and-set）”</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2><span id="%E4%B8%89xv6-%E7%9A%84-acquire-%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84">三、xv6 的 acquire 是如何实现的？</span></h2><p>xv6 并不直接写汇编，而是用：</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">__sync_lock_test_and_set(&amp;lk-&gt;locked, <span class="hljs-number">1</span>)<br></code></pre></td></tr></tbody></table></figure>
+
+<h3><span id="%E8%BF%99%E4%B8%AA%E5%87%BD%E6%95%B0%E7%9A%84%E8%AF%AD%E4%B9%89">这个函数的语义</span></h3><ul>
+<li><p>原子地：</p>
+<ul>
+<li>把 <code>lk-&gt;locked</code> 设为 <code>1</code></li>
+<li>返回 <strong>旧值</strong></li>
+</ul>
+</li>
+</ul>
+<p>等价于 RISC-V 的 <code>amoswap</code></p>
+<hr>
+<h3><span id="acquire-%E7%9A%84%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%E6%8A%BD%E8%B1%A1%E7%89%88">acquire 的核心逻辑（抽象版）</span></h3><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">while</span> (__sync_lock_test_and_set(&amp;lk-&gt;locked, <span class="hljs-number">1</span>) != <span class="hljs-number">0</span>)<br>    ; <span class="hljs-comment">// 自旋</span><br></code></pre></td></tr></tbody></table></figure>
+
+<h4><span id="%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90">行为分析：</span></h4><table>
+<thead>
+<tr>
+<th>旧值</th>
+<th>含义</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>锁空闲</td>
+<td>当前 CPU 成功获取锁</td>
+</tr>
+<tr>
+<td>1</td>
+<td>锁被占用</td>
+<td>继续自旋</td>
+</tr>
+</tbody></table>
+<p>📌 <strong>即使 swap 失败</strong>：</p>
+<ul>
+<li>仍然是原子的</li>
+<li>不会破坏锁状态</li>
+</ul>
+<hr>
+<h3><span id="%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AB%E8%87%AA%E6%97%8B%E9%94%81spinlock">为什么叫“自旋锁”（spinlock）？</span></h3><ul>
+<li>没有睡眠</li>
+<li>不让出 CPU</li>
+<li>一直在 while 循环里“空转等待”</li>
+</ul>
+<p>👉 适合：</p>
+<ul>
+<li><strong>临界区短</strong></li>
+<li><strong>内核态</strong></li>
+<li><strong>不能睡眠的场景</strong></li>
+</ul>
+<hr>
+<h2><span id="%E5%9B%9B%E4%B8%BA%E4%BB%80%E4%B9%88-release-%E4%B9%9F%E4%B8%8D%E8%83%BD%E7%94%A8%E6%99%AE%E9%80%9A%E8%B5%8B%E5%80%BC">四、为什么 release 也不能用普通赋值？</span></h2><p>你可能会觉得：</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">lk-&gt;locked = <span class="hljs-number">0</span>;<br></code></pre></td></tr></tbody></table></figure>
+
+<p>就够了。</p>
+<h3><span id="%E2%9D%8C-%E4%BD%86-c-%E8%AF%AD%E8%A8%80%E6%A0%87%E5%87%86%E4%B8%8D%E4%BF%9D%E8%AF%81">❌ 但 C 语言标准不保证：</span></h3><ul>
+<li>赋值是原子的</li>
+<li>编译器不会拆成多个 store</li>
+<li>不会乱序重排</li>
+</ul>
+<p>在并发代码中，这是 <strong>未定义风险</strong>。</p>
+<hr>
+<h3><span id="xv6-%E7%9A%84-release-%E5%AE%9E%E7%8E%B0">xv6 的 release 实现</span></h3><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">__sync_lock_release(&amp;lk-&gt;locked);<br></code></pre></td></tr></tbody></table></figure>
+
+<p>作用：</p>
+<ul>
+<li><strong>原子地</strong> 将 <code>locked</code> 设为 0</li>
+<li>同样可归结为 <code>amoswap</code></li>
+</ul>
+<p>📌 顺序很重要：</p>
+<ol>
+<li>清除 <code>lk-&gt;cpu</code></li>
+<li>再释放锁</li>
+</ol>
+<p>保证：</p>
+<ul>
+<li>其他 CPU 拿到锁时</li>
+<li>锁状态是完全一致的</li>
+</ul>
+<hr>
+<h2><span id="%E4%BA%94lk-cpu-%E5%AD%97%E6%AE%B5%E6%98%AF%E5%B9%B2%E4%BB%80%E4%B9%88%E7%9A%84">五、lk-&gt;cpu 字段是干什么的？</span></h2><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">lk-&gt;cpu = mycpu();<br></code></pre></td></tr></tbody></table></figure>
+
+<p>用途：</p>
+<ul>
+<li><p><strong>调试</strong></p>
+</li>
+<li><p>检测：</p>
+<ul>
+<li>重复加锁</li>
+<li>非持有者释放锁</li>
+</ul>
+</li>
+</ul>
+<p>重要原则：</p>
+<blockquote>
+<p><strong>lk-&gt;cpu 也是共享数据，只能在持有锁时访问</strong></p>
+</blockquote>
+<p>这是一个非常经典的“锁保护锁自身元数据”的例子。</p>
+<hr>
+<h2><span id="%E5%85%ADacquire--release-%E7%9A%84%E6%9C%AC%E8%B4%A8%E6%80%BB%E7%BB%93">六、acquire / release 的本质总结</span></h2><h3><span id="acquire-%E5%81%9A%E4%BA%86%E4%B8%89%E4%BB%B6%E4%BA%8B">acquire 做了三件事：</span></h3><ol>
+<li>原子 test-and-set</li>
+<li>自旋等待</li>
+<li>记录持有锁的 CPU（调试）</li>
+</ol>
+<h3><span id="release-%E5%81%9A%E4%BA%86%E4%B8%A4%E4%BB%B6%E4%BA%8B">release 做了两件事：</span></h3><ol>
+<li>清理调试信息</li>
+<li>原子释放锁</li>
+</ol>
+<hr>
+<h2><span id="%E4%B8%83%E9%9D%A2%E8%AF%95%E5%BF%85%E8%80%83%E7%82%B9%E7%9B%B4%E6%8E%A5%E8%83%8C">七、面试必考点（直接背）</span></h2><h3><span id="q1%E4%B8%BA%E4%BB%80%E4%B9%88-acquire-%E4%B8%8D%E8%83%BD%E7%94%A8-if--%E8%B5%8B%E5%80%BC">Q1：为什么 acquire 不能用 if + 赋值？</span></h3><blockquote>
+<p>因为在多核环境下，读和写不是原子的，可能导致多个 CPU 同时获得锁，破坏互斥性。</p>
+</blockquote>
+<hr>
+<h3><span id="q2xv6-%E7%9A%84%E8%87%AA%E6%97%8B%E9%94%81%E4%BE%9D%E8%B5%96%E4%BB%80%E4%B9%88%E7%A1%AC%E4%BB%B6%E6%9C%BA%E5%88%B6">Q2：xv6 的自旋锁依赖什么硬件机制？</span></h3><blockquote>
+<p>依赖 CPU 提供的原子指令，在 RISC-V 上是 amoswap，用于实现 test-and-set。</p>
+</blockquote>
+<hr>
+<h3><span id="q3%E4%B8%BA%E4%BB%80%E4%B9%88-release-%E4%B9%9F%E8%A6%81%E7%94%A8%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C">Q3：为什么 release 也要用原子操作？</span></h3><blockquote>
+<p>因为 C 语言普通赋值在并发场景下不保证原子性，编译器可能拆分或重排指令。</p>
+</blockquote>
+<hr>
+<h3><span id="q4%E4%BB%80%E4%B9%88%E5%9C%BA%E6%99%AF%E9%80%82%E5%90%88%E8%87%AA%E6%97%8B%E9%94%81">Q4：什么场景适合自旋锁？</span></h3><ul>
+<li>临界区短</li>
+<li>不允许睡眠</li>
+<li>内核态</li>
+<li>CPU 数量有限</li>
+</ul>
+<hr>
+<h3><span id="q5%E8%87%AA%E6%97%8B%E9%94%81%E7%9A%84%E7%BC%BA%E7%82%B9">Q5：自旋锁的缺点？</span></h3><ul>
+<li>浪费 CPU</li>
+<li>临界区长时性能极差</li>
+<li>不适合用户态或 I/O 等待</li>
+</ul>
+<hr>
+<h1><span id="xv6-%E7%9D%A1%E7%9C%A0%E9%94%81sleep-locks%E6%95%B4%E7%90%86">xv6 睡眠锁（sleep-locks）整理</span></h1><hr>
+<h2><span id="%E4%B8%80%E4%B8%BA%E4%BB%80%E4%B9%88%E8%87%AA%E6%97%8B%E9%94%81%E4%B8%8D%E5%A4%9F%E7%94%A8">一、为什么自旋锁不够用？</span></h2><p>自旋锁像一个<strong>原地打转的陀螺</strong>：<br>没拿到锁，就一直转 CPU。</p>
+<h3><span id="%E8%87%AA%E6%97%8B%E9%94%81%E7%9A%84%E4%B8%A4%E4%B8%AA%E8%87%B4%E5%91%BD%E9%97%AE%E9%A2%98">自旋锁的两个致命问题</span></h3><h4><span id="1%EF%B8%8F%E2%83%A3-%E4%B8%B4%E7%95%8C%E5%8C%BA%E5%A4%AA%E9%95%BF%E4%BC%9A%E6%B5%AA%E8%B4%B9-cpu">1️⃣ 临界区太长会浪费 CPU</span></h4><ul>
+<li><p>文件系统读写磁盘</p>
+</li>
+<li><p>磁盘 I/O 可能 <strong>几十毫秒</strong></p>
+</li>
+<li><p>如果用自旋锁：</p>
+<ul>
+<li>其他 CPU 一直自旋</li>
+<li>CPU 时间被白白烧掉</li>
+</ul>
+</li>
+</ul>
+<h4><span id="2%EF%B8%8F%E2%83%A3-%E6%8C%81%E6%9C%89%E8%87%AA%E6%97%8B%E9%94%81%E6%97%B6%E4%B8%8D%E8%83%BD%E8%AE%A9%E5%87%BA-cpu">2️⃣ 持有自旋锁时不能让出 CPU</span></h4><p>原因有三层：</p>
+<ul>
+<li><p>acquire 是自旋，不会主动让出 CPU</p>
+</li>
+<li><p>如果持锁进程 yield：</p>
+<ul>
+<li>别的进程自旋</li>
+<li>持锁进程反而得不到 CPU</li>
+<li>⇒ <strong>死锁</strong></li>
+</ul>
+</li>
+<li><p>xv6 规定：<br><strong>持有自旋锁时必须关中断</strong></p>
+<ul>
+<li>yield / sleep 都需要中断</li>
+<li>逻辑上不允许</li>
+</ul>
+</li>
+</ul>
+<p>📌 结论：</p>
+<blockquote>
+<p>自旋锁只适合 <strong>短、快、不可睡眠</strong> 的临界区</p>
+</blockquote>
+<hr>
+<h2><span id="%E4%BA%8C%E7%9D%A1%E7%9C%A0%E9%94%81%E7%9A%84%E8%AE%BE%E8%AE%A1%E7%9B%AE%E6%A0%87">二、睡眠锁的设计目标</span></h2><p>我们想要一种锁：</p>
+<ul>
+<li><p>等锁时 <strong>不浪费 CPU</strong></p>
+</li>
+<li><p>拿不到锁时 <strong>sleep</strong></p>
+</li>
+<li><p>持锁时：</p>
+<ul>
+<li>可以 sleep</li>
+<li>可以开中断</li>
+</ul>
+</li>
+<li><p>适合 <strong>慢操作（磁盘、文件系统）</strong></p>
+</li>
+</ul>
+<p>于是有了：<strong>sleep-lock</strong></p>
+<hr>
+<h2><span id="%E4%B8%89%E7%9D%A1%E7%9C%A0%E9%94%81%E6%98%AF%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%9A%84%E6%A0%B8%E5%BF%83%E7%BB%93%E6%9E%84">三、睡眠锁是怎么实现的（核心结构）</span></h2><h3><span id="1%EF%B8%8F%E2%83%A3-%E7%9D%A1%E7%9C%A0%E9%94%81%E4%B8%8D%E6%98%AF%E4%B8%8D%E7%94%A8%E8%87%AA%E6%97%8B%E9%94%81">1️⃣ 睡眠锁不是“不用自旋锁”</span></h3><p>关键点在这里：</p>
+<blockquote>
+<p><strong>睡眠锁内部，仍然用自旋锁保护</strong></p>
+</blockquote>
+<p>结构（逻辑上）是这样：</p>
+<figure class="highlight sqf"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sqf"><span class="hljs-built_in">sleep</span> <span class="hljs-built_in">lock</span><br> ├─ <span class="hljs-built_in">locked</span> 标志<br> ├─ wait channel<br> └─ 一个自旋锁（短时间持有）<br></code></pre></td></tr></tbody></table></figure>
+
+<hr>
+<h3><span id="2%EF%B8%8F%E2%83%A3-acquiresleep-%E7%9A%84%E5%85%B3%E9%94%AE%E8%BF%87%E7%A8%8B%E6%A6%82%E5%BF%B5%E7%89%88">2️⃣ acquiresleep 的关键过程（概念版）</span></h3><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c">acquire internal spinlock<br><span class="hljs-title function_">while</span> <span class="hljs-params">(sleep lock 被占用)</span>:<br>    <span class="hljs-title function_">sleep</span><span class="hljs-params">(等待队列, internal spinlock)</span><br>设置 sleep lock 为 locked<br>release internal spinlock<br></code></pre></td></tr></tbody></table></figure>
+
+<p>💡 <strong>最重要的一步</strong>：</p>
+<blockquote>
+<p><code>sleep()</code> 会 <strong>原子地</strong>：</p>
+<ul>
+<li>释放自旋锁</li>
+<li>让出 CPU</li>
+</ul>
+</blockquote>
+<p>这一步避免了经典的：</p>
+<ul>
+<li>“先检查条件”</li>
+<li>“再睡眠”<br>之间的竞态窗口</li>
+</ul>
+<hr>
+<h3><span id="3%EF%B8%8F%E2%83%A3-%E6%95%88%E6%9E%9C%E6%98%AF%E4%BB%80%E4%B9%88">3️⃣ 效果是什么？</span></h3><ul>
+<li>等锁的进程不自旋</li>
+<li>CPU 可运行其他进程</li>
+<li>锁真正变成“阻塞式”的</li>
+</ul>
+<hr>
+<h2><span id="%E5%9B%9B%E7%9D%A1%E7%9C%A0%E9%94%81%E7%9A%84%E4%BD%BF%E7%94%A8%E9%99%90%E5%88%B6%E9%9D%9E%E5%B8%B8%E9%87%8D%E8%A6%81">四、睡眠锁的使用限制（非常重要）</span></h2><h3><span id="%E2%9D%8C-1-%E4%B8%8D%E8%83%BD%E7%94%A8%E4%BA%8E%E4%B8%AD%E6%96%AD%E5%A4%84%E7%90%86%E5%87%BD%E6%95%B0">❌ 1. 不能用于中断处理函数</span></h3><p>原因：</p>
+<ul>
+<li>acquiresleep 可能 sleep</li>
+<li>中断上下文 <strong>不能 sleep</strong></li>
+<li>中断必须尽快返回</li>
+</ul>
+<p>📌 所以：</p>
+<blockquote>
+<p><strong>中断里只能用自旋锁</strong></p>
+</blockquote>
+<hr>
+<h3><span id="%E2%9D%8C-2-%E4%B8%8D%E8%83%BD%E5%9C%A8%E8%87%AA%E6%97%8B%E9%94%81%E4%B8%B4%E7%95%8C%E5%8C%BA%E4%B8%AD%E4%BD%BF%E7%94%A8">❌ 2. 不能在自旋锁临界区中使用</span></h3><p>错误示例（概念）：</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c">acquire(spinlock);<br>acquiresleep(sleeplock); <span class="hljs-comment">// ❌</span><br></code></pre></td></tr></tbody></table></figure>
+
+<p>原因：</p>
+<ul>
+<li><p>自旋锁持有期间：</p>
+<ul>
+<li>中断关闭</li>
+<li>不允许 sleep</li>
+</ul>
+</li>
+<li><p>acquiresleep 可能让出 CPU</p>
+</li>
+<li><p>直接破坏自旋锁语义</p>
+</li>
+</ul>
+<hr>
+<h3><span id="%E2%9C%85-3-%E5%8F%8D%E8%BF%87%E6%9D%A5%E6%98%AF%E5%85%81%E8%AE%B8%E7%9A%84">✅ 3. 反过来是允许的</span></h3><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c">acquiresleep(sleeplock);<br>acquire(spinlock); <span class="hljs-comment">// ✅</span><br></code></pre></td></tr></tbody></table></figure>
+
+<p>解释：</p>
+<ul>
+<li>睡眠锁期间中断是开着的</li>
+<li>临时进入一个短的自旋锁临界区是安全的</li>
+</ul>
+<hr>
+<h2><span id="%E4%BA%94%E8%87%AA%E6%97%8B%E9%94%81-vs-%E7%9D%A1%E7%9C%A0%E9%94%81%E5%AF%B9%E7%85%A7%E8%A1%A8">五、自旋锁 vs 睡眠锁（对照表）</span></h2><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>自旋锁</th>
+<th>睡眠锁</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>等待方式</td>
+<td>忙等（自旋）</td>
+<td>sleep</td>
+</tr>
+<tr>
+<td>是否浪费 CPU</td>
+<td>是</td>
+<td>否</td>
+</tr>
+<tr>
+<td>是否允许 sleep</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>是否关中断</td>
+<td>是</td>
+<td>否</td>
+</tr>
+<tr>
+<td>能否用于中断</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>适合场景</td>
+<td>短临界区</td>
+<td>长操作（I/O）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2><span id="%E5%85%AD%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E7%94%A8%E5%93%AA%E7%A7%8D%E9%94%81%E7%BB%8F%E9%AA%8C%E6%B3%95%E5%88%99">六、什么时候用哪种锁？（经验法则）</span></h2><h3><span id="%E7%94%A8%E8%87%AA%E6%97%8B%E9%94%81">用自旋锁：</span></h3><ul>
+<li>临界区很短</li>
+<li>只做内存操作</li>
+<li>可能在中断上下文</li>
+<li>必须快速完成</li>
+</ul>
+<p>例子：</p>
+<ul>
+<li>ticks</li>
+<li>进程状态</li>
+<li>就绪队列</li>
+<li>缓冲区元数据</li>
+</ul>
+<hr>
+<h3><span id="%E7%94%A8%E7%9D%A1%E7%9C%A0%E9%94%81">用睡眠锁：</span></h3><ul>
+<li>可能等待 I/O</li>
+<li>可能 sleep</li>
+<li>操作耗时不可控</li>
+</ul>
+<p>例子：</p>
+<ul>
+<li>inode</li>
+<li>文件内容</li>
+<li>磁盘读写路径</li>
+</ul>
+<hr>
+<h2><span id="%E4%B8%83%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E7%89%88%E8%83%8C%E8%BF%99%E4%B8%80%E6%AE%B5%E5%B0%B1%E5%A4%9F">七、面试总结版（背这一段就够）</span></h2><blockquote>
+<p>xv6 使用自旋锁保护短临界区，避免上下文切换开销；<br>对于可能阻塞或耗时较长的操作，引入睡眠锁，使等待进程 sleep 让出 CPU；<br>睡眠锁内部仍由自旋锁保护状态，但 acquiresleep 会原子地释放自旋锁并休眠；<br>因此睡眠锁不能用于中断处理，也不能嵌套在自旋锁临界区中。</p>
+</blockquote>
+<hr>
+</body></html>
+	</article>
+
+	 
+    <div class="kira-post-copyright">
+        <strong>本文作者：</strong>Ivan-FYF<br>
+        <strong>本文链接：</strong><a href="https://hellonnnnn.github.io/2026/02/05/%E9%94%81/" title="https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;02&#x2F;05&#x2F;锁&#x2F;" target="_blank" rel="noopener">https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;02&#x2F;05&#x2F;锁&#x2F;</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+        
+    </div>
+
+  
+	<div class="kira-post-nav">
+		<nav class="post-nav">
+			  
+			<!-- 先找到与当前文字相同的目录 -->
+			                                                                                                               
+			<!-- 在找到当前文章所在的 index -->
+			                                                                                                                                                
+			<!-- 上一篇文章 -->
+			<div class="old">
+				<span>上一章</span>
+				<a href="/2026/02/04/%E7%AC%AC%E4%B8%83%E7%AB%A0/%E7%9C%9F%E5%AE%9Eos/"> 真实os</a>
+			</div>
+			       
+			<!-- 下一篇文章 -->
+			<div class="new">
+				<span>下一章</span>
+				<a href="/2026/02/05/xv6-%E4%B8%AD%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E9%94%81/"> xv6 中如何使用锁</a>
+			</div>
+			                                       
+		</nav>
+	</div>
+	
+	<div class="kira-post-meta kira-rainbow">
+		
+			<a class="kirafont icon-container-fill -link" href="/categories/os%E9%A1%B9%E7%9B%AE/">os项目</a>
+		
+		
+			<a class="kirafont icon-tag-fill -none-link" href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%85%AB/" rel="tag">xv6操作系统项目实验八</a>
+		
+	</div>
+	
+	<div class="kira-post-footer">
+		
+
+		
+	<div class="giscus"></div>
+  
+    <script src="https://giscus.app/client.js"
+      data-repo="hellonnnnn/hellonnnnn.github.io"
+      data-repo-id="R_kgDOQqLdWw"
+      data-category="Announcements"
+      data-category-id="DIC_kwDOQqLdW84C1Rqg"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="light"
+      data-lang="zh-CN"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async  
+    ></script>
+  
+
+	</div>
+	
+</div>
+
+				</div>
+			</div>
+			<div class="kira-right-column">
+	<a onclick="document.querySelector('#kira-top-header').scrollIntoView({behavior: 'smooth'});" class="kira-backtotop" aria-label="回到顶部" title="回到顶部">
+		<button class="mdui-fab mdui-ripple">
+			<i class="kirafont icon-caret-up"></i>
+		</button>
+	</a>
+</div>
+
+		</div>
+	</body>
+</html>

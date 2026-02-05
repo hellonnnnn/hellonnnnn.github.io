@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html 
+	lang="zh-Hans">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		
+<link rel="stylesheet" href="/css/layout.css">
+
+		
+		<title> 死锁与锁排序 -  Ivan&#39;s Tech Blog</title>
+		<!-- <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" /> -->
+		<!-- <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script> -->
+		
+<link rel="stylesheet" href="/lib/mdui/mdui.min.css">
+
+		
+<script src="/lib/mdui/mdui.min.js"></script>
+
+		<!-- lazyload -->
+		
+<script src="/lib/lazysizes.js"></script>
+
+		<!-- smooth-scrolling -->
+		
+<script src="/lib/smooth-scrolling.js"></script>
+
+		<!-- highlight -->
+		
+<link rel="stylesheet" href="/lib/highlight/atom-one-dark.min.css">
+
+		
+<script src="/lib/highlight/highlight.min.js"></script>
+
+		<!-- 预置 kiraicon -->
+		
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+
+		
+		<link
+			rel="shortcut icon"
+			href="https://kira.host/assets/Pictures/Others/116359b4ccf19917.jpg"
+			type="image/png"
+		/>
+		
+<link rel="stylesheet" href="/deps/css/APlayer.min.css">
+
+		
+		
+<script src="/deps/js/APlayer.min.js"></script>
+<script src="/deps/js/Meting.min.js"></script>
+
+	<meta name="generator" content="Hexo 8.1.1"></head>
+
+	<body>
+		<div
+			class="kira-background"
+			style="background-image: url('/img/background4.jpg')"
+		></div>
+		<div class="kira-header">
+    <a
+        class="kira-drawer-button mdui-ripple"
+        title="导航栏"
+        onclick="document.querySelector('.kira-sidebar-modal').classList.add('show');document.querySelector('.kira-sidebar#sidebar').classList.add('show');"
+    >
+        <i class="kirafont icon-menu"></i>
+    </a>
+    <a href="/" title="Ivan&#39;s Tech Blog">
+        <img
+			src="/img/background5.jpg"
+			alt="Ivan-FYF"
+		/>
+    </a>
+</div>
+		<div class="kira-body">
+			<div class="kira-sidebar" id="sidebar">
+	<div class="kira-avatar mdui-ripple">
+		<a href="/img/background5.jpg" title="Ivan-FYF">
+			<img
+				src="/img/background5.jpg"
+				alt="Ivan-FYF"
+			/>
+		</a>
+	</div>
+	<div class="kira-count">
+		<div><span>文章</span>44</div>
+		<div><span>标签</span>10</div>
+		<div><span>分类</span>3</div>
+	</div>
+	<div class="kira-list">
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/"
+			title="回到首页"
+		>
+			<i
+				class="kirafont
+					
+						icon-home
+					"
+			></i>
+			<div class="kira-list-item-content">
+				回到首页
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/archive.html"
+			title="文章归档"
+		>
+			<i
+				class="kirafont
+					
+						icon-container
+					"
+			></i>
+			<div class="kira-list-item-content">
+				文章归档
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/about/"
+			title="关于本人"
+		>
+			<i
+				class="kirafont
+					
+						icon-user
+					"
+			></i>
+			<div class="kira-list-item-content">
+				关于本人
+			</div>
+		</a>
+		
+	</div>
+	<aside id="kira-sidebar">
+		
+			<div class="kira-widget-wrap">
+	<div class="kira-widget kira-social">
+		
+			<a
+				class="mdui-ripple"
+				href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=2933852809&website=www.oicqzone.com"
+				target="_blank"
+				mdui-tooltip="{content: 'QQ'}"
+				style="color: rgb(49, 174, 255); background-color: rgba(49, 174, 255, .1);"
+			>
+				<i
+					class="kirafont
+					
+						icon-QQ
+					"
+				></i>
+			</a>
+		
+			<a
+				class="mdui-ripple"
+				href="https://github.com/<hellonnnnn>/"
+				target="_blank"
+				mdui-tooltip="{content: 'GitHub'}"
+				style="color: rgb(25, 23, 23); background-color: rgba(25, 23, 23, .15);"
+			>
+				<i
+					class="kirafont
+					
+						icon-github
+					"
+				></i>
+			</a>
+		
+	</div>
+</div>
+
+		
+			
+  <div class="kira-widget-wrap">
+    <h3 class="kira-widget-title">分类</h3>
+    <div class="kira-widget">
+      <ul class="category-list">
+        
+        
+
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/os项目/">
+              <img 
+                src="/img/background1.jpg" 
+                alt="os项目" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              os项目
+            </a>
+            <span class="category-list-count">41</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/八股/">
+              <img 
+                src="/img/background3.jpg" 
+                alt="八股" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              八股
+            </a>
+            <span class="category-list-count">1</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/算法/">
+              <img 
+                src="/img/background2.jpg" 
+                alt="算法" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              算法
+            </a>
+            <span class="category-list-count">1</span>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+		
+			
+	<div class="kira-widget-wrap">
+		<div id="randomtagcloud" class="kira-widget tagcloud kira-rainbow">
+			<a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%80/" style="font-size: 16px;">xv6操作系统项目实验一</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%83/" style="font-size: 14px;">xv6操作系统项目实验七</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%89/" style="font-size: 18px;">xv6操作系统项目实验三</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%8C/" style="font-size: 18px;">xv6操作系统项目实验二</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%94/" style="font-size: 12px;">xv6操作系统项目实验五</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%85%AB/" style="font-size: 14px;">xv6操作系统项目实验八</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%85%AD/" style="font-size: 10px;">xv6操作系统项目实验六</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%9B%9B/" style="font-size: 20px;">xv6操作系统项目实验四</a> <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" style="font-size: 10px;">基础知识</a> <a href="/tags/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5/" style="font-size: 10px;">算法训练营</a>
+
+		</div>
+		
+	</div>
+
+
+		
+			
+	<div class="kira-widget-wrap">
+		<h3 class="kira-widget-title">
+			文章归档
+		</h3>
+		<div class="kira-widget">
+			<ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/">2026</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/">2025</a><span class="archive-list-count">26</span></li></ul>
+		</div>
+	</div>
+
+
+		
+	</aside>
+	<!-- 保留空的版权容器，修复布局 -->
+    	<div class="kira-copyright">
+    </div>
+</div> <!-- 侧边栏的闭合div，必须保留 -->
+	<!-- <div class="kira-copyright">
+		&copy; 2026
+		<a href="/">Ivan-FYF</a>
+		Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> &
+		<a href="https://github.com/ch1ny/kira-hexo/" target="_blank">Kira-Hexo</a>
+		<br />
+		
+		
+	</div>
+</div> -->
+<div
+	class="kira-sidebar-modal"
+	id="sidebar-modal"
+	onclick="(function(self) {
+		self.classList.remove('show');
+		document.querySelector('.kira-sidebar.show#sidebar').classList.remove('show');
+	})(this)"
+></div>
+			<div class="kira-content">
+				<div id="kira-top-header"></div>
+				<div class="kira-main-content">
+					
+<link rel="stylesheet" href="/css/kira-image.css">
+
+
+<script src="/js/kira-image.js"></script>
+
+<div class="kira-image">
+    <div class="kira-image-modal">
+        <div class="kira-image-header">
+            <div class="kira-image-counter"></div>
+            <div class="kira-image-title"></div>
+            <div class="kira-image-operation">
+                <div class="kira-image-operation-button" id="kira-image-operation-button-zoom">
+                    <i class="kirafont icon-zoom-in"></i>
+                </div>
+                <div class="kira-image-operation-button" id="kira-image-operation-button-close">
+                    <i class="kirafont icon-close"></i>
+                </div>
+            </div>
+        </div>
+        <div class="kira-image-container">
+            <div class="kira-image-prev-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-left"></i>
+                </div>
+            </div>
+            <div class="kira-image-list">
+                <div class="kira-image-prev">
+                    <img />
+                </div>
+                <div class="kira-image-now">
+                    <img />
+                </div>
+                <div class="kira-image-next">
+                    <img />
+                </div>
+            </div>
+            <div class="kira-image-next-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+	
+<link rel="stylesheet" href="/css/kira-code-copy.css">
+
+	
+<script src="/js/kira-code-copy.js"></script>
+
+
+<div class="kira-post">
+	<article>
+		
+		<div
+			class="kira-post-cover"
+			style="padding-bottom: '56.25%'"
+		>
+			<img
+				data-src="/img/background4.jpg"
+				data-sizes="auto"
+				alt="死锁与锁排序"
+				class="lazyload kira-post-cover-image disabled-kira-image"
+			/>
+			<h1>死锁与锁排序</h1>
+		</div>
+		
+		<div class="kira-post-meta kira-rainbow" style="margin:10px 0!important;">
+			<a><i class="kirafont icon-calendar-fill"></i>2026年02月05日</a>
+			<a><i class="kirafont icon-edit-fill"></i>1.7k 字</a>
+			<a><i class="kirafont icon-time-circle-fill"></i>大概 7 分钟</a>
+		</div>
+		<html><head></head><body><hr>
+<h2><span id="">{}</span></h2><h2><span id="%E4%BA%8C%E6%A0%B9%E6%9C%AC%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E9%94%81%E6%8E%92%E5%BA%8Flock-ordering">二、根本解决方案：锁排序（Lock Ordering）</span></h2><h3><span id="%E2%AD%90-%E5%85%A8%E5%B1%80%E5%8E%9F%E5%88%99%E4%B8%80%E5%8F%A5%E8%AF%9D">⭐ 全局原则（一句话）</span></h3><blockquote>
+<p><strong>所有代码路径，必须以相同的全局顺序获取锁</strong></p>
+</blockquote>
+<p>不是“大部分”，而是 <strong>所有</strong>。</p>
+<hr>
+<h3><span id="%E9%87%8D%E8%A6%81%E6%8E%A8%E8%AE%BA%E9%9D%9E%E5%B8%B8%E5%85%B3%E9%94%AE">重要推论（非常关键）</span></h3><blockquote>
+<p>锁顺序是 <strong>函数接口的一部分</strong></p>
+</blockquote>
+<p>也就是说：</p>
+<ul>
+<li><p>一个函数“隐含要求”：</p>
+<ul>
+<li>调用者必须在 <strong>正确的锁状态下</strong> 调用它</li>
+</ul>
+</li>
+<li><p>否则：</p>
+<ul>
+<li>即使函数本身写得“没问题”</li>
+<li>仍然可能死锁</li>
+</ul>
+</li>
+</ul>
+<p>📌 这是内核代码“比用户态难很多”的原因之一。</p>
+<hr>
+<h2><span id="%E4%B8%89xv6-%E4%B8%AD%E7%9A%84%E5%85%B8%E5%9E%8B%E9%94%81%E9%A1%BA%E5%BA%8F%E9%93%BE%E7%9C%9F%E5%AE%9E%E5%AD%98%E5%9C%A8">三、xv6 中的典型锁顺序链（真实存在）</span></h2><h3><span id="1%EF%B8%8F%E2%83%A3-conslock-%E2%86%92-p-lock%E4%B8%AD%E6%96%AD%E8%B7%AF%E5%BE%84">1️⃣ cons.lock → p-&gt;lock（中断路径）</span></h3><h4><span id="%E5%9C%BA%E6%99%AFconsoleintr">场景：<code>consoleintr</code></span></h4><ul>
+<li>中断处理键盘输入</li>
+<li>收到换行符 → 唤醒等待输入的进程</li>
+</ul>
+<p>锁顺序：</p>
+<figure class="highlight cos"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cos">cons.<span class="hljs-keyword">lock</span><br>   ↓<br>p-&gt;<span class="hljs-keyword">lock</span><br></code></pre></td></tr></tbody></table></figure>
+
+<p>原因：</p>
+<ul>
+<li><code>consoleintr</code> 持有 <code>cons.lock</code></li>
+<li>调用 <code>wakeup</code></li>
+<li><code>wakeup</code> 会获取目标进程的 <code>p-&gt;lock</code></li>
+</ul>
+<p>📌 <strong>全局规则</strong>：</p>
+<blockquote>
+<p>必须先拿 <code>cons.lock</code>，再拿任何 <code>p-&gt;lock</code></p>
+</blockquote>
+<p>否则：</p>
+<ul>
+<li>用户进程持有 <code>p-&gt;lock</code></li>
+<li>再尝试打印（获取 cons.lock）</li>
+<li>就会和中断路径死锁</li>
+</ul>
+<hr>
+<h3><span id="2%EF%B8%8F%E2%83%A3-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E6%9C%80%E9%95%BF%E9%94%81%E9%93%BE">2️⃣ 文件系统中的“最长锁链”</span></h3><p>创建文件时，典型锁顺序：</p>
+<figure class="highlight xl"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs xl">目录 <span class="hljs-function"><span class="hljs-title">inode</span> 的 ip-&gt;</span>lock<br>   ↓<br>新文件 <span class="hljs-function"><span class="hljs-title">inode</span> 的 ip-&gt;</span>lock<br>   ↓<br>磁盘块 <span class="hljs-function"><span class="hljs-title">buffer</span> 的 b-&gt;</span>lock<br>   ↓<br>vdisk_lock<br>   ↓<br>当前进程的 <span class="hljs-function"><span class="hljs-title">p</span>-&gt;</span>lock<br></code></pre></td></tr></tbody></table></figure>
+
+<p>特点：</p>
+<ul>
+<li>锁多</li>
+<li>顺序固定</li>
+<li>所有路径 <strong>必须一致</strong></li>
+</ul>
+<p>📌 一旦有某条路径反过来：</p>
+<ul>
+<li>就可能形成环</li>
+<li>导致死锁</li>
+</ul>
+<hr>
+<h2><span id="%E5%9B%9B%E4%B8%BA%E4%BB%80%E4%B9%88%E9%94%81%E6%8E%92%E5%BA%8F%E5%9C%A8%E5%86%85%E6%A0%B8%E4%B8%AD%E9%9D%9E%E5%B8%B8%E9%9A%BE">四、为什么锁排序在内核中“非常难”？</span></h2><p>这是<strong>面试高分点</strong>。</p>
+<hr>
+<h3><span id="1%EF%B8%8F%E2%83%A3-%E9%94%81%E9%A1%BA%E5%BA%8F-vs-%E7%A8%8B%E5%BA%8F%E9%80%BB%E8%BE%91%E5%86%B2%E7%AA%81">1️⃣ 锁顺序 vs 程序逻辑冲突</span></h3><p>常见问题：</p>
+<ul>
+<li><p>模块 M1 调用 M2</p>
+</li>
+<li><p>但全局锁顺序要求：</p>
+<ul>
+<li>先拿 M2 的锁</li>
+<li>再拿 M1 的锁</li>
+</ul>
+</li>
+</ul>
+<p>👉 结果：</p>
+<ul>
+<li>调用关系 ≠ 锁顺序</li>
+<li>代码可读性和直觉被破坏</li>
+</ul>
+<hr>
+<h3><span id="2%EF%B8%8F%E2%83%A3-%E9%94%81%E7%9A%84%E8%BA%AB%E4%BB%BD%E4%BA%8B%E5%85%88%E6%9C%AA%E7%9F%A5">2️⃣ 锁的“身份”事先未知</span></h3><p>典型场景：</p>
+<ul>
+<li>文件系统路径查找</li>
+<li><code>wait / exit</code> 遍历进程表</li>
+</ul>
+<p>问题：</p>
+<blockquote>
+<p>必须先拿一个锁，<br>才能知道 <strong>下一个要拿哪一把锁</strong></p>
+</blockquote>
+<p>这会让：</p>
+<ul>
+<li>锁顺序难以静态分析</li>
+<li>极易出错</li>
+</ul>
+<hr>
+<h3><span id="3%EF%B8%8F%E2%83%A3-%E9%94%81%E8%B6%8A%E5%A4%9A%E6%AD%BB%E9%94%81%E9%A3%8E%E9%99%A9%E8%B6%8A%E5%A4%A7">3️⃣ 锁越多，死锁风险越大</span></h3><ul>
+<li><p>细粒度锁 ⇒ 高并发</p>
+</li>
+<li><p>但：</p>
+<ul>
+<li>锁数量 ↑</li>
+<li>锁链变长</li>
+<li>死锁可能性指数级上升</li>
+</ul>
+</li>
+</ul>
+<p>📌 <strong>这也是为什么内核不会无限细化锁</strong></p>
+<hr>
+<h2><span id="%E4%BA%94%E6%AD%BB%E9%94%81%E9%81%BF%E5%85%8D%E6%98%AF%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1%E7%9A%84%E7%A1%AC%E7%BA%A6%E6%9D%9F">五、死锁避免是内核设计的“硬约束”</span></h2><p>可以这样总结：</p>
+<blockquote>
+<p>锁粒度、模块划分、函数接口设计，<br>都必须服从 <strong>死锁避免</strong> 这一全局约束。</p>
+</blockquote>
+<p>在实践中：</p>
+<ul>
+<li><p>有时为了避免死锁</p>
+</li>
+<li><p>会：</p>
+<ul>
+<li>合并锁</li>
+<li>牺牲并行性</li>
+<li>重构调用关系</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2><span id="%E5%85%AD%E9%9D%A2%E8%AF%95%E5%BF%85%E8%83%8C%E7%89%88%E6%80%BB%E7%BB%93">六、面试必背版总结</span></h2><h3><span id="q1%E4%BB%80%E4%B9%88%E6%98%AF%E6%AD%BB%E9%94%81">Q1：什么是死锁？</span></h3><blockquote>
+<p>多个线程循环等待对方持有的锁，导致所有线程永久阻塞。</p>
+</blockquote>
+<hr>
+<h3><span id="q2%E5%86%85%E6%A0%B8%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E6%AD%BB%E9%94%81">Q2：内核如何避免死锁？</span></h3><blockquote>
+<p>通过规定全局锁获取顺序，所有代码路径必须严格遵守。</p>
+</blockquote>
+<hr>
+<h3><span id="q3%E4%B8%BA%E4%BB%80%E4%B9%88%E9%94%81%E9%A1%BA%E5%BA%8F%E6%98%AF%E5%87%BD%E6%95%B0%E8%A7%84%E8%8C%83%E7%9A%84%E4%B8%80%E9%83%A8%E5%88%86">Q3：为什么锁顺序是函数规范的一部分？</span></h3><blockquote>
+<p>因为调用者必须在正确的锁状态下调用函数，否则即使函数本身正确，也可能引发死锁。</p>
+</blockquote>
+<hr>
+<h3><span id="q4xv6-%E4%B8%AD-conslock-%E5%92%8C-p-lock-%E7%9A%84%E9%A1%BA%E5%BA%8F%E6%98%AF%E4%BB%80%E4%B9%88%E4%B8%BA%E4%BB%80%E4%B9%88">Q4：xv6 中 cons.lock 和 p-&gt;lock 的顺序是什么？为什么？</span></h3><blockquote>
+<p>必须先获取 cons.lock，再获取 p-&gt;lock，以避免中断处理和进程上下文之间的死锁。</p>
+</blockquote>
+<hr>
+<h3><span id="q5%E7%BB%86%E7%B2%92%E5%BA%A6%E9%94%81%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9B%B4%E5%AE%B9%E6%98%93%E6%AD%BB%E9%94%81">Q5：细粒度锁为什么更容易死锁？</span></h3><blockquote>
+<p>锁越多、锁链越长，形成循环等待的可能性越高。</p>
+</blockquote>
+<hr>
+<h2><span id="%E4%B8%83%E4%BD%A0%E7%8E%B0%E5%9C%A8%E7%9A%84%E8%83%BD%E5%8A%9B%E7%9B%AE%E6%A0%87">七、你现在的“能力目标”</span></h2><p>看到一段 xv6 代码，你应该能立刻回答：</p>
+<ul>
+<li>这段代码<strong>可能同时持有哪些锁？</strong></li>
+<li>它们的<strong>全局顺序是什么？</strong></li>
+<li>有没有路径会 <strong>反序获取锁？</strong></li>
+<li>如果加一把新锁，会不会 <strong>引入环？</strong></li>
+</ul>
+<hr>
+<h2><span id="%E4%B8%80%E5%85%88%E7%BB%99%E7%9B%B4%E8%A7%89%E8%A7%A3%E9%87%8A%E4%B8%8D%E8%AE%B2%E6%8A%BD%E8%B1%A1">一、先给直觉解释（不讲抽象）</span></h2><h3><span id="%E4%BD%A0%E5%B9%B3%E6%97%B6%E5%AF%B9%E5%87%BD%E6%95%B0%E8%A7%84%E8%8C%83%E7%9A%84%E7%90%86%E8%A7%A3%E6%98%AF">你平时对“函数规范”的理解是：</span></h3><blockquote>
+<p>这个函数需要什么参数、返回什么结果。</p>
+</blockquote>
+<p>但在内核里，这 <strong>不够</strong>。</p>
+<hr>
+<h3><span id="%E5%9C%A8%E5%86%85%E6%A0%B8%E9%87%8C%E5%87%BD%E6%95%B0%E8%BF%98%E6%9C%89%E4%B8%80%E7%A7%8D%E9%9A%90%E5%90%AB%E5%8F%82%E6%95%B0">在内核里，函数还有一种<strong>隐含参数</strong>：</span></h3><blockquote>
+<p><strong>“你调用我时，手里已经拿着哪些锁？”</strong></p>
+</blockquote>
+<p>如果这个“隐含参数”不对，就会死锁。</p>
+<hr>
+<h2><span id="%E4%BA%8C%E4%B8%A5%E6%A0%BC%E5%90%AB%E4%B9%89%E4%BB%80%E4%B9%88%E5%8F%AB%E9%94%81%E9%A1%BA%E5%BA%8F%E6%98%AF%E5%87%BD%E6%95%B0%E8%A7%84%E8%8C%83%E7%9A%84%E4%B8%80%E9%83%A8%E5%88%86">二、严格含义：什么叫“锁顺序是函数规范的一部分”？</span></h2><h3><span id="%E5%AE%8C%E6%95%B4%E7%9A%84%E5%87%BD%E6%95%B0%E8%A7%84%E8%8C%83%E5%85%B6%E5%AE%9E%E6%98%AF">完整的函数规范其实是：</span></h3><blockquote>
+<p><strong>函数 F 的正确调用条件包括：</strong></p>
+<ol>
+<li>显式参数（int、指针等）</li>
+<li><strong>调用者当前持有的锁集合</strong></li>
+<li><strong>这些锁在全局锁顺序中的位置</strong></li>
+</ol>
+</blockquote>
+<p>如果调用者<strong>在错误的锁状态下</strong>调用函数：</p>
+<ul>
+<li>函数代码本身 100% 正确</li>
+<li>也可能 <strong>立刻引入死锁</strong></li>
+</ul>
+<hr>
+<h2><span id="%E4%B8%89%E4%B8%80%E4%B8%AA%E6%9C%80%E5%B0%8F%E4%BD%86%E8%87%B4%E5%91%BD%E7%9A%84%E4%BE%8B%E5%AD%90%E4%B8%80%E6%AD%A5%E5%B0%B1%E6%87%82">三、一个最小但致命的例子（一步就懂）</span></h2><h3><span id="1%EF%B8%8F%E2%83%A3-%E5%85%A8%E5%B1%80%E9%94%81%E9%A1%BA%E5%BA%8F%E7%B3%BB%E7%BB%9F%E8%A7%84%E5%AE%9A">1️⃣ 全局锁顺序（系统规定）</span></h3><figure class="highlight css"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">A</span> → <span class="hljs-selector-tag">B</span><br></code></pre></td></tr></tbody></table></figure>
+
+<p>意思是：</p>
+<ul>
+<li>可以先拿 A，再拿 B</li>
+<li><strong>绝不允许</strong>先拿 B 再拿 A</li>
+</ul>
+<hr>
+<h3><span id="2%EF%B8%8F%E2%83%A3-%E4%B8%80%E4%B8%AA%E7%9C%8B%E8%B5%B7%E6%9D%A5%E5%AE%8C%E5%85%A8%E6%B2%A1%E9%97%AE%E9%A2%98%E7%9A%84%E5%87%BD%E6%95%B0">2️⃣ 一个“看起来完全没问题”的函数</span></h3><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">void</span> <span class="hljs-title function_">f</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {<br>    acquire(A);<br>    ...<br>    release(A);<br>}<br></code></pre></td></tr></tbody></table></figure>
+
+<p>这个函数：</p>
+<ul>
+<li>锁成对</li>
+<li>没有竞态</li>
+<li>单独看 <strong>完全正确</strong></li>
+</ul>
+<hr>
+<h3><span id="3%EF%B8%8F%E2%83%A3-%E9%94%99%E8%AF%AF%E5%8F%91%E7%94%9F%E5%9C%A8%E8%B0%83%E7%94%A8%E8%80%85%E9%87%8D%E7%82%B9">3️⃣ 错误发生在调用者（重点）</span></h3><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">void</span> <span class="hljs-title function_">g</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {<br>    acquire(B);   <span class="hljs-comment">// ❌ 已经拿了 B</span><br>    f();          <span class="hljs-comment">// f 内部会 acquire(A)</span><br>    release(B);<br>}<br></code></pre></td></tr></tbody></table></figure>
+
+<p>现在发生了什么？</p>
+<ul>
+<li>g() 已经持有 B</li>
+<li>f() 又试图 acquire(A)</li>
+<li>实际顺序是：</li>
+</ul>
+<figure class="highlight css"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">B</span> → <span class="hljs-selector-tag">A</span>   ❌<br></code></pre></td></tr></tbody></table></figure>
+
+<p>👉 <strong>直接违反全局锁顺序</strong></p>
+<hr>
+<h3><span id="4%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%BC%9A%E6%AD%BB%E9%94%81">4️⃣ 为什么这会死锁？</span></h3><p>并发情况下：</p>
+<ul>
+<li><p>线程 T1：</p>
+<figure class="highlight isbl"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs isbl"><span class="hljs-function"><span class="hljs-title">acquire</span>(<span class="hljs-variable">B</span>)</span><br>→ 调用 <span class="hljs-function"><span class="hljs-title">f</span>()</span><br>→ 等 <span class="hljs-variable">A</span><br></code></pre></td></tr></tbody></table></figure>
+</li>
+<li><p>线程 T2：</p>
+<figure class="highlight stylus"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">acquire</span><span class="hljs-params">(A)</span></span><br>→ 等 B<br></code></pre></td></tr></tbody></table></figure></li>
+</ul>
+<p>形成：</p>
+<figure class="highlight css"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">A</span> → <span class="hljs-selector-tag">B</span> → <span class="hljs-selector-tag">A</span>   （环）<br></code></pre></td></tr></tbody></table></figure>
+
+<p>💥 <strong>死锁</strong></p>
+<hr>
+<h3><span id="%E2%9A%A0%EF%B8%8F-%E5%85%B3%E9%94%AE%E7%82%B9%E4%B8%80%E5%AE%9A%E8%A6%81%E8%AE%B0%E4%BD%8F">⚠️ 关键点（一定要记住）</span></h3><blockquote>
+<p><strong>死锁不是 f() 里产生的，而是 f() 被“错误地调用”产生的</strong></p>
+</blockquote>
+<hr>
+<h2><span id="%E5%9B%9B%E8%BF%99%E5%B0%B1%E6%98%AF%E4%B8%BA%E4%BB%80%E4%B9%88%E8%AF%B4%E9%94%81%E9%A1%BA%E5%BA%8F%E6%98%AF%E5%87%BD%E6%95%B0%E8%A7%84%E8%8C%83%E7%9A%84%E4%B8%80%E9%83%A8%E5%88%86">四、这就是为什么说：锁顺序是函数规范的一部分</span></h2><h3><span id="%E5%87%BD%E6%95%B0-f-%E7%9A%84%E7%9C%9F%E5%AE%9E%E8%A7%84%E8%8C%83%E5%85%B6%E5%AE%9E%E6%98%AF">函数 f 的真实“规范”其实是：</span></h3><blockquote>
+<p>❗ 调用 f() 时：</p>
+<ul>
+<li><strong>调用者不能持有任何“排在 A 之后”的锁</strong></li>
+<li>否则 f() 不可调用</li>
+</ul>
+</blockquote>
+<p>但这个条件：</p>
+<ul>
+<li>写在注释里</li>
+<li>写在设计文档里</li>
+<li>或写在程序员的脑子里</li>
+</ul>
+<p><strong>却不在 C 的类型系统里</strong></p>
+<hr>
+<h2><span id="%E4%BA%94xv6-%E4%B8%AD%E7%9A%84%E7%9C%9F%E5%AE%9E%E4%BE%8B%E5%AD%90%E9%9D%9E%E5%B8%B8%E7%BB%8F%E5%85%B8">五、xv6 中的真实例子（非常经典）</span></h2><h3><span id="consoleintr-%E2%86%92-wakeup">consoleintr → wakeup</span></h3><h4><span id="%E5%85%A8%E5%B1%80%E8%A7%84%E5%88%99">全局规则：</span></h4><figure class="highlight cos"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cos">cons.<span class="hljs-keyword">lock</span> → p-&gt;<span class="hljs-keyword">lock</span><br></code></pre></td></tr></tbody></table></figure>
+
+<hr>
+<h3><span id="wakeup-%E7%9A%84%E9%9A%90%E8%97%8F%E8%A7%84%E8%8C%83">wakeup() 的“隐藏规范”</span></h3><figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">wakeup(p):<br>  内部会 acquire(p-&gt;lock)<br></code></pre></td></tr></tbody></table></figure>
+
+<p><strong>因此：</strong></p>
+<blockquote>
+<p>调用 wakeup() 的任何代码：</p>
+<ul>
+<li>都必须保证</li>
+<li>当前只持有 <strong>排在 p-&gt;lock 之前的锁</strong></li>
+</ul>
+</blockquote>
+<hr>
+<h3><span id="consoleintr-%E6%98%AF%E5%90%88%E6%B3%95%E7%9A%84%E5%90%97">consoleintr 是合法的吗？</span></h3><figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">consoleintr:<br>  acquire(cons.lock)<br>  wakeup(p)<br></code></pre></td></tr></tbody></table></figure>
+
+<p>✔ 合法，因为：</p>
+<figure class="highlight cos"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cos">cons.<span class="hljs-keyword">lock</span> → p-&gt;<span class="hljs-keyword">lock</span><br></code></pre></td></tr></tbody></table></figure>
+
+<hr>
+<h3><span id="%E5%A6%82%E6%9E%9C%E6%9C%89%E4%BA%BA%E5%8F%8D%E7%9D%80%E5%86%99">如果有人反着写？</span></h3><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c">acquire(p-&gt;lock);<br><span class="hljs-built_in">printf</span>(<span class="hljs-string">"..."</span>);<br></code></pre></td></tr></tbody></table></figure>
+
+<p>printf 内部会拿 cons.lock：</p>
+<figure class="highlight cos"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cos">p-&gt;<span class="hljs-keyword">lock</span> → cons.<span class="hljs-keyword">lock</span>   ❌<br></code></pre></td></tr></tbody></table></figure>
+
+<p>立刻和中断路径死锁。</p>
+<hr>
+<h2><span id="%E5%85%AD%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E6%98%AF%E5%86%85%E6%A0%B8%E5%B9%B6%E5%8F%91%E9%87%8C%E6%9C%80%E9%9A%BE%E7%9A%84%E7%82%B9">六、为什么这是内核并发里最难的点？</span></h2><p>因为：</p>
+<ul>
+<li>编译器 <strong>无法检查</strong></li>
+<li>函数签名 <strong>看不出来</strong></li>
+<li>错误往往只在高并发下出现</li>
+<li>调试极其困难</li>
+</ul>
+<p>📌 所以内核开发者会说：</p>
+<blockquote>
+<p><strong>“锁顺序是接口的一部分”</strong></p>
+</blockquote>
+<hr>
+<h2><span id="%E4%B8%83%E4%B8%80%E5%8F%A5%E8%AF%9D%E9%9D%A2%E8%AF%95%E7%BA%A7%E6%80%BB%E7%BB%93">七、一句话“面试级总结”</span></h2><blockquote>
+<p><strong>在内核中，一个函数是否能被安全调用，不仅取决于它的代码是否正确，还取决于调用者在调用时已经持有哪些锁，因此锁顺序是函数规范的一部分。</strong></p>
+</blockquote>
+<hr>
+</body></html>
+	</article>
+
+	 
+    <div class="kira-post-copyright">
+        <strong>本文作者：</strong>Ivan-FYF<br>
+        <strong>本文链接：</strong><a href="https://hellonnnnn.github.io/2026/02/05/%E6%AD%BB%E9%94%81%E4%B8%8E%E9%94%81%E6%8E%92%E5%BA%8F/" title="https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;02&#x2F;05&#x2F;死锁与锁排序&#x2F;" target="_blank" rel="noopener">https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;02&#x2F;05&#x2F;死锁与锁排序&#x2F;</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+        
+    </div>
+
+  
+	<div class="kira-post-nav">
+		<nav class="post-nav">
+			  
+			<!-- 先找到与当前文字相同的目录 -->
+			                                                                                                                     
+			<!-- 在找到当前文章所在的 index -->
+			                                                                                                                                                        
+			<!-- 上一篇文章 -->
+			<div class="old">
+				<span>上一章</span>
+				<a href="/2026/02/05/xv6-%E4%B8%AD%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E9%94%81/"> xv6 中如何使用锁</a>
+			</div>
+			       
+			<!-- 下一篇文章 -->
+			<div class="new">
+				<span>下一章</span>
+				<a href="/2026/02/05/%E9%94%81%E5%92%8C%E4%B8%AD%E6%96%AD%E5%A4%84%E7%90%86%E5%87%BD%E6%95%B0/"> 锁和中断处理函数</a>
+			</div>
+			                         
+		</nav>
+	</div>
+	
+	<div class="kira-post-meta kira-rainbow">
+		
+			<a class="kirafont icon-container-fill -link" href="/categories/os%E9%A1%B9%E7%9B%AE/">os项目</a>
+		
+		
+			<a class="kirafont icon-tag-fill -none-link" href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%85%AB/" rel="tag">xv6操作系统项目实验八</a>
+		
+	</div>
+	
+	<div class="kira-post-footer">
+		
+
+		
+	<div class="giscus"></div>
+  
+    <script src="https://giscus.app/client.js"
+      data-repo="hellonnnnn/hellonnnnn.github.io"
+      data-repo-id="R_kgDOQqLdWw"
+      data-category="Announcements"
+      data-category-id="DIC_kwDOQqLdW84C1Rqg"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="light"
+      data-lang="zh-CN"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async  
+    ></script>
+  
+
+	</div>
+	
+</div>
+
+				</div>
+			</div>
+			<div class="kira-right-column">
+	<a onclick="document.querySelector('#kira-top-header').scrollIntoView({behavior: 'smooth'});" class="kira-backtotop" aria-label="回到顶部" title="回到顶部">
+		<button class="mdui-fab mdui-ripple">
+			<i class="kirafont icon-caret-up"></i>
+		</button>
+	</a>
+</div>
+
+		</div>
+	</body>
+</html>
