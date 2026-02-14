@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html 
+	lang="zh-Hans">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		
+<link rel="stylesheet" href="/css/layout.css">
+
+		
+		<title> 日志层 -  Ivan&#39;s Tech Blog</title>
+		<!-- <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" /> -->
+		<!-- <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script> -->
+		
+<link rel="stylesheet" href="/lib/mdui/mdui.min.css">
+
+		
+<script src="/lib/mdui/mdui.min.js"></script>
+
+		<!-- lazyload -->
+		
+<script src="/lib/lazysizes.js"></script>
+
+		<!-- smooth-scrolling -->
+		
+<script src="/lib/smooth-scrolling.js"></script>
+
+		<!-- highlight -->
+		
+<link rel="stylesheet" href="/lib/highlight/atom-one-dark.min.css">
+
+		
+<script src="/lib/highlight/highlight.min.js"></script>
+
+		<!-- 预置 kiraicon -->
+		
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+
+		
+		<link
+			rel="shortcut icon"
+			href="https://kira.host/assets/Pictures/Others/116359b4ccf19917.jpg"
+			type="image/png"
+		/>
+		
+<link rel="stylesheet" href="/deps/css/APlayer.min.css">
+
+		
+		
+<script src="/deps/js/APlayer.min.js"></script>
+<script src="/deps/js/Meting.min.js"></script>
+
+	<meta name="generator" content="Hexo 8.1.1"></head>
+
+	<body>
+		<div
+			class="kira-background"
+			style="background-image: url('/img/background4.jpg')"
+		></div>
+		<div class="kira-header">
+    <a
+        class="kira-drawer-button mdui-ripple"
+        title="导航栏"
+        onclick="document.querySelector('.kira-sidebar-modal').classList.add('show');document.querySelector('.kira-sidebar#sidebar').classList.add('show');"
+    >
+        <i class="kirafont icon-menu"></i>
+    </a>
+    <a href="/" title="Ivan&#39;s Tech Blog">
+        <img
+			src="/img/background5.jpg"
+			alt="Ivan-FYF"
+		/>
+    </a>
+</div>
+		<div class="kira-body">
+			<div class="kira-sidebar" id="sidebar">
+	<div class="kira-avatar mdui-ripple">
+		<a href="/img/background5.jpg" title="Ivan-FYF">
+			<img
+				src="/img/background5.jpg"
+				alt="Ivan-FYF"
+			/>
+		</a>
+	</div>
+	<div class="kira-count">
+		<div><span>文章</span>53</div>
+		<div><span>标签</span>11</div>
+		<div><span>分类</span>3</div>
+	</div>
+	<div class="kira-list">
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/"
+			title="回到首页"
+		>
+			<i
+				class="kirafont
+					
+						icon-home
+					"
+			></i>
+			<div class="kira-list-item-content">
+				回到首页
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/archive.html"
+			title="文章归档"
+		>
+			<i
+				class="kirafont
+					
+						icon-container
+					"
+			></i>
+			<div class="kira-list-item-content">
+				文章归档
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/about/"
+			title="关于本人"
+		>
+			<i
+				class="kirafont
+					
+						icon-user
+					"
+			></i>
+			<div class="kira-list-item-content">
+				关于本人
+			</div>
+		</a>
+		
+	</div>
+	<aside id="kira-sidebar">
+		
+			<div class="kira-widget-wrap">
+	<div class="kira-widget kira-social">
+		
+			<a
+				class="mdui-ripple"
+				href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=2933852809&website=www.oicqzone.com"
+				target="_blank"
+				mdui-tooltip="{content: 'QQ'}"
+				style="color: rgb(49, 174, 255); background-color: rgba(49, 174, 255, .1);"
+			>
+				<i
+					class="kirafont
+					
+						icon-QQ
+					"
+				></i>
+			</a>
+		
+			<a
+				class="mdui-ripple"
+				href="https://github.com/<hellonnnnn>/"
+				target="_blank"
+				mdui-tooltip="{content: 'GitHub'}"
+				style="color: rgb(25, 23, 23); background-color: rgba(25, 23, 23, .15);"
+			>
+				<i
+					class="kirafont
+					
+						icon-github
+					"
+				></i>
+			</a>
+		
+	</div>
+</div>
+
+		
+			
+  <div class="kira-widget-wrap">
+    <h3 class="kira-widget-title">分类</h3>
+    <div class="kira-widget">
+      <ul class="category-list">
+        
+        
+
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/os项目/">
+              <img 
+                src="/img/background1.jpg" 
+                alt="os项目" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              os项目
+            </a>
+            <span class="category-list-count">51</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/八股/">
+              <img 
+                src="/img/background3.jpg" 
+                alt="八股" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              八股
+            </a>
+            <span class="category-list-count">1</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/算法/">
+              <img 
+                src="/img/background2.jpg" 
+                alt="算法" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              算法
+            </a>
+            <span class="category-list-count">1</span>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+		
+			
+	<div class="kira-widget-wrap">
+		<div id="randomtagcloud" class="kira-widget tagcloud kira-rainbow">
+			<a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%80/" style="font-size: 16px;">xv6操作系统项目实验一</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%83/" style="font-size: 14px;">xv6操作系统项目实验七</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%89/" style="font-size: 18px;">xv6操作系统项目实验三</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B9%9D/" style="font-size: 20px;">xv6操作系统项目实验九</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%8C/" style="font-size: 18px;">xv6操作系统项目实验二</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%94/" style="font-size: 12px;">xv6操作系统项目实验五</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%85%AB/" style="font-size: 18px;">xv6操作系统项目实验八</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%85%AD/" style="font-size: 10px;">xv6操作系统项目实验六</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%9B%9B/" style="font-size: 20px;">xv6操作系统项目实验四</a> <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" style="font-size: 10px;">基础知识</a> <a href="/tags/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5/" style="font-size: 10px;">算法训练营</a>
+
+		</div>
+		
+	</div>
+
+
+		
+			
+	<div class="kira-widget-wrap">
+		<h3 class="kira-widget-title">
+			文章归档
+		</h3>
+		<div class="kira-widget">
+			<ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/">2026</a><span class="archive-list-count">27</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/">2025</a><span class="archive-list-count">26</span></li></ul>
+		</div>
+	</div>
+
+
+		
+	</aside>
+	<!-- 保留空的版权容器，修复布局 -->
+    	<div class="kira-copyright">
+    </div>
+</div> <!-- 侧边栏的闭合div，必须保留 -->
+	<!-- <div class="kira-copyright">
+		&copy; 2026
+		<a href="/">Ivan-FYF</a>
+		Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> &
+		<a href="https://github.com/ch1ny/kira-hexo/" target="_blank">Kira-Hexo</a>
+		<br />
+		
+		
+	</div>
+</div> -->
+<div
+	class="kira-sidebar-modal"
+	id="sidebar-modal"
+	onclick="(function(self) {
+		self.classList.remove('show');
+		document.querySelector('.kira-sidebar.show#sidebar').classList.remove('show');
+	})(this)"
+></div>
+			<div class="kira-content">
+				<div id="kira-top-header"></div>
+				<div class="kira-main-content">
+					
+<link rel="stylesheet" href="/css/kira-image.css">
+
+
+<script src="/js/kira-image.js"></script>
+
+<div class="kira-image">
+    <div class="kira-image-modal">
+        <div class="kira-image-header">
+            <div class="kira-image-counter"></div>
+            <div class="kira-image-title"></div>
+            <div class="kira-image-operation">
+                <div class="kira-image-operation-button" id="kira-image-operation-button-zoom">
+                    <i class="kirafont icon-zoom-in"></i>
+                </div>
+                <div class="kira-image-operation-button" id="kira-image-operation-button-close">
+                    <i class="kirafont icon-close"></i>
+                </div>
+            </div>
+        </div>
+        <div class="kira-image-container">
+            <div class="kira-image-prev-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-left"></i>
+                </div>
+            </div>
+            <div class="kira-image-list">
+                <div class="kira-image-prev">
+                    <img />
+                </div>
+                <div class="kira-image-now">
+                    <img />
+                </div>
+                <div class="kira-image-next">
+                    <img />
+                </div>
+            </div>
+            <div class="kira-image-next-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+	
+<link rel="stylesheet" href="/css/kira-code-copy.css">
+
+	
+<script src="/js/kira-code-copy.js"></script>
+
+
+<div class="kira-post">
+	<article>
+		
+		<div
+			class="kira-post-cover"
+			style="padding-bottom: '56.25%'"
+		>
+			<img
+				data-src="/img/background4.jpg"
+				data-sizes="auto"
+				alt="日志层"
+				class="lazyload kira-post-cover-image disabled-kira-image"
+			/>
+			<h1>日志层</h1>
+		</div>
+		
+		<div class="kira-post-meta kira-rainbow" style="margin:10px 0!important;">
+			<a><i class="kirafont icon-calendar-fill"></i>2026年02月14日</a>
+			<a><i class="kirafont icon-edit-fill"></i>3.4k 字</a>
+			<a><i class="kirafont icon-time-circle-fill"></i>大概 14 分钟</a>
+		</div>
+		<html><head></head><body><p>你想深入理解 xv6 中日志层（log layer）的设计原理，以及它是如何解决文件系统崩溃恢复问题的，核心是搞懂日志机制为何能让文件系统操作具备原子性，避免崩溃后的数据不一致。</p>
+<h3><span id="%E4%B8%80%E6%97%A5%E5%BF%97%E5%B1%82%E8%A7%A3%E5%86%B3%E5%B4%A9%E6%BA%83%E9%97%AE%E9%A2%98%E7%9A%84%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91">一、日志层解决崩溃问题的核心逻辑</span></h3><p>要理解这个机制，我们可以把文件系统操作拆解为“准备-提交-应用-清理”四个阶段，结合崩溃发生的不同时机分析：</p>
+<h4><span id="1-%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF">1. 核心设计思路</span></h4><p>xv6 把文件系统的修改操作（比如创建文件、截断文件、删除文件等，这些操作需要多次磁盘写入）封装成一个<strong>原子事务</strong>：</p>
+<ul>
+<li>不直接修改磁盘上的文件系统核心数据（inode、块位图、数据块等）；</li>
+<li>先把所有要修改的内容写入磁盘上的<strong>日志区域</strong>（log）；</li>
+<li>写入“提交标记”（commit record），表示日志里的操作是完整的；</li>
+<li>再把日志里的内容“回放”到真实的文件系统位置；</li>
+<li>最后清空日志，完成整个操作。</li>
+</ul>
+<h4><span id="2-%E4%B8%8D%E5%90%8C%E5%B4%A9%E6%BA%83%E6%97%B6%E6%9C%BA%E7%9A%84%E5%A4%84%E7%90%86%E5%85%B3%E9%94%AE">2. 不同崩溃时机的处理（关键）</span></h4><table>
+<thead>
+<tr>
+<th>崩溃时机</th>
+<th>日志状态</th>
+<th>恢复逻辑</th>
+<th>最终效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>提交标记写入前</td>
+<td>日志无“完成”标记</td>
+<td>恢复代码直接忽略日志</td>
+<td>磁盘状态和操作未开始时一致，无脏数据</td>
+</tr>
+<tr>
+<td>提交标记写入后、回放前</td>
+<td>日志有“完成”标记</td>
+<td>恢复代码重播日志到文件系统</td>
+<td>操作的所有修改都被应用，数据一致</td>
+</tr>
+<tr>
+<td>回放中</td>
+<td>日志有“完成”标记</td>
+<td>恢复代码重新重播（重复写入不影响）</td>
+<td>最终所有修改都应用，数据一致</td>
+</tr>
+<tr>
+<td>回放完成、日志清空前</td>
+<td>日志有“完成”标记</td>
+<td>恢复代码重播（已回放的部分重复写）</td>
+<td>数据已一致，清空日志即可</td>
+</tr>
+</tbody></table>
+<h4><span id="3-%E5%85%B3%E9%94%AE%E7%89%B9%E6%80%A7%E5%B9%82%E7%AD%89%E6%80%A7">3. 关键特性：幂等性</span></h4><p>日志回放的操作是<strong>幂等的</strong>（重复执行多次和执行一次的结果完全一样）。比如：</p>
+<ul>
+<li>把 inode 的大小字段从 100 改成 0（截断文件），重复写入这个修改，结果还是 0；</li>
+<li>把数据块的位图标记为“空闲”，重复写这个标记，结果还是“空闲”。<br>这就保证了即使恢复时重复执行日志操作，也不会导致新的不一致。<br>你现在提供了 xv6 日志系统的完整核心代码，想要我逐模块解析这段代码的执行逻辑、关键函数的作用，以及代码中隐藏的设计细节（比如日志吸收、缓存固定、崩溃恢复等）。我会从<strong>代码整体功能</strong>、<strong>核心函数逐行解析</strong>、<strong>关键设计细节</strong>三个维度帮你彻底吃透这段代码。</li>
+</ul>
+<h3><span id="%E4%B8%80%E4%BB%A3%E7%A0%81%E6%95%B4%E4%BD%93%E5%8A%9F%E8%83%BD%E6%80%BB%E7%BB%93">一、代码整体功能总结</span></h3><p>这段代码实现了 xv6 文件系统的<strong>日志子系统</strong>，核心目标是保证文件系统操作的原子性，避免崩溃后数据不一致。整体逻辑可以概括为：</p>
+<ol>
+<li><strong>初始化与恢复</strong>：系统启动时读取日志头，若有未提交的事务则回放；</li>
+<li><strong>事务预定</strong>：每个文件系统调用开始时（<code>begin_op</code>）预定日志空间，防止溢出和中途提交；</li>
+<li><strong>日志记录</strong>：修改缓存块后通过 <code>log_write</code> 记录到日志（替代直接写磁盘），支持“日志吸收”优化；</li>
+<li><strong>事务提交</strong>：所有调用完成后（<code>end_op</code>）触发提交，分“写日志→写头块→回放→清空日志”四阶段；</li>
+<li><strong>崩溃恢复</strong>：重启时通过 <code>recover_from_log</code> 检查日志头，确保已提交的事务全部生效。</li>
+</ol>
+<h3><span id="%E4%BA%8C%E6%A0%B8%E5%BF%83%E5%87%BD%E6%95%B0%E9%80%90%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90">二、核心函数逐模块解析</span></h3><h4><span id="1-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%AE%9A%E4%B9%89">1. 数据结构定义</span></h4><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// 日志头：存储日志中有效块的数量 + 目标块号数组</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">logheader</span> {</span><br>  <span class="hljs-type">int</span> n;          <span class="hljs-comment">// 日志中包含的块数（0=空，&gt;0=有已提交事务）</span><br>  <span class="hljs-type">int</span> block[LOGSIZE]; <span class="hljs-comment">// 每个日志块对应的目标文件系统块号</span><br>};<br><br><span class="hljs-comment">// 日志核心管理结构（内存中）</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">log</span> {</span><br>  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">spinlock</span> <span class="hljs-title">lock</span>;</span>  <span class="hljs-comment">// 日志锁，保证并发安全</span><br>  <span class="hljs-type">int</span> start;             <span class="hljs-comment">// 日志在磁盘上的起始块号（从超级块读取）</span><br>  <span class="hljs-type">int</span> size;              <span class="hljs-comment">// 日志总块数（从超级块读取）</span><br>  <span class="hljs-type">int</span> outstanding;       <span class="hljs-comment">// 正在执行的文件系统调用数（预定日志空间的调用数）</span><br>  <span class="hljs-type">int</span> committing;        <span class="hljs-comment">// 标记是否正在提交，防止并发提交</span><br>  <span class="hljs-type">int</span> dev;               <span class="hljs-comment">// 磁盘设备号</span><br>  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">logheader</span> <span class="hljs-title">lh</span>;</span>   <span class="hljs-comment">// 内存中的日志头（对应磁盘上的日志头块）</span><br>};<br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">log</span> <span class="hljs-title">log</span>;</span> <span class="hljs-comment">// 全局日志对象，整个文件系统共用</span><br></code></pre></td></tr></tbody></table></figure>
+<ul>
+<li>关键：<code>log.lh</code> 是磁盘日志头的<strong>内存副本</strong>，所有日志操作先修改这个内存副本，再通过 <code>write_head</code> 同步到磁盘。</li>
+</ul>
+<h4><span id="2-%E5%88%9D%E5%A7%8B%E5%8C%96%E4%B8%8E%E5%B4%A9%E6%BA%83%E6%81%A2%E5%A4%8Dinitlog--recover_from_log">2. 初始化与崩溃恢复（initlog + recover_from_log）</span></h4><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">void</span> <span class="hljs-title function_">initlog</span><span class="hljs-params">(<span class="hljs-type">int</span> dev, <span class="hljs-keyword">struct</span> superblock *sb)</span> {<br>  <span class="hljs-comment">// 检查日志头大小是否超过磁盘块（BSIZE=512），防止溢出</span><br>  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> logheader) &gt;= BSIZE)<br>    panic(<span class="hljs-string">"initlog: too big logheader"</span>);<br><br>  initlock(&amp;<span class="hljs-built_in">log</span>.lock, <span class="hljs-string">"log"</span>); <span class="hljs-comment">// 初始化日志锁</span><br>  <span class="hljs-built_in">log</span>.start = sb-&gt;logstart;   <span class="hljs-comment">// 从超级块读日志起始块号</span><br>  <span class="hljs-built_in">log</span>.size = sb-&gt;nlog;        <span class="hljs-comment">// 从超级块读日志总块数</span><br>  <span class="hljs-built_in">log</span>.dev = dev;              <span class="hljs-comment">// 记录磁盘设备号</span><br>  recover_from_log();         <span class="hljs-comment">// 启动时恢复崩溃的事务</span><br>}<br><br><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">recover_from_log</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {<br>  read_head();                <span class="hljs-comment">// 从磁盘读日志头到内存</span><br>  install_trans(<span class="hljs-number">1</span>);           <span class="hljs-comment">// 回放日志到文件系统（recovering=1 表示恢复阶段，不释放缓存）</span><br>  <span class="hljs-built_in">log</span>.lh.n = <span class="hljs-number">0</span>;               <span class="hljs-comment">// 清空内存日志头</span><br>  write_head();               <span class="hljs-comment">// 同步空日志头到磁盘，清空日志</span><br>}<br></code></pre></td></tr></tbody></table></figure>
+<ul>
+<li>执行时机：系统启动时 <code>fsinit</code> 调用 <code>initlog</code>，在第一个用户进程运行前完成恢复；</li>
+<li>核心逻辑：只要磁盘日志头的 <code>n&gt;0</code>，<code>install_trans</code> 就会把日志块回放至文件系统，保证已提交的事务不丢失。</li>
+</ul>
+<h4><span id="3-%E6%97%A5%E5%BF%97%E5%A4%B4%E7%9A%84%E8%AF%BB%E5%86%99read_head--write_head">3. 日志头的读写（read_head + write_head）</span></h4><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// 从磁盘读日志头到内存 log.lh</span><br><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">read_head</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {<br>  <span class="hljs-comment">// 读磁盘上的日志头块（log.start 是日志头块的块号）</span><br>  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">buf</span> *<span class="hljs-title">buf</span> =</span> bread(<span class="hljs-built_in">log</span>.dev, <span class="hljs-built_in">log</span>.start);<br>  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">logheader</span> *<span class="hljs-title">lh</span> =</span> (<span class="hljs-keyword">struct</span> logheader *) (buf-&gt;data);<br>  <span class="hljs-built_in">log</span>.lh.n = lh-&gt;n; <span class="hljs-comment">// 同步块数</span><br>  <span class="hljs-comment">// 同步目标块号数组</span><br>  <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-built_in">log</span>.lh.n; i++) {<br>    <span class="hljs-built_in">log</span>.lh.block[i] = lh-&gt;block[i];<br>  }<br>  brelse(buf); <span class="hljs-comment">// 释放缓存块</span><br>}<br><br><span class="hljs-comment">// 把内存 log.lh 同步到磁盘日志头块（提交的核心标记）</span><br><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">write_head</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {<br>  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">buf</span> *<span class="hljs-title">buf</span> =</span> bread(<span class="hljs-built_in">log</span>.dev, <span class="hljs-built_in">log</span>.start); <span class="hljs-comment">// 读日志头块到缓存</span><br>  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">logheader</span> *<span class="hljs-title">hb</span> =</span> (<span class="hljs-keyword">struct</span> logheader *) (buf-&gt;data);<br>  hb-&gt;n = <span class="hljs-built_in">log</span>.lh.n; <span class="hljs-comment">// 同步块数</span><br>  <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-built_in">log</span>.lh.n; i++) {<br>    hb-&gt;block[i] = <span class="hljs-built_in">log</span>.lh.block[i]; <span class="hljs-comment">// 同步目标块号</span><br>  }<br>  bwrite(buf); <span class="hljs-comment">// 写回磁盘（这一步是事务提交的核心标记）</span><br>  brelse(buf);<br>}<br></code></pre></td></tr></tbody></table></figure>
+<ul>
+<li>关键：<code>write_head</code> 是<strong>事务提交的真正分界点</strong>——执行后，即使系统崩溃，恢复时也会识别到 <code>n&gt;0</code> 并回放日志。</li>
+</ul>
+<h4><span id="4-%E6%97%A5%E5%BF%97%E5%9B%9E%E6%94%BEinstall_trans">4. 日志回放（install_trans）</span></h4><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// 把日志块从日志区复制到文件系统的目标位置</span><br><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">install_trans</span><span class="hljs-params">(<span class="hljs-type">int</span> recovering)</span> {<br>  <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> tail = <span class="hljs-number">0</span>; tail &lt; <span class="hljs-built_in">log</span>.lh.n; tail++) {<br>    <span class="hljs-comment">// 读日志块：log.start+tail+1 是日志数据块的块号（+1 因为 log.start 是头块）</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">buf</span> *<span class="hljs-title">lbuf</span> =</span> bread(<span class="hljs-built_in">log</span>.dev, <span class="hljs-built_in">log</span>.start+tail+<span class="hljs-number">1</span>);<br>    <span class="hljs-comment">// 读目标文件系统块（log.lh.block[tail] 是目标块号）</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">buf</span> *<span class="hljs-title">dbuf</span> =</span> bread(<span class="hljs-built_in">log</span>.dev, <span class="hljs-built_in">log</span>.lh.block[tail]);<br>    memmove(dbuf-&gt;data, lbuf-&gt;data, BSIZE); <span class="hljs-comment">// 复制日志块到目标块</span><br>    bwrite(dbuf);  <span class="hljs-comment">// 写回磁盘</span><br>    <span class="hljs-keyword">if</span>(recovering == <span class="hljs-number">0</span>) <span class="hljs-comment">// 非恢复阶段，释放缓存块的固定（减少引用计数）</span><br>      bunpin(dbuf);<br>    brelse(lbuf); <span class="hljs-comment">// 释放日志块缓存</span><br>    brelse(dbuf); <span class="hljs-comment">// 释放目标块缓存</span><br>  }<br>}<br></code></pre></td></tr></tbody></table></figure>
+<ul>
+<li>核心：<code>recovering</code> 参数区分“崩溃恢复”和“正常提交”：<ul>
+<li>恢复阶段（<code>recovering=1</code>）：不需要 <code>bunpin</code>，因为恢复时没有提前 <code>bpin</code>；</li>
+<li>正常提交（<code>recovering=0</code>）：需要 <code>bunpin</code>，释放 <code>log_write</code> 中 <code>bpin</code> 固定的缓存块。</li>
+</ul>
+</li>
+</ul>
+<h4><span id="5-%E4%BA%8B%E5%8A%A1%E9%A2%84%E5%AE%9Abegin_op">5. 事务预定（begin_op）</span></h4><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">void</span> <span class="hljs-title function_">begin_op</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {<br>  acquire(&amp;<span class="hljs-built_in">log</span>.lock); <span class="hljs-comment">// 加锁保证并发安全</span><br>  <span class="hljs-keyword">while</span>(<span class="hljs-number">1</span>){<br>    <span class="hljs-keyword">if</span>(<span class="hljs-built_in">log</span>.committing){<br>      <span class="hljs-comment">// 若正在提交，等待（防止提交过程中新增操作）</span><br>      sleep(&amp;<span class="hljs-built_in">log</span>, &amp;<span class="hljs-built_in">log</span>.lock);<br>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(<span class="hljs-built_in">log</span>.lh.n + (<span class="hljs-built_in">log</span>.outstanding+<span class="hljs-number">1</span>)*MAXOPBLOCKS &gt; LOGSIZE){<br>      <span class="hljs-comment">// 检查日志空间是否足够：当前日志块数 + 新调用的最大可能块数 &gt; 日志上限</span><br>      sleep(&amp;<span class="hljs-built_in">log</span>, &amp;<span class="hljs-built_in">log</span>.lock);<br>    } <span class="hljs-keyword">else</span> {<br>      <span class="hljs-comment">// 预定空间：增加未完成调用数，阻止提交</span><br>      <span class="hljs-built_in">log</span>.outstanding += <span class="hljs-number">1</span>;<br>      release(&amp;<span class="hljs-built_in">log</span>.lock);<br>      <span class="hljs-keyword">break</span>;<br>    }<br>  }<br>}<br></code></pre></td></tr></tbody></table></figure>
+<ul>
+<li>核心逻辑：<ol>
+<li><code>log.outstanding</code> 递增后，<code>end_op</code> 只有在该值归 0 时才会提交，保证单个调用不被拆分；</li>
+<li><code>MAXOPBLOCKS</code> 是保守上限，假设每个调用最多写这么多块，避免日志溢出。</li>
+</ol>
+</li>
+</ul>
+<h4><span id="6-%E4%BA%8B%E5%8A%A1%E6%8F%90%E4%BA%A4%E8%A7%A6%E5%8F%91end_op">6. 事务提交触发（end_op）</span></h4><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">void</span> <span class="hljs-title function_">end_op</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {<br>  <span class="hljs-type">int</span> do_commit = <span class="hljs-number">0</span>;<br><br>  acquire(&amp;<span class="hljs-built_in">log</span>.lock);<br>  <span class="hljs-built_in">log</span>.outstanding -= <span class="hljs-number">1</span>; <span class="hljs-comment">// 减少未完成调用数</span><br>  <span class="hljs-keyword">if</span>(<span class="hljs-built_in">log</span>.committing)<br>    panic(<span class="hljs-string">"log.committing"</span>); <span class="hljs-comment">// 防止提交过程中调用 end_op</span><br>  <span class="hljs-keyword">if</span>(<span class="hljs-built_in">log</span>.outstanding == <span class="hljs-number">0</span>){<br>    do_commit = <span class="hljs-number">1</span>;       <span class="hljs-comment">// 所有调用完成，标记需要提交</span><br>    <span class="hljs-built_in">log</span>.committing = <span class="hljs-number">1</span>;  <span class="hljs-comment">// 标记正在提交</span><br>  } <span class="hljs-keyword">else</span> {<br>    <span class="hljs-comment">// 唤醒等待日志空间的进程（因为 outstanding 减少，可用空间增加）</span><br>    wakeup(&amp;<span class="hljs-built_in">log</span>);<br>  }<br>  release(&amp;<span class="hljs-built_in">log</span>.lock);<br><br>  <span class="hljs-keyword">if</span>(do_commit){<br>    commit(); <span class="hljs-comment">// 执行提交（不能持有锁，因为 commit 会 sleep）</span><br>    acquire(&amp;<span class="hljs-built_in">log</span>.lock);<br>    <span class="hljs-built_in">log</span>.committing = <span class="hljs-number">0</span>; <span class="hljs-comment">// 清除提交标记</span><br>    wakeup(&amp;<span class="hljs-built_in">log</span>);       <span class="hljs-comment">// 唤醒等待提交完成的进程</span><br>    release(&amp;<span class="hljs-built_in">log</span>.lock);<br>  }<br>}<br></code></pre></td></tr></tbody></table></figure>
+<ul>
+<li>关键：<code>commit</code> 必须在解锁后执行，因为 <code>commit</code> 中的 <code>bread</code>/<code>bwrite</code> 会触发 sleep，而持有自旋锁时不能 sleep。</li>
+</ul>
+<h4><span id="7-%E6%8F%90%E4%BA%A4%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91commit--write_log">7. 提交核心逻辑（commit + write_log）</span></h4><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">commit</span><span class="hljs-params">()</span> {<br>  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">log</span>.lh.n &gt; <span class="hljs-number">0</span>) {<br>    write_log();     <span class="hljs-comment">// 步骤1：把缓存中的修改块复制到日志磁盘区</span><br>    write_head();    <span class="hljs-comment">// 步骤2：写日志头到磁盘（提交标记）</span><br>    install_trans(<span class="hljs-number">0</span>); <span class="hljs-comment">// 步骤3：回放日志到文件系统</span><br>    <span class="hljs-built_in">log</span>.lh.n = <span class="hljs-number">0</span>;    <span class="hljs-comment">// 步骤4：清空内存日志头</span><br>    write_head();    <span class="hljs-comment">// 步骤5：同步空日志头到磁盘，清空日志</span><br>  }<br>}<br><br><span class="hljs-comment">// 把缓存中的修改块复制到日志磁盘区</span><br><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">write_log</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {<br>  <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> tail = <span class="hljs-number">0</span>; tail &lt; <span class="hljs-built_in">log</span>.lh.n; tail++) {<br>    <span class="hljs-comment">// 读日志磁盘块（目标位置）</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">buf</span> *<span class="hljs-title">to</span> =</span> bread(<span class="hljs-built_in">log</span>.dev, <span class="hljs-built_in">log</span>.start+tail+<span class="hljs-number">1</span>);<br>    <span class="hljs-comment">// 读缓存中的修改块（源位置）</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">buf</span> *<span class="hljs-title">from</span> =</span> bread(<span class="hljs-built_in">log</span>.dev, <span class="hljs-built_in">log</span>.lh.block[tail]);<br>    memmove(to-&gt;data, from-&gt;data, BSIZE); <span class="hljs-comment">// 复制数据</span><br>    bwrite(to);  <span class="hljs-comment">// 写日志块到磁盘</span><br>    brelse(from); <span class="hljs-comment">// 释放源块缓存</span><br>    brelse(to);   <span class="hljs-comment">// 释放日志块缓存</span><br>  }<br>}<br></code></pre></td></tr></tbody></table></figure>
+<ul>
+<li>提交五步法：保证事务的原子性——要么全部回放，要么全部忽略。</li>
+</ul>
+<h4><span id="8-%E6%97%A5%E5%BF%97%E8%AE%B0%E5%BD%95log_write">8. 日志记录（log_write）</span></h4><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">void</span> <span class="hljs-title function_">log_write</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> buf *b)</span> {<br>  <span class="hljs-comment">// 检查日志空间是否溢出</span><br>  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">log</span>.lh.n &gt;= LOGSIZE || <span class="hljs-built_in">log</span>.lh.n &gt;= <span class="hljs-built_in">log</span>.size - <span class="hljs-number">1</span>)<br>    panic(<span class="hljs-string">"too big a transaction"</span>);<br>  <span class="hljs-comment">// 检查是否在事务中（必须先调用 begin_op）</span><br>  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">log</span>.outstanding &lt; <span class="hljs-number">1</span>)<br>    panic(<span class="hljs-string">"log_write outside of trans"</span>);<br><br>  acquire(&amp;<span class="hljs-built_in">log</span>.lock);<br>  <span class="hljs-type">int</span> i;<br>  <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-built_in">log</span>.lh.n; i++) {<br>    <span class="hljs-comment">// 日志吸收（absorption）：同一事务中多次写同一块，复用日志槽位</span><br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">log</span>.lh.block[i] == b-&gt;blockno)<br>      <span class="hljs-keyword">break</span>;<br>  }<br>  <span class="hljs-built_in">log</span>.lh.block[i] = b-&gt;blockno; <span class="hljs-comment">// 记录目标块号</span><br>  <span class="hljs-keyword">if</span> (i == <span class="hljs-built_in">log</span>.lh.n) {  <span class="hljs-comment">// 新块：需要固定缓存</span><br>    bpin(b);            <span class="hljs-comment">// 增加引用计数，防止缓存被换出</span><br>    <span class="hljs-built_in">log</span>.lh.n++;         <span class="hljs-comment">// 日志块数+1</span><br>  }<br>  release(&amp;<span class="hljs-built_in">log</span>.lock);<br>}<br></code></pre></td></tr></tbody></table></figure>
+<ul>
+<li>核心设计：<ol>
+<li><strong>日志吸收</strong>：避免同一事务中多次写同一块占用多个日志槽位，节省空间；</li>
+<li><strong>缓存固定（bpin）</strong>：防止修改后的缓存块被换出（换出会提前写磁盘，破坏原子性）；</li>
+<li>替代 <code>bwrite</code>：用户修改缓存后调用 <code>log_write</code>，而非直接 <code>bwrite</code>，保证修改先入日志。</li>
+</ol>
+</li>
+</ul>
+<h3><span id="%E4%B8%89%E5%85%B3%E9%94%AE%E8%AE%BE%E8%AE%A1%E7%BB%86%E8%8A%82%E4%B8%8E%E6%98%93%E9%94%99%E7%82%B9">三、关键设计细节与易错点</span></h3><h4><span id="1-%E6%97%A5%E5%BF%97%E7%A9%BA%E9%97%B4%E8%AE%A1%E7%AE%97">1. 日志空间计算</span></h4><ul>
+<li><code>log.size - 1</code>：日志总块数减 1，因为第一个块是日志头，剩余的才是数据块；</li>
+<li><code>(log.outstanding+1)*MAXOPBLOCKS</code>：保守估算新调用的最大块数，防止溢出。</li>
+</ul>
+<h4><span id="2-%E7%BC%93%E5%AD%98%E5%9B%BA%E5%AE%9A%E4%B8%8E%E9%87%8A%E6%94%BE">2. 缓存固定与释放</span></h4><ul>
+<li><code>bpin</code>：在 <code>log_write</code> 中调用，固定缓存块；</li>
+<li><code>bunpin</code>：在 <code>install_trans</code> 中调用（<code>recovering=0</code>），释放缓存块；</li>
+<li>配对：每个 <code>bpin</code> 对应一个 <code>bunpin</code>，防止内存泄漏。</li>
+</ul>
+<h4><span id="3-%E5%B9%B6%E5%8F%91%E5%AE%89%E5%85%A8">3. 并发安全</span></h4><ul>
+<li>自旋锁 <code>log.lock</code>：保护 <code>log</code> 结构体的所有字段，防止并发修改；</li>
+<li><code>sleep</code>/<code>wakeup</code>：处理等待（提交中、空间不足），避免忙等。</li>
+</ul>
+<h4><span id="4-%E5%8E%9F%E5%AD%90%E6%80%A7%E4%BF%9D%E8%AF%81">4. 原子性保证</span></h4><ul>
+<li>提交点：<code>write_head</code> 是唯一提交标记，之前崩溃则日志头 <code>n=0</code>，恢复时忽略；之后崩溃则 <code>n&gt;0</code>，恢复时回放；</li>
+<li>幂等回放：<code>install_trans</code> 重复执行多次结果一致，保证恢复安全。</li>
+</ul>
+<h3><span id="%E5%9B%9B%E6%80%BB%E7%BB%93">四、总结</span></h3><p>这段代码的核心关键点：</p>
+<ol>
+<li><strong>原子事务</strong>：通过“先写日志→提交→回放→清空”的流程，保证文件系统操作要么全成，要么全败；</li>
+<li><strong>日志吸收</strong>：同一事务中重复写同一块时复用日志槽位，节省空间；</li>
+<li><strong>缓存固定</strong>：<code>bpin</code>/<code>bunpin</code> 防止修改后的缓存块提前换出，破坏原子性；</li>
+<li><strong>崩溃恢复</strong>：启动时读取日志头，<code>n&gt;0</code> 则回放，保证已提交的事务不丢失；</li>
+<li><strong>并发安全</strong>：自旋锁 + sleep/wakeup 保证多进程下的日志操作安全。</li>
+</ol>
+<p>这段代码是 xv6 文件系统稳定性的核心，所有文件系统修改（创建、写入、删除、截断）都通过这套日志机制保证原子性。</p>
+<p>我给你一段<strong>最精简、好记、考试/面试直接能用</strong>的日志用法总结：</p>
+<hr>
+<h1><span id="xv6-%E6%97%A5%E5%BF%97%E7%94%A8%E6%B3%95%E6%9E%81%E7%AE%80%E7%89%88">xv6 日志用法（极简版）</span></h1><ol>
+<li><p><strong>每个文件系统原子操作，都要用日志包起来</strong></p>
+</li>
+<li><p>固定写法：</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs c">begin_op();<br><br>bread(...);        <span class="hljs-comment">// 读块</span><br>修改 buf-&gt;data;    <span class="hljs-comment">// 改内容</span><br>log_write(buf);   <span class="hljs-comment">// 记日志（代替直接 bwrite）</span><br><br>end_op();<br></code></pre></td></tr></tbody></table></figure>
+</li>
+<li><p><strong>begin_op()</strong></p>
+<ul>
+<li>开始事务，预定日志空间</li>
+<li>防止中途被提交打断</li>
+</ul>
+</li>
+<li><p><strong>log_write()</strong></p>
+<ul>
+<li>把要写的块<strong>记入日志</strong>，不直接写磁盘</li>
+<li>合并重复块、锁住缓存不被换出</li>
+</ul>
+</li>
+<li><p><strong>end_op()</strong></p>
+<ul>
+<li>结束事务</li>
+<li>所有调用都结束时自动<strong>提交日志</strong></li>
+<li>提交后才真正把数据写到文件系统</li>
+</ul>
+</li>
+<li><p><strong>崩溃恢复</strong></p>
+<ul>
+<li>重启自动检查日志头</li>
+<li>已提交就重放，没提交就丢弃</li>
+<li>保证操作<strong>原子性</strong>：要么全做，要么全不做</li>
+</ul>
+</li>
+</ol>
+<hr>
+<p>一句话记忆：<br><strong>begin_op 开始，log_write 记修改，end_op 提交，崩溃自动恢复。</strong></p>
+</body></html>
+	</article>
+
+	 
+    <div class="kira-post-copyright">
+        <strong>本文作者：</strong>Ivan-FYF<br>
+        <strong>本文链接：</strong><a href="https://hellonnnnn.github.io/2026/02/14/%E6%97%A5%E5%BF%97%E5%B1%82/" title="https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;02&#x2F;14&#x2F;日志层&#x2F;" target="_blank" rel="noopener">https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;02&#x2F;14&#x2F;日志层&#x2F;</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+        
+    </div>
+
+  
+	<div class="kira-post-nav">
+		<nav class="post-nav">
+			      
+			<!-- 先找到与当前文字相同的目录 -->
+			                                                                                                                                    
+			<!-- 在找到当前文章所在的 index -->
+			                                                                                                                                                                            
+			<!-- 上一篇文章 -->
+			<div class="old">
+				<span>上一章</span>
+				<a href="/2026/02/07/%E7%AC%AC%E5%85%AB%E7%AB%A0/%E9%94%81%E5%AE%9E%E9%AA%8C%E4%B8%80/"> 锁实验一</a>
+			</div>
+			       
+			<!-- 下一篇文章 -->
+			<div class="new">
+				<span>下一章</span>
+				<a href="/2026/02/14/%E7%A3%81%E7%9B%98%E5%B1%82%E5%92%8Ccache%E5%B1%82/"> 磁盘层和cache层</a>
+			</div>
+			                                                        
+		</nav>
+	</div>
+	
+	<div class="kira-post-meta kira-rainbow">
+		
+			<a class="kirafont icon-container-fill -link" href="/categories/os%E9%A1%B9%E7%9B%AE/">os项目</a>
+		
+		
+			<a class="kirafont icon-tag-fill -none-link" href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B9%9D/" rel="tag">xv6操作系统项目实验九</a>
+		
+	</div>
+	
+	<div class="kira-post-footer">
+		
+
+		
+	<div class="giscus"></div>
+  
+    <script src="https://giscus.app/client.js"
+      data-repo="hellonnnnn/hellonnnnn.github.io"
+      data-repo-id="R_kgDOQqLdWw"
+      data-category="Announcements"
+      data-category-id="DIC_kwDOQqLdW84C1Rqg"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="light"
+      data-lang="zh-CN"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async  
+    ></script>
+  
+
+	</div>
+	
+</div>
+
+				</div>
+			</div>
+			<div class="kira-right-column">
+	<a onclick="document.querySelector('#kira-top-header').scrollIntoView({behavior: 'smooth'});" class="kira-backtotop" aria-label="回到顶部" title="回到顶部">
+		<button class="mdui-fab mdui-ripple">
+			<i class="kirafont icon-caret-up"></i>
+		</button>
+	</a>
+</div>
+
+		</div>
+	</body>
+</html>

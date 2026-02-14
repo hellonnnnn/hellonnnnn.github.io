@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html 
+	lang="zh-Hans">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		
+<link rel="stylesheet" href="/css/layout.css">
+
+		
+		<title> 总结 -  Ivan&#39;s Tech Blog</title>
+		<!-- <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" /> -->
+		<!-- <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script> -->
+		
+<link rel="stylesheet" href="/lib/mdui/mdui.min.css">
+
+		
+<script src="/lib/mdui/mdui.min.js"></script>
+
+		<!-- lazyload -->
+		
+<script src="/lib/lazysizes.js"></script>
+
+		<!-- smooth-scrolling -->
+		
+<script src="/lib/smooth-scrolling.js"></script>
+
+		<!-- highlight -->
+		
+<link rel="stylesheet" href="/lib/highlight/atom-one-dark.min.css">
+
+		
+<script src="/lib/highlight/highlight.min.js"></script>
+
+		<!-- 预置 kiraicon -->
+		
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+
+		
+		<link
+			rel="shortcut icon"
+			href="https://kira.host/assets/Pictures/Others/116359b4ccf19917.jpg"
+			type="image/png"
+		/>
+		
+<link rel="stylesheet" href="/deps/css/APlayer.min.css">
+
+		
+		
+<script src="/deps/js/APlayer.min.js"></script>
+<script src="/deps/js/Meting.min.js"></script>
+
+	<meta name="generator" content="Hexo 8.1.1"></head>
+
+	<body>
+		<div
+			class="kira-background"
+			style="background-image: url('/img/background4.jpg')"
+		></div>
+		<div class="kira-header">
+    <a
+        class="kira-drawer-button mdui-ripple"
+        title="导航栏"
+        onclick="document.querySelector('.kira-sidebar-modal').classList.add('show');document.querySelector('.kira-sidebar#sidebar').classList.add('show');"
+    >
+        <i class="kirafont icon-menu"></i>
+    </a>
+    <a href="/" title="Ivan&#39;s Tech Blog">
+        <img
+			src="/img/background5.jpg"
+			alt="Ivan-FYF"
+		/>
+    </a>
+</div>
+		<div class="kira-body">
+			<div class="kira-sidebar" id="sidebar">
+	<div class="kira-avatar mdui-ripple">
+		<a href="/img/background5.jpg" title="Ivan-FYF">
+			<img
+				src="/img/background5.jpg"
+				alt="Ivan-FYF"
+			/>
+		</a>
+	</div>
+	<div class="kira-count">
+		<div><span>文章</span>53</div>
+		<div><span>标签</span>11</div>
+		<div><span>分类</span>3</div>
+	</div>
+	<div class="kira-list">
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/"
+			title="回到首页"
+		>
+			<i
+				class="kirafont
+					
+						icon-home
+					"
+			></i>
+			<div class="kira-list-item-content">
+				回到首页
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/archive.html"
+			title="文章归档"
+		>
+			<i
+				class="kirafont
+					
+						icon-container
+					"
+			></i>
+			<div class="kira-list-item-content">
+				文章归档
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/about/"
+			title="关于本人"
+		>
+			<i
+				class="kirafont
+					
+						icon-user
+					"
+			></i>
+			<div class="kira-list-item-content">
+				关于本人
+			</div>
+		</a>
+		
+	</div>
+	<aside id="kira-sidebar">
+		
+			<div class="kira-widget-wrap">
+	<div class="kira-widget kira-social">
+		
+			<a
+				class="mdui-ripple"
+				href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=2933852809&website=www.oicqzone.com"
+				target="_blank"
+				mdui-tooltip="{content: 'QQ'}"
+				style="color: rgb(49, 174, 255); background-color: rgba(49, 174, 255, .1);"
+			>
+				<i
+					class="kirafont
+					
+						icon-QQ
+					"
+				></i>
+			</a>
+		
+			<a
+				class="mdui-ripple"
+				href="https://github.com/<hellonnnnn>/"
+				target="_blank"
+				mdui-tooltip="{content: 'GitHub'}"
+				style="color: rgb(25, 23, 23); background-color: rgba(25, 23, 23, .15);"
+			>
+				<i
+					class="kirafont
+					
+						icon-github
+					"
+				></i>
+			</a>
+		
+	</div>
+</div>
+
+		
+			
+  <div class="kira-widget-wrap">
+    <h3 class="kira-widget-title">分类</h3>
+    <div class="kira-widget">
+      <ul class="category-list">
+        
+        
+
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/os项目/">
+              <img 
+                src="/img/background1.jpg" 
+                alt="os项目" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              os项目
+            </a>
+            <span class="category-list-count">51</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/八股/">
+              <img 
+                src="/img/background3.jpg" 
+                alt="八股" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              八股
+            </a>
+            <span class="category-list-count">1</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/算法/">
+              <img 
+                src="/img/background2.jpg" 
+                alt="算法" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              算法
+            </a>
+            <span class="category-list-count">1</span>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+		
+			
+	<div class="kira-widget-wrap">
+		<div id="randomtagcloud" class="kira-widget tagcloud kira-rainbow">
+			<a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%80/" style="font-size: 16px;">xv6操作系统项目实验一</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%83/" style="font-size: 14px;">xv6操作系统项目实验七</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%89/" style="font-size: 18px;">xv6操作系统项目实验三</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B9%9D/" style="font-size: 20px;">xv6操作系统项目实验九</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%8C/" style="font-size: 18px;">xv6操作系统项目实验二</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%94/" style="font-size: 12px;">xv6操作系统项目实验五</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%85%AB/" style="font-size: 18px;">xv6操作系统项目实验八</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%85%AD/" style="font-size: 10px;">xv6操作系统项目实验六</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%9B%9B/" style="font-size: 20px;">xv6操作系统项目实验四</a> <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" style="font-size: 10px;">基础知识</a> <a href="/tags/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5/" style="font-size: 10px;">算法训练营</a>
+
+		</div>
+		
+	</div>
+
+
+		
+			
+	<div class="kira-widget-wrap">
+		<h3 class="kira-widget-title">
+			文章归档
+		</h3>
+		<div class="kira-widget">
+			<ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/">2026</a><span class="archive-list-count">27</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/">2025</a><span class="archive-list-count">26</span></li></ul>
+		</div>
+	</div>
+
+
+		
+	</aside>
+	<!-- 保留空的版权容器，修复布局 -->
+    	<div class="kira-copyright">
+    </div>
+</div> <!-- 侧边栏的闭合div，必须保留 -->
+	<!-- <div class="kira-copyright">
+		&copy; 2026
+		<a href="/">Ivan-FYF</a>
+		Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> &
+		<a href="https://github.com/ch1ny/kira-hexo/" target="_blank">Kira-Hexo</a>
+		<br />
+		
+		
+	</div>
+</div> -->
+<div
+	class="kira-sidebar-modal"
+	id="sidebar-modal"
+	onclick="(function(self) {
+		self.classList.remove('show');
+		document.querySelector('.kira-sidebar.show#sidebar').classList.remove('show');
+	})(this)"
+></div>
+			<div class="kira-content">
+				<div id="kira-top-header"></div>
+				<div class="kira-main-content">
+					
+<link rel="stylesheet" href="/css/kira-image.css">
+
+
+<script src="/js/kira-image.js"></script>
+
+<div class="kira-image">
+    <div class="kira-image-modal">
+        <div class="kira-image-header">
+            <div class="kira-image-counter"></div>
+            <div class="kira-image-title"></div>
+            <div class="kira-image-operation">
+                <div class="kira-image-operation-button" id="kira-image-operation-button-zoom">
+                    <i class="kirafont icon-zoom-in"></i>
+                </div>
+                <div class="kira-image-operation-button" id="kira-image-operation-button-close">
+                    <i class="kirafont icon-close"></i>
+                </div>
+            </div>
+        </div>
+        <div class="kira-image-container">
+            <div class="kira-image-prev-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-left"></i>
+                </div>
+            </div>
+            <div class="kira-image-list">
+                <div class="kira-image-prev">
+                    <img />
+                </div>
+                <div class="kira-image-now">
+                    <img />
+                </div>
+                <div class="kira-image-next">
+                    <img />
+                </div>
+            </div>
+            <div class="kira-image-next-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+	
+<link rel="stylesheet" href="/css/kira-code-copy.css">
+
+	
+<script src="/js/kira-code-copy.js"></script>
+
+
+<div class="kira-post">
+	<article>
+		
+		<div
+			class="kira-post-cover"
+			style="padding-bottom: '56.25%'"
+		>
+			<img
+				data-src="/img/background4.jpg"
+				data-sizes="auto"
+				alt="总结"
+				class="lazyload kira-post-cover-image disabled-kira-image"
+			/>
+			<h1>总结</h1>
+		</div>
+		
+		<div class="kira-post-meta kira-rainbow" style="margin:10px 0!important;">
+			<a><i class="kirafont icon-calendar-fill"></i>2026年02月14日</a>
+			<a><i class="kirafont icon-edit-fill"></i>1.8k 字</a>
+			<a><i class="kirafont icon-time-circle-fill"></i>大概 7 分钟</a>
+		</div>
+		<html><head></head><body><h1><span id="xv6-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%85%AD%E5%B1%82%E5%85%A8%E9%93%BE%E8%B7%AF%E6%80%BB%E7%BB%93%E8%83%8C%E8%AF%B5%E7%89%88%E9%80%BB%E8%BE%91%E5%9B%BE">xv6 文件系统六层全链路总结（背诵版+逻辑图）</span></h1><h2><span id="%E4%B8%80%E5%85%AD%E5%B1%82%E6%A0%B8%E5%BF%83%E5%AE%9A%E4%BD%8D%E9%80%9F%E8%AE%B0%E4%B8%80%E5%8F%A5%E8%AF%9D%E5%B1%82">一、六层核心定位速记（一句话/层）</span></h2><table>
+<thead>
+<tr>
+<th>层级</th>
+<th>核心定位</th>
+<th>关键关键词</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. 日志层</td>
+<td>包裹所有磁盘修改，保证原子性，崩溃后自动恢复</td>
+<td>begin_op/end_op、log_write、原子性</td>
+</tr>
+<tr>
+<td>2. 块分配层</td>
+<td>管理磁盘空闲块，提供块的分配（balloc）与释放（bfree）</td>
+<td>空闲位图、BPB、buffer cache 独占</td>
+</tr>
+<tr>
+<td>3. inode层</td>
+<td>管理文件元信息+数据块映射，封装直接/间接块，提供inode的分配/读写/释放</td>
+<td>dinode/inode、bmap/itrunc、ref/nlink</td>
+</tr>
+<tr>
+<td>4. 目录层</td>
+<td>以“特殊inode（T_DIR）”存储目录条目，实现目录的查找（dirlookup）与新增（dirlink）</td>
+<td>dirent、.和..、死锁规避</td>
+</tr>
+<tr>
+<td>5. 路径层</td>
+<td>将字符串路径转换为inode指针，支持绝对/相对路径，规避并发/死锁风险</td>
+<td>namex/namei、逐目录加锁、ref防删除</td>
+</tr>
+<tr>
+<td>6. 文件描述符层</td>
+<td>统一抽象所有I/O对象（文件/管道/设备），提供标准化读写接口</td>
+<td>struct file、引用计数、偏移量</td>
+</tr>
+</tbody></table>
+<h2><span id="%E4%BA%8C%E5%85%AD%E5%B1%82%E5%85%A8%E9%93%BE%E8%B7%AF%E9%80%BB%E8%BE%91%E5%9B%BEmermaid-%E5%8F%AF%E7%9B%B4%E6%8E%A5%E6%B8%B2%E6%9F%93">二、六层全链路逻辑图（Mermaid 可直接渲染）</span></h2><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><code class="hljs mermaid">graph TD<br>    subgraph 用户层<br>        A[系统调用：open/link/mkdir等]<br>    end<br><br>    subgraph 6.文件描述符层<br>        B[sys_open/sys_link等系统调用实现] --&gt; B1[filealloc分配struct file]<br>        B1 --&gt; B2[filedup/fileclose管理引用计数]<br>        B2 --&gt; B3[fileread/filewrite统一读写接口]<br>    end<br><br>    subgraph 5.路径层<br>        C[namex/namei解析路径] --&gt; C1[逐组件拆分路径]<br>        C1 --&gt; C2[逐目录加锁查找]<br>        C2 --&gt; C3[返回目标inode指针]<br>    end<br><br>    subgraph 4.目录层<br>        D[dirlookup查找目录条目] --&gt; D1[dirlink新增目录条目]<br>        D1 --&gt; D2[复用inode层readi/writei读写条目]<br>    end<br><br>    subgraph 3.inode层<br>        E[ialloc分配inode] --&gt; E1[bmap映射数据块]<br>        E1 --&gt; E2[readi/writei读写文件内容]<br>        E2 --&gt; E3[itrunc释放数据块/iput释放inode]<br>    end<br><br>    subgraph 2.块分配层<br>        F[balloc分配磁盘块] --&gt; F1[bfree释放磁盘块]<br>        F1 --&gt; F2[空闲位图标记块状态]<br>    end<br><br>    subgraph 1.日志层<br>        G[begin_op启动事务] --&gt; G1[log_write记录磁盘修改]<br>        G1 --&gt; G2[end_op提交日志（真正写磁盘）]<br>        G2 --&gt; G3[崩溃后自动重放/丢弃日志]<br>    end<br><br>    %% 链路流向<br>    A --&gt; B<br>    B --&gt; C<br>    C --&gt; D<br>    D --&gt; E<br>    E --&gt; F<br>    F --&gt; G<br><br>    %% 反向依赖（底层支撑上层）<br>    G --&gt; F<br>    F --&gt; E<br>    E --&gt; D<br>    D --&gt; C<br>    C --&gt; B<br>    B --&gt; A<br></code></pre></td></tr></tbody></table></figure>
+
+<h2><span id="%E4%B8%89%E5%85%AD%E5%B1%82%E6%A0%B8%E5%BF%83%E5%8D%8F%E4%BD%9C%E6%B5%81%E7%A8%8B%E8%83%8C%E8%AF%B5%E7%89%88">三、六层核心协作流程（背诵版）</span></h2><p>以「用户调用 open 创建文件」为例，全链路核心步骤：</p>
+<ol>
+<li><strong>日志层</strong>：sys_open 调用 begin_op() 启动事务，所有磁盘修改包裹在事务中；</li>
+<li><strong>路径层</strong>：nameiparent 解析文件父目录路径，逐目录加锁查找，返回父目录 inode（dp）；</li>
+<li><strong>目录层</strong>：dirlookup 检查文件名是否已存在，不存在则准备新增条目；</li>
+<li><strong>inode层</strong>：ialloc 分配新 inode（type=T_FILE），bmap 为文件分配数据块；</li>
+<li><strong>块分配层</strong>：balloc 从空闲位图分配磁盘块，更新位图并写入日志；</li>
+<li><strong>目录层</strong>：dirlink 在父目录 dp 中新增条目，指向新 inode；</li>
+<li><strong>inode层</strong>：iupdate 将新 inode 同步到磁盘，iput 管理引用计数；</li>
+<li><strong>文件描述符层</strong>：filealloc 分配 struct file，绑定新 inode，设置偏移量/读写权限，返回文件描述符；</li>
+<li><strong>日志层</strong>：end_op() 提交事务，日志刷盘，所有修改原子生效。</li>
+</ol>
+<h2><span id="%E5%9B%9B%E5%85%AD%E5%B1%82%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99%E5%BF%85%E8%83%8C3%E6%9D%A1">四、六层核心设计原则（必背3条）</span></h2><ol>
+<li><strong>原子性</strong>：所有磁盘修改（块分配、inode修改、目录修改）必须包裹在日志事务中，崩溃后要么全执行、要么全回滚；</li>
+<li><strong>分层解耦</strong>：上层依赖下层的接口，不关心下层实现（如路径层只调用目录层dirlookup，不关心目录如何存储）；</li>
+<li><strong>并发安全</strong>：<ul>
+<li>底层（块/inode）：依赖buffer cache/睡眠锁保证独占访问；</li>
+<li>中层（目录/路径）：逐目录加锁、ref计数防删除、先解锁旧目录再锁新目录避死锁；</li>
+<li>上层（文件描述符）：引用计数保证共享安全，偏移量原子更新。</li>
+</ul>
+</li>
+</ol>
+<h2><span id="%E4%BA%94%E5%85%AD%E5%B1%82%E6%A0%B8%E5%BF%83%E8%AE%B0%E5%BF%86%E5%8F%A3%E8%AF%80%E6%9E%81%E7%AE%80%E7%89%88">五、六层核心记忆口诀（极简版）</span></h2><p>日志包原子，块管空闲位；<br>inode映数据，目录存条目；<br>路径找inode，描述符统接口。</p>
+<p>下面给你 <strong>最标准、最清晰、考试/背诵直接用的 xv6 文件系统「七层总结」</strong><br>严格按你前面学的顺序：<br><strong>日志层 → 块分配层 → inode 层 → 目录层 → 路径名层 → 文件描述符层 → 系统调用层</strong></p>
+<p>每一层只给：<strong>作用 + 核心结构 + 关键函数 + 一句话口诀</strong><br>干净、好背、不漏考点。</p>
+<hr>
+<h1><span id="xv6-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F-%E4%B8%83%E5%B1%82-%E8%B6%85%E7%BA%A7%E8%83%8C%E8%AF%B5%E7%89%88">xv6 文件系统 七层 超级背诵版</span></h1><h2><span id="1-%E6%97%A5%E5%BF%97%E5%B1%82%E6%9C%80%E5%BA%95%E5%B1%82%E4%BF%9D%E8%AF%81%E5%AE%89%E5%85%A8">1. 日志层（最底层，保证安全）</span></h2><p><strong>作用</strong>：让所有磁盘操作<strong>原子性</strong>，崩溃后自动恢复。<br><strong>核心</strong>：事务（transaction）<br><strong>关键函数</strong></p>
+<ul>
+<li><code>begin_op()</code>：开始事务</li>
+<li><code>log_write()</code>：记录修改</li>
+<li><code>end_op()</code>：提交事务<br><strong>口诀</strong>：要么全做，要么全不做，崩溃不怕。</li>
+</ul>
+<hr>
+<h2><span id="2-%E5%9D%97%E5%88%86%E9%85%8D%E5%B1%82%E7%AE%A1%E7%90%86%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B2%E5%9D%97">2. 块分配层（管理磁盘空闲块）</span></h2><p><strong>作用</strong>：分配/释放磁盘块，用<strong>空闲位图</strong>管理。<br><strong>核心</strong>：bitmap（一位对应一块）<br><strong>关键函数</strong></p>
+<ul>
+<li><code>balloc()</code>：分配块</li>
+<li><code>bfree()</code>：释放块<br><strong>口诀</strong>：0 空闲，1 占用，找 0 分配。</li>
+</ul>
+<hr>
+<h2><span id="3-inode-%E5%B1%82%E6%96%87%E4%BB%B6%E5%85%83%E6%95%B0%E6%8D%AE%E6%A0%B8%E5%BF%83">3. inode 层（文件元数据核心）</span></h2><p><strong>作用</strong>：管理文件大小、权限、数据块位置。<br><strong>结构</strong></p>
+<ul>
+<li>磁盘 inode (<code>dinode</code>)</li>
+<li>内存 inode (<code>inode</code>)<br><strong>关键函数</strong></li>
+<li><code>ialloc()</code>：分配 inode</li>
+<li><code>iget/iput</code>：引用计数</li>
+<li><code>ilock/iunlock</code>：独占锁</li>
+<li><code>bmap()</code>：直接块 + 间接块映射</li>
+<li><code>readi/writei</code>：文件读写</li>
+<li><code>itrunc()</code>：删除文件数据<br><strong>口诀</strong>：直接块快，间接块大，引用计数保安全。</li>
+</ul>
+<hr>
+<h2><span id="4-%E7%9B%AE%E5%BD%95%E5%B1%82%E6%96%87%E4%BB%B6%E5%90%8D-%E2%86%94-inode">4. 目录层（文件名 ↔ inode）</span></h2><p><strong>作用</strong>：目录就是<strong>类型为 T_DIR 的文件</strong>，存 <code>dirent</code> 条目。<br><strong>结构</strong>：<code>struct dirent { inum, name }</code><br><strong>关键函数</strong></p>
+<ul>
+<li><code>dirlookup()</code>：查找文件名</li>
+<li><code>dirlink()</code>：添加文件名<br><strong>口诀</strong>：目录就是文件，存名字和编号。</li>
+</ul>
+<hr>
+<h2><span id="5-%E8%B7%AF%E5%BE%84%E5%90%8D%E5%B1%82%E5%AD%97%E7%AC%A6%E4%B8%B2-%E2%86%92-inode">5. 路径名层（字符串 → inode）</span></h2><p><strong>作用</strong>：把 <code>/a/b/c</code> 变成 inode 指针。<br><strong>关键函数</strong></p>
+<ul>
+<li><code>namei()</code>：找最终文件</li>
+<li><code>nameiparent()</code>：找父目录</li>
+<li><code>namex()</code>：通用查找<br><strong>安全点</strong></li>
+<li>逐目录加锁</li>
+<li>先解锁旧目录，再锁新目录 → <strong>防死锁</strong></li>
+<li><code>iget</code> 增加引用 → <strong>防删除</strong><br><strong>口诀</strong>：一层一层找，一次只锁一个。</li>
+</ul>
+<hr>
+<h2><span id="6-%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6%E5%B1%82%E7%BB%9F%E4%B8%80%E4%B8%80%E5%88%87-io">6. 文件描述符层（统一一切 I/O）</span></h2><p><strong>作用</strong>：统一抽象 <strong>文件、管道、设备</strong>，实现“一切皆文件”。<br><strong>结构</strong>：<code>struct file</code><br><strong>关键函数</strong></p>
+<ul>
+<li><code>filealloc()</code>：分配打开文件</li>
+<li><code>filedup()</code>：共享（fork/dup）</li>
+<li><code>fileclose()</code>：关闭</li>
+<li><code>fileread/filewrite</code>：统一读写<br><strong>特点</strong></li>
+<li>每个打开文件有 <strong>偏移量 offset</strong></li>
+<li>引用计数 <code>ref</code> 管理共享<br><strong>口诀</strong>：统一接口，共享安全，偏移自动走。</li>
+</ul>
+<hr>
+<h2><span id="7-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%B1%82%E7%94%A8%E6%88%B7%E6%8E%A5%E5%8F%A3">7. 系统调用层（用户接口）</span></h2><p><strong>作用</strong>：给用户提供 <code>open/read/write/link/unlink/mkdir</code> 等接口。<br><strong>核心调用</strong></p>
+<ul>
+<li><code>sys_link</code>：硬链接（增加 nlink）</li>
+<li><code>sys_unlink</code>：删除链接</li>
+<li><code>sys_open</code>：打开/创建文件</li>
+<li><code>sys_mkdir</code>：创建目录</li>
+<li><code>sys_pipe</code>：管道<br><strong>统一规则</strong></li>
+<li>全部包在<strong>日志事务</strong>里</li>
+<li>全部用前面 6 层函数<br><strong>口诀</strong>：用户调接口，内核七层跑。</li>
+</ul>
+<hr>
+<h1><span id="%E7%BB%88%E6%9E%81%E4%B8%83%E5%8F%A5%E6%80%BB%E5%8F%A3%E8%AF%80%E8%83%8C%E4%BC%9A%E5%B0%B1%E6%BB%A1%E5%88%86">终极七句总口诀（背会就满分）</span></h1><ol>
+<li><strong>日志保原子，崩溃不损坏</strong></li>
+<li><strong>块位图分配，管理空闲盘</strong></li>
+<li><strong>inode存元数据，直接间接块</strong></li>
+<li><strong>目录是文件，存名与编号</strong></li>
+<li><strong>路径逐层找，锁序防死锁</strong></li>
+<li><strong>描述符统一，一切皆文件</strong></li>
+<li><strong>系统调接口，事务保安全</strong></li>
+</ol>
+<hr>
+</body></html>
+	</article>
+
+	 
+    <div class="kira-post-copyright">
+        <strong>本文作者：</strong>Ivan-FYF<br>
+        <strong>本文链接：</strong><a href="https://hellonnnnn.github.io/2026/02/14/%E6%80%BB%E7%BB%93/" title="https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;02&#x2F;14&#x2F;总结&#x2F;" target="_blank" rel="noopener">https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;02&#x2F;14&#x2F;总结&#x2F;</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+        
+    </div>
+
+  
+	<div class="kira-post-nav">
+		<nav class="post-nav">
+			      
+			<!-- 先找到与当前文字相同的目录 -->
+			                                                                                                                                                      
+			<!-- 在找到当前文章所在的 index -->
+			                                                                                                                                                                                                    
+			<!-- 上一篇文章 -->
+			<div class="old">
+				<span>上一章</span>
+				<a href="/2026/02/14/%E8%B7%AF%E5%BE%84%E5%90%8D%E5%B1%82/"> 路径名层</a>
+			</div>
+			       
+			<!-- 下一篇文章 -->
+			<div class="new">
+				<span>下一章</span>
+				<a href="/2026/02/14/%E7%9C%9F%E5%AE%9E%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/"> 真实文件系统</a>
+			</div>
+			              
+		</nav>
+	</div>
+	
+	<div class="kira-post-meta kira-rainbow">
+		
+			<a class="kirafont icon-container-fill -link" href="/categories/os%E9%A1%B9%E7%9B%AE/">os项目</a>
+		
+		
+			<a class="kirafont icon-tag-fill -none-link" href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B9%9D/" rel="tag">xv6操作系统项目实验九</a>
+		
+	</div>
+	
+	<div class="kira-post-footer">
+		
+
+		
+	<div class="giscus"></div>
+  
+    <script src="https://giscus.app/client.js"
+      data-repo="hellonnnnn/hellonnnnn.github.io"
+      data-repo-id="R_kgDOQqLdWw"
+      data-category="Announcements"
+      data-category-id="DIC_kwDOQqLdW84C1Rqg"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="light"
+      data-lang="zh-CN"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async  
+    ></script>
+  
+
+	</div>
+	
+</div>
+
+				</div>
+			</div>
+			<div class="kira-right-column">
+	<a onclick="document.querySelector('#kira-top-header').scrollIntoView({behavior: 'smooth'});" class="kira-backtotop" aria-label="回到顶部" title="回到顶部">
+		<button class="mdui-fab mdui-ripple">
+			<i class="kirafont icon-caret-up"></i>
+		</button>
+	</a>
+</div>
+
+		</div>
+	</body>
+</html>

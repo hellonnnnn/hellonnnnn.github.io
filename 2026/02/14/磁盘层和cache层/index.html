@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html 
+	lang="zh-Hans">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		
+<link rel="stylesheet" href="/css/layout.css">
+
+		
+		<title> 磁盘层和cache层 -  Ivan&#39;s Tech Blog</title>
+		<!-- <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" /> -->
+		<!-- <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script> -->
+		
+<link rel="stylesheet" href="/lib/mdui/mdui.min.css">
+
+		
+<script src="/lib/mdui/mdui.min.js"></script>
+
+		<!-- lazyload -->
+		
+<script src="/lib/lazysizes.js"></script>
+
+		<!-- smooth-scrolling -->
+		
+<script src="/lib/smooth-scrolling.js"></script>
+
+		<!-- highlight -->
+		
+<link rel="stylesheet" href="/lib/highlight/atom-one-dark.min.css">
+
+		
+<script src="/lib/highlight/highlight.min.js"></script>
+
+		<!-- 预置 kiraicon -->
+		
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+
+		
+		<link
+			rel="shortcut icon"
+			href="https://kira.host/assets/Pictures/Others/116359b4ccf19917.jpg"
+			type="image/png"
+		/>
+		
+<link rel="stylesheet" href="/deps/css/APlayer.min.css">
+
+		
+		
+<script src="/deps/js/APlayer.min.js"></script>
+<script src="/deps/js/Meting.min.js"></script>
+
+	<meta name="generator" content="Hexo 8.1.1"></head>
+
+	<body>
+		<div
+			class="kira-background"
+			style="background-image: url('/img/background4.jpg')"
+		></div>
+		<div class="kira-header">
+    <a
+        class="kira-drawer-button mdui-ripple"
+        title="导航栏"
+        onclick="document.querySelector('.kira-sidebar-modal').classList.add('show');document.querySelector('.kira-sidebar#sidebar').classList.add('show');"
+    >
+        <i class="kirafont icon-menu"></i>
+    </a>
+    <a href="/" title="Ivan&#39;s Tech Blog">
+        <img
+			src="/img/background5.jpg"
+			alt="Ivan-FYF"
+		/>
+    </a>
+</div>
+		<div class="kira-body">
+			<div class="kira-sidebar" id="sidebar">
+	<div class="kira-avatar mdui-ripple">
+		<a href="/img/background5.jpg" title="Ivan-FYF">
+			<img
+				src="/img/background5.jpg"
+				alt="Ivan-FYF"
+			/>
+		</a>
+	</div>
+	<div class="kira-count">
+		<div><span>文章</span>53</div>
+		<div><span>标签</span>11</div>
+		<div><span>分类</span>3</div>
+	</div>
+	<div class="kira-list">
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/"
+			title="回到首页"
+		>
+			<i
+				class="kirafont
+					
+						icon-home
+					"
+			></i>
+			<div class="kira-list-item-content">
+				回到首页
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/archive.html"
+			title="文章归档"
+		>
+			<i
+				class="kirafont
+					
+						icon-container
+					"
+			></i>
+			<div class="kira-list-item-content">
+				文章归档
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/about/"
+			title="关于本人"
+		>
+			<i
+				class="kirafont
+					
+						icon-user
+					"
+			></i>
+			<div class="kira-list-item-content">
+				关于本人
+			</div>
+		</a>
+		
+	</div>
+	<aside id="kira-sidebar">
+		
+			<div class="kira-widget-wrap">
+	<div class="kira-widget kira-social">
+		
+			<a
+				class="mdui-ripple"
+				href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=2933852809&website=www.oicqzone.com"
+				target="_blank"
+				mdui-tooltip="{content: 'QQ'}"
+				style="color: rgb(49, 174, 255); background-color: rgba(49, 174, 255, .1);"
+			>
+				<i
+					class="kirafont
+					
+						icon-QQ
+					"
+				></i>
+			</a>
+		
+			<a
+				class="mdui-ripple"
+				href="https://github.com/<hellonnnnn>/"
+				target="_blank"
+				mdui-tooltip="{content: 'GitHub'}"
+				style="color: rgb(25, 23, 23); background-color: rgba(25, 23, 23, .15);"
+			>
+				<i
+					class="kirafont
+					
+						icon-github
+					"
+				></i>
+			</a>
+		
+	</div>
+</div>
+
+		
+			
+  <div class="kira-widget-wrap">
+    <h3 class="kira-widget-title">分类</h3>
+    <div class="kira-widget">
+      <ul class="category-list">
+        
+        
+
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/os项目/">
+              <img 
+                src="/img/background1.jpg" 
+                alt="os项目" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              os项目
+            </a>
+            <span class="category-list-count">51</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/八股/">
+              <img 
+                src="/img/background3.jpg" 
+                alt="八股" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              八股
+            </a>
+            <span class="category-list-count">1</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/算法/">
+              <img 
+                src="/img/background2.jpg" 
+                alt="算法" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              算法
+            </a>
+            <span class="category-list-count">1</span>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+		
+			
+	<div class="kira-widget-wrap">
+		<div id="randomtagcloud" class="kira-widget tagcloud kira-rainbow">
+			<a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%80/" style="font-size: 16px;">xv6操作系统项目实验一</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%83/" style="font-size: 14px;">xv6操作系统项目实验七</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%89/" style="font-size: 18px;">xv6操作系统项目实验三</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B9%9D/" style="font-size: 20px;">xv6操作系统项目实验九</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%8C/" style="font-size: 18px;">xv6操作系统项目实验二</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%94/" style="font-size: 12px;">xv6操作系统项目实验五</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%85%AB/" style="font-size: 18px;">xv6操作系统项目实验八</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%85%AD/" style="font-size: 10px;">xv6操作系统项目实验六</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%9B%9B/" style="font-size: 20px;">xv6操作系统项目实验四</a> <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" style="font-size: 10px;">基础知识</a> <a href="/tags/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5/" style="font-size: 10px;">算法训练营</a>
+
+		</div>
+		
+	</div>
+
+
+		
+			
+	<div class="kira-widget-wrap">
+		<h3 class="kira-widget-title">
+			文章归档
+		</h3>
+		<div class="kira-widget">
+			<ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/">2026</a><span class="archive-list-count">27</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/">2025</a><span class="archive-list-count">26</span></li></ul>
+		</div>
+	</div>
+
+
+		
+	</aside>
+	<!-- 保留空的版权容器，修复布局 -->
+    	<div class="kira-copyright">
+    </div>
+</div> <!-- 侧边栏的闭合div，必须保留 -->
+	<!-- <div class="kira-copyright">
+		&copy; 2026
+		<a href="/">Ivan-FYF</a>
+		Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> &
+		<a href="https://github.com/ch1ny/kira-hexo/" target="_blank">Kira-Hexo</a>
+		<br />
+		
+		
+	</div>
+</div> -->
+<div
+	class="kira-sidebar-modal"
+	id="sidebar-modal"
+	onclick="(function(self) {
+		self.classList.remove('show');
+		document.querySelector('.kira-sidebar.show#sidebar').classList.remove('show');
+	})(this)"
+></div>
+			<div class="kira-content">
+				<div id="kira-top-header"></div>
+				<div class="kira-main-content">
+					
+<link rel="stylesheet" href="/css/kira-image.css">
+
+
+<script src="/js/kira-image.js"></script>
+
+<div class="kira-image">
+    <div class="kira-image-modal">
+        <div class="kira-image-header">
+            <div class="kira-image-counter"></div>
+            <div class="kira-image-title"></div>
+            <div class="kira-image-operation">
+                <div class="kira-image-operation-button" id="kira-image-operation-button-zoom">
+                    <i class="kirafont icon-zoom-in"></i>
+                </div>
+                <div class="kira-image-operation-button" id="kira-image-operation-button-close">
+                    <i class="kirafont icon-close"></i>
+                </div>
+            </div>
+        </div>
+        <div class="kira-image-container">
+            <div class="kira-image-prev-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-left"></i>
+                </div>
+            </div>
+            <div class="kira-image-list">
+                <div class="kira-image-prev">
+                    <img />
+                </div>
+                <div class="kira-image-now">
+                    <img />
+                </div>
+                <div class="kira-image-next">
+                    <img />
+                </div>
+            </div>
+            <div class="kira-image-next-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+	
+<link rel="stylesheet" href="/css/kira-code-copy.css">
+
+	
+<script src="/js/kira-code-copy.js"></script>
+
+
+<div class="kira-post">
+	<article>
+		
+		<div
+			class="kira-post-cover"
+			style="padding-bottom: '56.25%'"
+		>
+			<img
+				data-src="/img/background4.jpg"
+				data-sizes="auto"
+				alt="磁盘层和cache层"
+				class="lazyload kira-post-cover-image disabled-kira-image"
+			/>
+			<h1>磁盘层和cache层</h1>
+		</div>
+		
+		<div class="kira-post-meta kira-rainbow" style="margin:10px 0!important;">
+			<a><i class="kirafont icon-calendar-fill"></i>2026年02月14日</a>
+			<a><i class="kirafont icon-edit-fill"></i>703 字</a>
+			<a><i class="kirafont icon-time-circle-fill"></i>大概 3 分钟</a>
+		</div>
+		<html><head></head><body><p>我用<strong>最清晰、最贴合 xv6 源码</strong>的方式，给你一次性讲透 <strong>磁盘层（disk layer）</strong> 和 <strong>缓冲区缓存层（buffer cache layer）</strong>，你可以直接用来理解 xv6 文件系统整体架构。</p>
+<hr>
+<h1><span id="%E4%B8%80%E7%A3%81%E7%9B%98%E5%B1%82disk-layer">一、磁盘层（disk layer）</span></h1><p><strong>作用：最底层，只负责和硬件磁盘交互，只做「读一个块 / 写一个块」。</strong></p>
+<h2><span id="1-%E5%AE%9A%E4%BD%8D">1. 定位</span></h2><ul>
+<li>在 xv6 中：<code>ide.c</code>（IDE 硬盘驱动）</li>
+<li>是<strong>文件系统最底层</strong>，上层（buffer cache、log、fs）都不直接碰磁盘。</li>
+</ul>
+<h2><span id="2-%E5%8A%9F%E8%83%BD%E5%8F%AA%E6%9C%89%E4%B8%A4%E4%B8%AA">2. 功能只有两个</span></h2><ol>
+<li><strong>读磁盘块</strong>：从磁盘第 <code>blockno</code> 号块读到内存。</li>
+<li><strong>写磁盘块</strong>：把内存里的一块数据写到磁盘第 <code>blockno</code> 号块。</li>
+</ol>
+<h2><span id="3-%E7%89%B9%E7%82%B9">3. 特点</span></h2><ul>
+<li>只认 <strong>512 字节一个块</strong>（xv6 磁盘块大小）。</li>
+<li>不理解文件、inode、目录、日志——<strong>它只管块号和数据</strong>。</li>
+<li>是<strong>同步/阻塞</strong>的：发起读写，必须等磁盘完成。</li>
+<li>不缓存、不合并、不优化。</li>
+</ul>
+<h2><span id="4-%E5%AF%B9%E5%A4%96%E6%8E%A5%E5%8F%A3%E7%AE%80%E5%8C%96">4. 对外接口（简化）</span></h2><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">void</span> <span class="hljs-title function_">ide_rw</span><span class="hljs-params">(<span class="hljs-type">int</span> diskno, uint blockno, <span class="hljs-type">void</span> *dst, <span class="hljs-type">int</span> write)</span>;<br></code></pre></td></tr></tbody></table></figure>
+<ul>
+<li><code>write=0</code>：读磁盘</li>
+<li><code>write=1</code>：写磁盘</li>
+</ul>
+<hr>
+<h1><span id="%E4%BA%8C%E7%BC%93%E5%AD%98%E5%B1%82buffer-cache-layer">二、缓存层（buffer cache layer）</span></h1><p><strong>作用：给磁盘加一层内存缓存，统一管理磁盘块，防止重复 I/O，保证互斥。</strong></p>
+<p>对应文件：<code>bio.c</code></p>
+<h2><span id="1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-cache">1. 为什么需要 cache？</span></h2><ol>
+<li>磁盘太慢，内存快 → <strong>缓存热块</strong></li>
+<li>多个进程同时写同一块 → <strong>必须互斥访问</strong></li>
+<li>文件系统需要拿到一块“可修改的内存缓冲区”来操作 inode、bitmap 等</li>
+</ol>
+<h2><span id="2-%E6%A0%B8%E5%BF%83%E7%BB%93%E6%9E%84bufferbuf">2. 核心结构：buffer（buf）</span></h2><p>每个 buf 代表：</p>
+<ul>
+<li><strong>磁盘上的一个块</strong></li>
+<li>内存中的一份副本</li>
+<li>状态、锁、引用计数、链表指针</li>
+</ul>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">buf</span> {</span><br>  <span class="hljs-type">int</span> flags;       <span class="hljs-comment">// B_VALID, B_DIRTY</span><br>  <span class="hljs-type">int</span> dev;         <span class="hljs-comment">// 设备号</span><br>  <span class="hljs-type">int</span> blockno;     <span class="hljs-comment">// 磁盘块号</span><br>  uchar data[BSIZE]; <span class="hljs-comment">// 512 字节数据</span><br>  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">buf</span> *<span class="hljs-title">prev</span>;</span><br>  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">buf</span> *<span class="hljs-title">next</span>;</span><br>};<br></code></pre></td></tr></tbody></table></figure>
+
+<h2><span id="3-%E6%A0%B8%E5%BF%83%E4%B8%A4%E4%B8%AA%E6%8E%A5%E5%8F%A3%E6%9C%80%E9%87%8D%E8%A6%81">3. 核心两个接口（最重要）</span></h2><h3><span id="1bread--%E8%AF%BB%E5%9D%97">1）bread() —— 读块</span></h3><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">struct</span> buf* <span class="hljs-title function_">bread</span><span class="hljs-params">(<span class="hljs-type">int</span> dev, <span class="hljs-type">int</span> blockno)</span>;<br></code></pre></td></tr></tbody></table></figure>
+<p>工作流程：</p>
+<ol>
+<li>去 cache 里找这个块号是否已经在内存</li>
+<li><strong>命中</strong>：直接返回</li>
+<li><strong>不命中</strong>：<ul>
+<li>找一个空闲 buf（LRU 淘汰）</li>
+<li>调用 <code>ide_rw</code> 从磁盘读入</li>
+<li>标记 <code>B_VALID</code></li>
+<li>返回 buf</li>
+</ul>
+</li>
+</ol>
+<h3><span id="2bwrite--%E5%86%99%E5%9D%97">2）bwrite() —— 写块</span></h3><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">void</span> <span class="hljs-title function_">bwrite</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> buf *b)</span>;<br></code></pre></td></tr></tbody></table></figure>
+<ul>
+<li>把内存中的 buf 数据<strong>写到磁盘</strong></li>
+<li>只写真正被修改过的（<code>B_DIRTY</code>）</li>
+</ul>
+<h3><span id="3brelse">3）brelse()</span></h3><ul>
+<li>释放缓冲区（解锁）</li>
+<li>放回到 LRU 链表</li>
+</ul>
+<h2><span id="4-%E7%BC%93%E5%AD%98%E5%B1%82%E4%B8%89%E5%A4%A7%E4%BD%9C%E7%94%A8">4. 缓存层三大作用</span></h2><ol>
+<li><p><strong>减少磁盘 I/O</strong><br>多次读同一块，只访问一次磁盘。</p>
+</li>
+<li><p><strong>提供互斥访问</strong><br>每个 buf 有锁，同一时间只有一个进程能修改同一块。</p>
+</li>
+<li><p><strong>提供统一的内存缓冲区</strong><br>上层（日志、inode、文件）只操作 <code>buf-&gt;data</code>，不关心磁盘。</p>
+</li>
+</ol>
+<hr>
+<h1><span id="%E4%B8%89%E7%A3%81%E7%9B%98%E5%B1%82-%E2%86%94-%E7%BC%93%E5%AD%98%E5%B1%82-%E7%9A%84%E5%85%B3%E7%B3%BB%E8%B6%85%E7%BA%A7%E6%B8%85%E6%99%B0">三、磁盘层 ↔ 缓存层 的关系（超级清晰）</span></h1><figure class="highlight applescript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs applescript">上层：<span class="hljs-built_in">log</span>、fs、inode、<span class="hljs-built_in">file</span><br>↓<br>缓存层 bio.c：bread / bwrite / brelse（带缓存、带锁）<br>↓<br>磁盘层 ide.c：ide_rw（真正读写磁盘）<br>↓<br>硬件磁盘<br></code></pre></td></tr></tbody></table></figure>
+
+<p>一句话总结：</p>
+<ul>
+<li><strong>磁盘层：只做原始块读写。</strong></li>
+<li><strong>缓存层：管理磁盘块，提供缓存、互斥、内存副本。</strong></li>
+</ul>
+<hr>
+</body></html>
+	</article>
+
+	 
+    <div class="kira-post-copyright">
+        <strong>本文作者：</strong>Ivan-FYF<br>
+        <strong>本文链接：</strong><a href="https://hellonnnnn.github.io/2026/02/14/%E7%A3%81%E7%9B%98%E5%B1%82%E5%92%8Ccache%E5%B1%82/" title="https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;02&#x2F;14&#x2F;磁盘层和cache层&#x2F;" target="_blank" rel="noopener">https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;02&#x2F;14&#x2F;磁盘层和cache层&#x2F;</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+        
+    </div>
+
+  
+	<div class="kira-post-nav">
+		<nav class="post-nav">
+			      
+			<!-- 先找到与当前文字相同的目录 -->
+			                                                                                                                                       
+			<!-- 在找到当前文章所在的 index -->
+			                                                                                                                                                                                
+			<!-- 上一篇文章 -->
+			<div class="old">
+				<span>上一章</span>
+				<a href="/2026/02/14/%E6%97%A5%E5%BF%97%E5%B1%82/"> 日志层</a>
+			</div>
+			       
+			<!-- 下一篇文章 -->
+			<div class="new">
+				<span>下一章</span>
+				<a href="/2026/02/14/%E5%9D%97%E5%88%86%E9%85%8D%E5%99%A8/"> 块分配器</a>
+			</div>
+			                                                 
+		</nav>
+	</div>
+	
+	<div class="kira-post-meta kira-rainbow">
+		
+			<a class="kirafont icon-container-fill -link" href="/categories/os%E9%A1%B9%E7%9B%AE/">os项目</a>
+		
+		
+			<a class="kirafont icon-tag-fill -none-link" href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B9%9D/" rel="tag">xv6操作系统项目实验九</a>
+		
+	</div>
+	
+	<div class="kira-post-footer">
+		
+
+		
+	<div class="giscus"></div>
+  
+    <script src="https://giscus.app/client.js"
+      data-repo="hellonnnnn/hellonnnnn.github.io"
+      data-repo-id="R_kgDOQqLdWw"
+      data-category="Announcements"
+      data-category-id="DIC_kwDOQqLdW84C1Rqg"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="light"
+      data-lang="zh-CN"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async  
+    ></script>
+  
+
+	</div>
+	
+</div>
+
+				</div>
+			</div>
+			<div class="kira-right-column">
+	<a onclick="document.querySelector('#kira-top-header').scrollIntoView({behavior: 'smooth'});" class="kira-backtotop" aria-label="回到顶部" title="回到顶部">
+		<button class="mdui-fab mdui-ripple">
+			<i class="kirafont icon-caret-up"></i>
+		</button>
+	</a>
+</div>
+
+		</div>
+	</body>
+</html>

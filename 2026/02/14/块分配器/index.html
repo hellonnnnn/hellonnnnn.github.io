@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html 
+	lang="zh-Hans">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		
+<link rel="stylesheet" href="/css/layout.css">
+
+		
+		<title> 块分配器 -  Ivan&#39;s Tech Blog</title>
+		<!-- <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" /> -->
+		<!-- <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script> -->
+		
+<link rel="stylesheet" href="/lib/mdui/mdui.min.css">
+
+		
+<script src="/lib/mdui/mdui.min.js"></script>
+
+		<!-- lazyload -->
+		
+<script src="/lib/lazysizes.js"></script>
+
+		<!-- smooth-scrolling -->
+		
+<script src="/lib/smooth-scrolling.js"></script>
+
+		<!-- highlight -->
+		
+<link rel="stylesheet" href="/lib/highlight/atom-one-dark.min.css">
+
+		
+<script src="/lib/highlight/highlight.min.js"></script>
+
+		<!-- 预置 kiraicon -->
+		
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+
+		
+		<link
+			rel="shortcut icon"
+			href="https://kira.host/assets/Pictures/Others/116359b4ccf19917.jpg"
+			type="image/png"
+		/>
+		
+<link rel="stylesheet" href="/deps/css/APlayer.min.css">
+
+		
+		
+<script src="/deps/js/APlayer.min.js"></script>
+<script src="/deps/js/Meting.min.js"></script>
+
+	<meta name="generator" content="Hexo 8.1.1"></head>
+
+	<body>
+		<div
+			class="kira-background"
+			style="background-image: url('/img/background4.jpg')"
+		></div>
+		<div class="kira-header">
+    <a
+        class="kira-drawer-button mdui-ripple"
+        title="导航栏"
+        onclick="document.querySelector('.kira-sidebar-modal').classList.add('show');document.querySelector('.kira-sidebar#sidebar').classList.add('show');"
+    >
+        <i class="kirafont icon-menu"></i>
+    </a>
+    <a href="/" title="Ivan&#39;s Tech Blog">
+        <img
+			src="/img/background5.jpg"
+			alt="Ivan-FYF"
+		/>
+    </a>
+</div>
+		<div class="kira-body">
+			<div class="kira-sidebar" id="sidebar">
+	<div class="kira-avatar mdui-ripple">
+		<a href="/img/background5.jpg" title="Ivan-FYF">
+			<img
+				src="/img/background5.jpg"
+				alt="Ivan-FYF"
+			/>
+		</a>
+	</div>
+	<div class="kira-count">
+		<div><span>文章</span>53</div>
+		<div><span>标签</span>11</div>
+		<div><span>分类</span>3</div>
+	</div>
+	<div class="kira-list">
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/"
+			title="回到首页"
+		>
+			<i
+				class="kirafont
+					
+						icon-home
+					"
+			></i>
+			<div class="kira-list-item-content">
+				回到首页
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/archive.html"
+			title="文章归档"
+		>
+			<i
+				class="kirafont
+					
+						icon-container
+					"
+			></i>
+			<div class="kira-list-item-content">
+				文章归档
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/about/"
+			title="关于本人"
+		>
+			<i
+				class="kirafont
+					
+						icon-user
+					"
+			></i>
+			<div class="kira-list-item-content">
+				关于本人
+			</div>
+		</a>
+		
+	</div>
+	<aside id="kira-sidebar">
+		
+			<div class="kira-widget-wrap">
+	<div class="kira-widget kira-social">
+		
+			<a
+				class="mdui-ripple"
+				href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=2933852809&website=www.oicqzone.com"
+				target="_blank"
+				mdui-tooltip="{content: 'QQ'}"
+				style="color: rgb(49, 174, 255); background-color: rgba(49, 174, 255, .1);"
+			>
+				<i
+					class="kirafont
+					
+						icon-QQ
+					"
+				></i>
+			</a>
+		
+			<a
+				class="mdui-ripple"
+				href="https://github.com/<hellonnnnn>/"
+				target="_blank"
+				mdui-tooltip="{content: 'GitHub'}"
+				style="color: rgb(25, 23, 23); background-color: rgba(25, 23, 23, .15);"
+			>
+				<i
+					class="kirafont
+					
+						icon-github
+					"
+				></i>
+			</a>
+		
+	</div>
+</div>
+
+		
+			
+  <div class="kira-widget-wrap">
+    <h3 class="kira-widget-title">分类</h3>
+    <div class="kira-widget">
+      <ul class="category-list">
+        
+        
+
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/os项目/">
+              <img 
+                src="/img/background1.jpg" 
+                alt="os项目" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              os项目
+            </a>
+            <span class="category-list-count">51</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/八股/">
+              <img 
+                src="/img/background3.jpg" 
+                alt="八股" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              八股
+            </a>
+            <span class="category-list-count">1</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/算法/">
+              <img 
+                src="/img/background2.jpg" 
+                alt="算法" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              算法
+            </a>
+            <span class="category-list-count">1</span>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+		
+			
+	<div class="kira-widget-wrap">
+		<div id="randomtagcloud" class="kira-widget tagcloud kira-rainbow">
+			<a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%80/" style="font-size: 16px;">xv6操作系统项目实验一</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%83/" style="font-size: 14px;">xv6操作系统项目实验七</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%89/" style="font-size: 18px;">xv6操作系统项目实验三</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B9%9D/" style="font-size: 20px;">xv6操作系统项目实验九</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%8C/" style="font-size: 18px;">xv6操作系统项目实验二</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%94/" style="font-size: 12px;">xv6操作系统项目实验五</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%85%AB/" style="font-size: 18px;">xv6操作系统项目实验八</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%85%AD/" style="font-size: 10px;">xv6操作系统项目实验六</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%9B%9B/" style="font-size: 20px;">xv6操作系统项目实验四</a> <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" style="font-size: 10px;">基础知识</a> <a href="/tags/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5/" style="font-size: 10px;">算法训练营</a>
+
+		</div>
+		
+	</div>
+
+
+		
+			
+	<div class="kira-widget-wrap">
+		<h3 class="kira-widget-title">
+			文章归档
+		</h3>
+		<div class="kira-widget">
+			<ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/">2026</a><span class="archive-list-count">27</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/">2025</a><span class="archive-list-count">26</span></li></ul>
+		</div>
+	</div>
+
+
+		
+	</aside>
+	<!-- 保留空的版权容器，修复布局 -->
+    	<div class="kira-copyright">
+    </div>
+</div> <!-- 侧边栏的闭合div，必须保留 -->
+	<!-- <div class="kira-copyright">
+		&copy; 2026
+		<a href="/">Ivan-FYF</a>
+		Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> &
+		<a href="https://github.com/ch1ny/kira-hexo/" target="_blank">Kira-Hexo</a>
+		<br />
+		
+		
+	</div>
+</div> -->
+<div
+	class="kira-sidebar-modal"
+	id="sidebar-modal"
+	onclick="(function(self) {
+		self.classList.remove('show');
+		document.querySelector('.kira-sidebar.show#sidebar').classList.remove('show');
+	})(this)"
+></div>
+			<div class="kira-content">
+				<div id="kira-top-header"></div>
+				<div class="kira-main-content">
+					
+<link rel="stylesheet" href="/css/kira-image.css">
+
+
+<script src="/js/kira-image.js"></script>
+
+<div class="kira-image">
+    <div class="kira-image-modal">
+        <div class="kira-image-header">
+            <div class="kira-image-counter"></div>
+            <div class="kira-image-title"></div>
+            <div class="kira-image-operation">
+                <div class="kira-image-operation-button" id="kira-image-operation-button-zoom">
+                    <i class="kirafont icon-zoom-in"></i>
+                </div>
+                <div class="kira-image-operation-button" id="kira-image-operation-button-close">
+                    <i class="kirafont icon-close"></i>
+                </div>
+            </div>
+        </div>
+        <div class="kira-image-container">
+            <div class="kira-image-prev-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-left"></i>
+                </div>
+            </div>
+            <div class="kira-image-list">
+                <div class="kira-image-prev">
+                    <img />
+                </div>
+                <div class="kira-image-now">
+                    <img />
+                </div>
+                <div class="kira-image-next">
+                    <img />
+                </div>
+            </div>
+            <div class="kira-image-next-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+	
+<link rel="stylesheet" href="/css/kira-code-copy.css">
+
+	
+<script src="/js/kira-code-copy.js"></script>
+
+
+<div class="kira-post">
+	<article>
+		
+		<div
+			class="kira-post-cover"
+			style="padding-bottom: '56.25%'"
+		>
+			<img
+				data-src="/img/background4.jpg"
+				data-sizes="auto"
+				alt="块分配器"
+				class="lazyload kira-post-cover-image disabled-kira-image"
+			/>
+			<h1>块分配器</h1>
+		</div>
+		
+		<div class="kira-post-meta kira-rainbow" style="margin:10px 0!important;">
+			<a><i class="kirafont icon-calendar-fill"></i>2026年02月14日</a>
+			<a><i class="kirafont icon-edit-fill"></i>906 字</a>
+			<a><i class="kirafont icon-time-circle-fill"></i>大概 4 分钟</a>
+		</div>
+		<html><head></head><body><p>你想了解 xv6 中块分配器（balloc/bfree）的核心设计、代码逻辑，以及它和日志系统的配合方式，我会用简洁的语言拆解块分配器的用法、工作原理和关键细节。</p>
+<h3><span id="%E4%B8%80%E5%9D%97%E5%88%86%E9%85%8D%E5%99%A8%E6%A0%B8%E5%BF%83%E4%BD%9C%E7%94%A8%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80">一、块分配器核心作用与设计基础</span></h3><h4><span id="1-%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD">1. 核心功能</span></h4><ul>
+<li><strong>balloc</strong>：从空闲池分配一个未使用的磁盘块，返回块号；</li>
+<li><strong>bfree</strong>：释放已使用的磁盘块，将其标记为空闲。</li>
+</ul>
+<h4><span id="2-%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E7%A9%BA%E9%97%B2%E4%BD%8D%E5%9B%BE">2. 底层实现：空闲位图</span></h4><ul>
+<li>磁盘上维护<strong>空闲位图</strong>：每 1 位对应 1 个磁盘块，<code>0=空闲</code>、<code>1=已使用</code>；</li>
+<li>位图本身占用若干磁盘块（xv6 仅用 1 个位图块），mkfs 初始化时会标记引导扇区、超级块、日志块、inode 块等系统块为“已使用”；</li>
+<li>位图块受 buffer cache 独占保护：同一时间只有一个进程能操作同一位图块，无需额外加锁。</li>
+</ul>
+<h3><span id="%E4%BA%8C%E6%A0%B8%E5%BF%83%E5%87%BD%E6%95%B0%E7%94%A8%E6%B3%95%E4%B8%8E%E9%80%BB%E8%BE%91%E6%9E%81%E7%AE%80%E7%89%88">二、核心函数用法与逻辑（极简版）</span></h3><h4><span id="1-%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95%E5%BF%85%E9%A1%BB%E5%8C%85%E8%A3%B9%E5%9C%A8%E6%97%A5%E5%BF%97%E4%BA%8B%E5%8A%A1%E4%B8%AD">1. 基本用法（必须包裹在日志事务中）</span></h4><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// 分配块示例</span><br>begin_op();          <span class="hljs-comment">// 启动日志事务</span><br><span class="hljs-type">int</span> bno = balloc(dev); <span class="hljs-comment">// 分配空闲块</span><br><span class="hljs-keyword">if</span>(bno &gt; <span class="hljs-number">0</span>) {<br>  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">buf</span> *<span class="hljs-title">bp</span> =</span> bread(dev, bno);<br>  <span class="hljs-comment">// 修改块内容</span><br>  log_write(bp);     <span class="hljs-comment">// 记录到日志（包括位图块的修改）</span><br>  brelse(bp);<br>}<br>end_op();            <span class="hljs-comment">// 提交事务，位图修改生效</span><br><br><span class="hljs-comment">// 释放块示例</span><br>begin_op();<br>bfree(dev, bno);     <span class="hljs-comment">// 释放块（修改位图）</span><br>end_op();<br></code></pre></td></tr></tbody></table></figure>
+<p>⚠️ 关键：balloc/bfree 必须在 <code>begin_op()</code>/<code>end_op()</code> 之间调用，因为它们会修改位图块，需要日志保证原子性（避免崩溃后位图不一致）。</p>
+<h4><span id="2-balloc-%E5%88%86%E9%85%8D%E9%80%BB%E8%BE%91">2. balloc 分配逻辑</span></h4><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs c">uint <span class="hljs-title function_">balloc</span><span class="hljs-params">(<span class="hljs-type">int</span> dev)</span> {<br>  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">superblock</span> <span class="hljs-title">sb</span>;</span><br>  readsb(dev, &amp;sb); <span class="hljs-comment">// 读超级块（获取位图块位置、总块数）</span><br>  <br>  <span class="hljs-comment">// 外层循环：遍历所有位图块</span><br>  <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> bi=<span class="hljs-number">0</span>; bi&lt;sb.nblocks; bi++){<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">buf</span> *<span class="hljs-title">bp</span> =</span> bread(dev, sb.bmapstart + bi); <span class="hljs-comment">// 读位图块到缓存</span><br>    <span class="hljs-type">uint8_t</span> *bitmap = bp-&gt;data;<br>    <br>    <span class="hljs-comment">// 内层循环：检查位图块中的每一位（BPB=每块能表示的块数）</span><br>    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> j=<span class="hljs-number">0</span>; j&lt;BPB; j++){<br>      <span class="hljs-type">int</span> bn = bi*BPB + j; <span class="hljs-comment">// 计算当前位对应的磁盘块号</span><br>      <span class="hljs-keyword">if</span>(bn &gt;= sb.size) <span class="hljs-keyword">break</span>; <span class="hljs-comment">// 超出总块数则退出</span><br>      <span class="hljs-keyword">if</span>(bitmap[j/<span class="hljs-number">8</span>] &amp; (<span class="hljs-number">1</span> &lt;&lt; (j%<span class="hljs-number">8</span>))) <span class="hljs-keyword">continue</span>; <span class="hljs-comment">// 位为1，块已使用</span><br>      <br>      <span class="hljs-comment">// 找到空闲块：标记位为1（已使用）</span><br>      bitmap[j/<span class="hljs-number">8</span>] |= (<span class="hljs-number">1</span> &lt;&lt; (j%<span class="hljs-number">8</span>));<br>      log_write(bp); <span class="hljs-comment">// 位图修改记录到日志</span><br>      brelse(bp);<br>      <span class="hljs-keyword">return</span> bn; <span class="hljs-comment">// 返回分配的块号</span><br>    }<br>    brelse(bp);<br>  }<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>; <span class="hljs-comment">// 无空闲块</span><br>}<br></code></pre></td></tr></tbody></table></figure>
+<ul>
+<li>效率优化：分两层循环（按位图块遍历 → 按位遍历），减少磁盘 I/O；</li>
+<li>并发安全：buffer cache 保证同一位图块只能被一个进程操作，避免分配冲突。</li>
+</ul>
+<h4><span id="3-bfree-%E9%87%8A%E6%94%BE%E9%80%BB%E8%BE%91">3. bfree 释放逻辑</span></h4><figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">void</span> <span class="hljs-title function_">bfree</span><span class="hljs-params">(<span class="hljs-type">int</span> dev, uint bno)</span> {<br>  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">superblock</span> <span class="hljs-title">sb</span>;</span><br>  readsb(dev, &amp;sb);<br>  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">buf</span> *<span class="hljs-title">bp</span> =</span> bread(dev, sb.bmapstart + (bno/BPB)); <span class="hljs-comment">// 定位到位图块</span><br>  <span class="hljs-type">uint8_t</span> *bitmap = bp-&gt;data;<br>  <br>  <span class="hljs-comment">// 清除对应位（标记为空闲）</span><br>  bitmap[(bno%BPB)/<span class="hljs-number">8</span>] &amp;= ~(<span class="hljs-number">1</span> &lt;&lt; ((bno%BPB)%<span class="hljs-number">8</span>));<br>  log_write(bp); <span class="hljs-comment">// 位图修改记录到日志</span><br>  brelse(bp);<br>}<br></code></pre></td></tr></tbody></table></figure>
+<ul>
+<li>核心：找到块对应的位图位，将其置 0，同样需通过 <code>log_write</code> 记录到日志。</li>
+</ul>
+<h3><span id="%E4%B8%89%E5%85%B3%E9%94%AE%E7%BB%86%E8%8A%82%E6%80%BB%E7%BB%93">三、关键细节总结</span></h3><ol>
+<li><strong>位图核心规则</strong>：位 0=空闲、位 1=已使用，mkfs 初始化系统块为 1；</li>
+<li><strong>事务约束</strong>：balloc/bfree 必须在日志事务内调用，否则位图修改可能因崩溃导致不一致；</li>
+<li><strong>并发安全</strong>：依赖 buffer cache 对单个位图块的独占访问，无需额外锁；</li>
+<li><strong>效率设计</strong>：分两层循环遍历位图，减少磁盘读次数；</li>
+<li><strong>日志配合</strong>：位图块的修改通过 <code>log_write</code> 记录，提交后才真正写入磁盘。</li>
+</ol>
+<p>一句话记忆：<strong>balloc 查位图找 0 置 1，bfree 找 1 置 0，都要包在日志事务里，靠缓存保证并发安全。</strong></p>
+</body></html>
+	</article>
+
+	 
+    <div class="kira-post-copyright">
+        <strong>本文作者：</strong>Ivan-FYF<br>
+        <strong>本文链接：</strong><a href="https://hellonnnnn.github.io/2026/02/14/%E5%9D%97%E5%88%86%E9%85%8D%E5%99%A8/" title="https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;02&#x2F;14&#x2F;块分配器&#x2F;" target="_blank" rel="noopener">https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;02&#x2F;14&#x2F;块分配器&#x2F;</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+        
+    </div>
+
+  
+	<div class="kira-post-nav">
+		<nav class="post-nav">
+			      
+			<!-- 先找到与当前文字相同的目录 -->
+			                                                                                                                                          
+			<!-- 在找到当前文章所在的 index -->
+			                                                                                                                                                                                    
+			<!-- 上一篇文章 -->
+			<div class="old">
+				<span>上一章</span>
+				<a href="/2026/02/14/%E7%A3%81%E7%9B%98%E5%B1%82%E5%92%8Ccache%E5%B1%82/"> 磁盘层和cache层</a>
+			</div>
+			       
+			<!-- 下一篇文章 -->
+			<div class="new">
+				<span>下一章</span>
+				<a href="/2026/02/14/inode%E5%B1%82/"> inode层</a>
+			</div>
+			                                          
+		</nav>
+	</div>
+	
+	<div class="kira-post-meta kira-rainbow">
+		
+			<a class="kirafont icon-container-fill -link" href="/categories/os%E9%A1%B9%E7%9B%AE/">os项目</a>
+		
+		
+			<a class="kirafont icon-tag-fill -none-link" href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B9%9D/" rel="tag">xv6操作系统项目实验九</a>
+		
+	</div>
+	
+	<div class="kira-post-footer">
+		
+
+		
+	<div class="giscus"></div>
+  
+    <script src="https://giscus.app/client.js"
+      data-repo="hellonnnnn/hellonnnnn.github.io"
+      data-repo-id="R_kgDOQqLdWw"
+      data-category="Announcements"
+      data-category-id="DIC_kwDOQqLdW84C1Rqg"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="light"
+      data-lang="zh-CN"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async  
+    ></script>
+  
+
+	</div>
+	
+</div>
+
+				</div>
+			</div>
+			<div class="kira-right-column">
+	<a onclick="document.querySelector('#kira-top-header').scrollIntoView({behavior: 'smooth'});" class="kira-backtotop" aria-label="回到顶部" title="回到顶部">
+		<button class="mdui-fab mdui-ripple">
+			<i class="kirafont icon-caret-up"></i>
+		</button>
+	</a>
+</div>
+
+		</div>
+	</body>
+</html>
