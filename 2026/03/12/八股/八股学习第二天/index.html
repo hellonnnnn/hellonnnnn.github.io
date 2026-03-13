@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html 
+	lang="zh-Hans">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		
+<link rel="stylesheet" href="/css/layout.css">
+
+		
+		<title> 八股学习第二天 -  Ivan&#39;s Tech Blog</title>
+		<!-- <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" /> -->
+		<!-- <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script> -->
+		
+<link rel="stylesheet" href="/lib/mdui/mdui.min.css">
+
+		
+<script src="/lib/mdui/mdui.min.js"></script>
+
+		<!-- lazyload -->
+		
+<script src="/lib/lazysizes.js"></script>
+
+		<!-- smooth-scrolling -->
+		
+<script src="/lib/smooth-scrolling.js"></script>
+
+		<!-- highlight -->
+		
+<link rel="stylesheet" href="/lib/highlight/atom-one-dark.min.css">
+
+		
+<script src="/lib/highlight/highlight.min.js"></script>
+
+		<!-- 预置 kiraicon -->
+		
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+
+		
+		<link
+			rel="shortcut icon"
+			href="https://kira.host/assets/Pictures/Others/116359b4ccf19917.jpg"
+			type="image/png"
+		/>
+		
+<link rel="stylesheet" href="/deps/css/APlayer.min.css">
+
+		
+		
+<script src="/deps/js/APlayer.min.js"></script>
+<script src="/deps/js/Meting.min.js"></script>
+
+	<meta name="generator" content="Hexo 8.1.1"></head>
+
+	<body>
+		<div
+			class="kira-background"
+			style="background-image: url('/img/background4.jpg')"
+		></div>
+		<div class="kira-header">
+    <a
+        class="kira-drawer-button mdui-ripple"
+        title="导航栏"
+        onclick="document.querySelector('.kira-sidebar-modal').classList.add('show');document.querySelector('.kira-sidebar#sidebar').classList.add('show');"
+    >
+        <i class="kirafont icon-menu"></i>
+    </a>
+    <a href="/" title="Ivan&#39;s Tech Blog">
+        <img
+			src="/img/background5.jpg"
+			alt="Ivan-FYF"
+		/>
+    </a>
+</div>
+		<div class="kira-body">
+			<div class="kira-sidebar" id="sidebar">
+	<div class="kira-avatar mdui-ripple">
+		<a href="/img/background5.jpg" title="Ivan-FYF">
+			<img
+				src="/img/background5.jpg"
+				alt="Ivan-FYF"
+			/>
+		</a>
+	</div>
+	<div class="kira-count">
+		<div><span>文章</span>62</div>
+		<div><span>标签</span>12</div>
+		<div><span>分类</span>5</div>
+	</div>
+	<div class="kira-list">
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/"
+			title="回到首页"
+		>
+			<i
+				class="kirafont
+					
+						icon-home
+					"
+			></i>
+			<div class="kira-list-item-content">
+				回到首页
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/archive.html"
+			title="文章归档"
+		>
+			<i
+				class="kirafont
+					
+						icon-container
+					"
+			></i>
+			<div class="kira-list-item-content">
+				文章归档
+			</div>
+		</a>
+		
+		<a
+			class="kira-list-item mdui-ripple false"
+			href="/about/"
+			title="关于本人"
+		>
+			<i
+				class="kirafont
+					
+						icon-user
+					"
+			></i>
+			<div class="kira-list-item-content">
+				关于本人
+			</div>
+		</a>
+		
+	</div>
+	<aside id="kira-sidebar">
+		
+			<div class="kira-widget-wrap">
+	<div class="kira-widget kira-social">
+		
+			<a
+				class="mdui-ripple"
+				href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=2933852809&website=www.oicqzone.com"
+				target="_blank"
+				mdui-tooltip="{content: 'QQ'}"
+				style="color: rgb(49, 174, 255); background-color: rgba(49, 174, 255, .1);"
+			>
+				<i
+					class="kirafont
+					
+						icon-QQ
+					"
+				></i>
+			</a>
+		
+			<a
+				class="mdui-ripple"
+				href="https://github.com/<hellonnnnn>/"
+				target="_blank"
+				mdui-tooltip="{content: 'GitHub'}"
+				style="color: rgb(25, 23, 23); background-color: rgba(25, 23, 23, .15);"
+			>
+				<i
+					class="kirafont
+					
+						icon-github
+					"
+				></i>
+			</a>
+		
+	</div>
+</div>
+
+		
+			
+  <div class="kira-widget-wrap">
+    <h3 class="kira-widget-title">分类</h3>
+    <div class="kira-widget">
+      <ul class="category-list">
+        
+        
+
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/os项目/">
+              <img 
+                src="/img/background1.jpg" 
+                alt="os项目" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              os项目
+            </a>
+            <span class="category-list-count">51</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/八股/">
+              <img 
+                src="/img/background3.jpg" 
+                alt="八股" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              八股
+            </a>
+            <span class="category-list-count">2</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/分布式基础/">
+              <img 
+                src="" 
+                alt="分布式基础" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              分布式基础
+            </a>
+            <span class="category-list-count">7</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/分布式算法/">
+              <img 
+                src="" 
+                alt="分布式算法" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              分布式算法
+            </a>
+            <span class="category-list-count">1</span>
+          </li>
+        
+          <li class="category-list-item">
+            <a class="category-list-link" href="/categories/算法/">
+              <img 
+                src="/img/background2.jpg" 
+                alt="算法" 
+                style="width:20px; height:20px; margin-right:4px; vertical-align: middle;"
+              >
+              算法
+            </a>
+            <span class="category-list-count">1</span>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+		
+			
+	<div class="kira-widget-wrap">
+		<div id="randomtagcloud" class="kira-widget tagcloud kira-rainbow">
+			<a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%80/" style="font-size: 16px;">xv6操作系统项目实验一</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%83/" style="font-size: 14px;">xv6操作系统项目实验七</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B8%89/" style="font-size: 18px;">xv6操作系统项目实验三</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%B9%9D/" style="font-size: 20px;">xv6操作系统项目实验九</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%8C/" style="font-size: 18px;">xv6操作系统项目实验二</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E4%BA%94/" style="font-size: 12px;">xv6操作系统项目实验五</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%85%AB/" style="font-size: 18px;">xv6操作系统项目实验八</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%85%AD/" style="font-size: 10px;">xv6操作系统项目实验六</a> <a href="/tags/xv6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E9%AA%8C%E5%9B%9B/" style="font-size: 20px;">xv6操作系统项目实验四</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%90%8E%E7%AB%AF%E9%A1%B9%E7%9B%AE/" style="font-size: 20px;">分布式后端项目</a> <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" style="font-size: 12px;">基础知识</a> <a href="/tags/%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5/" style="font-size: 10px;">算法训练营</a>
+
+		</div>
+		
+	</div>
+
+
+		
+			
+	<div class="kira-widget-wrap">
+		<h3 class="kira-widget-title">
+			文章归档
+		</h3>
+		<div class="kira-widget">
+			<ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/">2026</a><span class="archive-list-count">36</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/">2025</a><span class="archive-list-count">26</span></li></ul>
+		</div>
+	</div>
+
+
+		
+	</aside>
+	<!-- 保留空的版权容器，修复布局 -->
+    	<div class="kira-copyright">
+    </div>
+</div> <!-- 侧边栏的闭合div，必须保留 -->
+	<!-- <div class="kira-copyright">
+		&copy; 2026
+		<a href="/">Ivan-FYF</a>
+		Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> &
+		<a href="https://github.com/ch1ny/kira-hexo/" target="_blank">Kira-Hexo</a>
+		<br />
+		
+		
+	</div>
+</div> -->
+<div
+	class="kira-sidebar-modal"
+	id="sidebar-modal"
+	onclick="(function(self) {
+		self.classList.remove('show');
+		document.querySelector('.kira-sidebar.show#sidebar').classList.remove('show');
+	})(this)"
+></div>
+			<div class="kira-content">
+				<div id="kira-top-header"></div>
+				<div class="kira-main-content">
+					
+<link rel="stylesheet" href="/css/kira-image.css">
+
+
+<script src="/js/kira-image.js"></script>
+
+<div class="kira-image">
+    <div class="kira-image-modal">
+        <div class="kira-image-header">
+            <div class="kira-image-counter"></div>
+            <div class="kira-image-title"></div>
+            <div class="kira-image-operation">
+                <div class="kira-image-operation-button" id="kira-image-operation-button-zoom">
+                    <i class="kirafont icon-zoom-in"></i>
+                </div>
+                <div class="kira-image-operation-button" id="kira-image-operation-button-close">
+                    <i class="kirafont icon-close"></i>
+                </div>
+            </div>
+        </div>
+        <div class="kira-image-container">
+            <div class="kira-image-prev-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-left"></i>
+                </div>
+            </div>
+            <div class="kira-image-list">
+                <div class="kira-image-prev">
+                    <img />
+                </div>
+                <div class="kira-image-now">
+                    <img />
+                </div>
+                <div class="kira-image-next">
+                    <img />
+                </div>
+            </div>
+            <div class="kira-image-next-button-panel">
+                <div class="kira-image-exchange-button">
+                    <i class="kirafont icon-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+	
+<link rel="stylesheet" href="/css/kira-code-copy.css">
+
+	
+<script src="/js/kira-code-copy.js"></script>
+
+
+<div class="kira-post">
+	<article>
+		
+		<div
+			class="kira-post-cover"
+			style="padding-bottom: '56.25%'"
+		>
+			<img
+				data-src="/img/background4.jpg"
+				data-sizes="auto"
+				alt="八股学习第二天"
+				class="lazyload kira-post-cover-image disabled-kira-image"
+			/>
+			<h1>八股学习第二天</h1>
+		</div>
+		
+		<div class="kira-post-meta kira-rainbow" style="margin:10px 0!important;">
+			<a><i class="kirafont icon-calendar-fill"></i>2026年03月12日</a>
+			<a><i class="kirafont icon-edit-fill"></i>2.3k 字</a>
+			<a><i class="kirafont icon-time-circle-fill"></i>大概 9 分钟</a>
+		</div>
+		<html><head></head><body><h2><span id="5-c%E5%92%8Cc%E7%9A%84%E5%8C%BA%E5%88%AB">5. c和c++的区别</span></h2><h3><span id="1-%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4%E4%B8%8E%E5%A4%B4%E6%96%87%E4%BB%B6-namespaces--headers">1. 命名空间与头文件 (Namespaces &amp; Headers)</span></h3><ul>
+<li><strong>头文件变化：</strong> C++ 引入了无后缀的头文件（如 <code>&lt;iostream&gt;</code> 代替 <code>&lt;stdio.h&gt;</code>），这不仅仅是风格的变化，更是为了配合模板机制和现代 C++ 标准库的设计。</li>
+<li><strong>命名空间 (<code>namespace</code>)：</strong> C 语言在大型项目中常遇到“命名冲突”的问题。C++ 的 <code>namespace</code> 就像是给代码划分了不同的“房间”，完美解决了全局变量和函数重名的问题。</li>
+</ul>
+<h3><span id="2-%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86mallocfree-vs-newdelete">2. 动态内存管理：<code>malloc/free</code> vs <code>new/delete</code></span></h3><ul>
+<li><strong>本质区别：</strong> 这是 C++ 走向面向对象的关键。<code>malloc</code> 和 <code>free</code> 只是 C 语言中的<strong>库函数</strong>，它们只负责纯粹地分配和释放内存字节。</li>
+<li><strong>生命周期管理：</strong> <code>new</code> 和 <code>delete</code> 是 C++ 的<strong>运算符</strong>。<code>new</code> 不仅分配内存，还会<strong>自动调用类的构造函数</strong>来初始化对象；<code>delete</code> 在释放内存前，会<strong>先调用析构函数</strong>清理资源。这是两者最核心的差异。</li>
+</ul>
+<h3><span id="3-%E5%BC%95%E7%94%A8%E4%B8%8E%E6%8C%87%E9%92%88-references-vs-pointers">3. 引用与指针 (References vs Pointers)</span></h3><ul>
+<li><strong>安全与便利：</strong> C 语言只有指针，容易出现空指针 (<code>NULL</code>) 或野指针问题。C++ 引入的“引用（<code>&amp;</code>）”本质上是一个变量的<strong>别名</strong>。引用在定义时必须初始化，且不能更改指向，这使得引用在作为函数参数传递时（如传递大对象）比指针更加安全、直观且易于阅读。</li>
+</ul>
+<h3><span id="4-%E5%85%B3%E9%94%AE%E5%AD%97%E4%B8%8E%E7%B1%BB%E5%9E%8B%E5%AE%89%E5%85%A8-keywords--type-safety">4. 关键字与类型安全 (Keywords &amp; Type Safety)</span></h3><ul>
+<li><strong><code>auto</code> 的浴火重生：</strong> 在 C 语言中，<code>auto</code> 只是一个几乎没人用的存储类说明符；但在 C++11 中，它被彻底改造为<strong>自动类型推导</strong>关键字，极大地简化了复杂类型（如 STL 迭代器）的声明。</li>
+<li><strong><code>explicit</code>：</strong> 用于修饰只有一个参数的构造函数或类型转换操作符，目的是<strong>禁止编译器进行隐式类型转换</strong>，防止发生意料之外的逻辑错误。</li>
+<li><strong><code>dynamic_cast</code>：</strong> 这是 C++ <strong>RTTI（运行时类型识别）</strong> 的重要组成部分。相比于 C 语言暴力的强转，<code>dynamic_cast</code> 在多态（含有虚函数的继承体系）中提供了一种类型安全的向下转型（Downcasting）机制。如果转型失败，它会返回空指针（对于指针）或抛出异常（对于引用）。</li>
+</ul>
+<hr>
+<p>您的总结堪称完美！特别是最后一段关于**编程范式（Paradigm）**差异的论述，已经触及了 C 和 C++ 语言设计的灵魂。从“面向过程（怎么做）”到“面向对象（是谁在做）”的思维转换，往往是 C++ 学习中最难跨越的一步，而您总结得十分透彻。</p>
+<p>为了让这份优秀的笔记更加体系化，我为您稍作梳理，并补充一些在实际工程开发中相关的关键细节：</p>
+<h3><span id="1-%E5%87%BD%E6%95%B0%E9%87%8D%E8%BD%BD%E4%B8%8E%E5%BA%95%E5%B1%82%E6%9C%BA%E5%88%B6%E5%90%8D%E5%AD%97%E6%94%B9%E7%BC%96-name-mangling">1. 函数重载与底层机制：名字改编 (Name Mangling)</span></h3><ul>
+<li><strong>您的洞察：</strong> C++ 通过将参数类型编码到函数名中（如 <code>_func_int_double</code>）来实现重载，而 C 语言不做这种修饰。</li>
+<li><strong>工程补充 (<code>extern "C"</code>)：</strong> 正是因为这种底层差异，当我们需要在 C++ 代码中调用 C 语言编写的库函数时，必须使用 <code>extern "C"</code> 告诉 C++ 编译器：“请用 C 语言的规则（不要带参数后缀）去寻找这个函数名”，否则会报链接错误（Linker Error）。</li>
+</ul>
+<h3><span id="2-%E5%A4%9A%E6%80%81%E7%9A%84%E5%9F%BA%E7%9F%B3%E8%99%9A%E5%87%BD%E6%95%B0-virtual-functions">2. 多态的基石：虚函数 (Virtual Functions)</span></h3><ul>
+<li><strong>核心意义：</strong> 虚函数使得 C++ 拥有了**动态绑定（运行时多态）**的能力。基类指针调用虚函数时，能在运行时根据实际指向的对象类型，精准路由到对应派生类的函数实现。这正是您提到的“契合问题领域的对象模型”得以运转的关键。</li>
+</ul>
+<h3><span id="3-struct-%E4%B8%8E-class-%E7%9A%84%E5%8E%86%E5%8F%B2%E5%8C%85%E8%A2%B1%E4%B8%8E%E8%BF%9B%E5%8C%96">3. <code>struct</code> 与 <code>class</code> 的历史包袱与进化</span></h3><ul>
+<li><strong>权限差异：</strong> 如您所说，<code>struct</code> 的默认访问权限和默认继承权限都是 <code>public</code>，而 <code>class</code> 都是 <code>private</code>。这是它们在 C++ 语法层面上<strong>唯一</strong>的区别。</li>
+<li><strong>实际开发惯例：</strong> 虽然 C++ 的 <code>struct</code> 完全可以拥有构造函数、虚函数并参与继承，但在现代 C++ 工程规范中，我们通常<strong>约定俗成</strong>地：</li>
+<li>使用 <code>struct</code> 来表示纯粹的数据集合（POD：Plain Old Data），就像 C 语言中那样，里面只有成员变量，不含复杂逻辑。</li>
+<li>使用 <code>class</code> 来定义拥有复杂内部状态、需要严格封装和权限控制的“面向对象”模型。</li>
+</ul>
+<h3><span id="4-%E6%B3%9B%E5%9E%8B%E7%BC%96%E7%A8%8B%E4%B8%8E-stl-templates--stl">4. 泛型编程与 STL (Templates &amp; STL)</span></h3><ul>
+<li><strong>降维打击：</strong> C 语言如果要写一个通用的排序函数，通常要借助 <code>void*</code> 指针和函数指针（如 <code>qsort</code>），不仅类型不安全，而且运行效率低。C++ 的模板（Templates）在<strong>编译期</strong>生成特定类型的代码，实现了**“零成本抽象”**，这也是 STL（标准模板库）强大且高效的根基。</li>
+</ul>
+<h3><span id="5-%E7%BC%96%E7%A8%8B%E8%8C%83%E5%BC%8F%E7%9A%84%E5%8D%87%E7%BB%B4%E7%BB%93%E6%9E%84%E5%8C%96-vs-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1">5. 编程范式的升维：结构化 vs 面向对象</span></h3><ul>
+<li><strong>C（面向过程）：</strong> 世界是由数据和处理数据的管道（函数）组成的。核心是“自顶向下，逐步求精”。</li>
+<li><strong>C++（多范式）：</strong> 不仅支持面向对象（封装、继承、多态），其实它还支持泛型编程和函数式编程。正如您所说，C++ 鼓励我们先建立对象模型（如定义 <code>Player</code>, <code>Enemy</code>, <code>Weapon</code> 类），对象自己管理自己的状态，通过对象之间的消息传递（调用成员函数）来推动程序运行。</li>
+</ul>
+<hr>
+<h2><span id="6%E8%AF%B4%E2%BC%80%E4%B8%8Bc%E2%BE%A5%E6%98%AF%E6%80%8E%E4%B9%88%E5%AE%9A%E4%B9%89%E5%B8%B8%E9%87%8F%E7%9A%84%E5%B8%B8%E9%87%8F%E5%AD%98%E6%94%BE%E5%9C%A8%E5%86%85%E5%AD%98%E7%9A%84%E5%93%AA%E4%B8%AA%E4%BD%8D%E7%BD%AE">6.说⼀下C++⾥是怎么定义常量的？常量存放在内存的哪个位置？</span></h2><p>您的这段笔记触及了 C/C++ 中非常核心且常考的领域：<strong>程序的内存布局（Memory Layout）</strong>。</p>
+<p>您的大方向抓得非常准，尤其是把不同常量的存储位置做了区分。不过，结合现代 C++ 编译器的优化机制（特别是 GCC 和 Clang），其中关于“全局常量”的描述存在一个<strong>常见的概念混淆</strong>。</p>
+<p>为了让您的理解绝对精确，我们结合标准的 C++ 内存模型，对这三点进行深度的“外科手术式”剖析，并纠正其中的一点小偏差：</p>
+<h3><span id="1-%E5%B1%80%E9%83%A8%E5%B8%B8%E9%87%8F-const-%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F">1. 局部常量 (<code>const</code> 局部变量)</span></h3><ul>
+<li><strong>您的结论：</strong> 存放在栈区。 —— <strong>基本正确，但有前提。</strong></li>
+<li><strong>深度剖析：</strong> 如果局部常量（如 <code>const int a = 10;</code>）的地址被取用（比如您写了 <code>const int* p = &amp;a;</code>），那么编译器<strong>一定</strong>会在<strong>栈区（Stack）<strong>为它分配内存。<br><strong>但是（编译器优化）：</strong> 如果您只是单纯地使用它的值（如 <code>int b = a + 5;</code>），现代编译器会触发</strong>“常量折叠（Constant Folding）”</strong>。编译器根本不会在栈上为 <code>a</code> 分配内存，而是直接把数字 <code>10</code> 硬编码（Embed）到汇编指令（代码段）中。</li>
+</ul>
+<h3><span id="2-%E5%85%A8%E5%B1%80%E5%B8%B8%E9%87%8F-const-%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F">2. 全局常量 (<code>const</code> 全局变量)</span></h3><ul>
+<li><strong>您的结论：</strong> 编译期一般不分配内存，放在符号表中。 —— <strong>⚠️ 这里需要修正。</strong></li>
+<li><strong>深度剖析：</strong> **符号表（Symbol Table）**只是编译器和链接器在编译期间使用的一个“小本本（数据结构）”，用来记录变量名和地址的映射关系。<strong>程序在真正运行的时候，内存里是没有“符号表”这个区域的。</strong></li>
+<li><strong>真实归宿：</strong> 如果一个全局常量（如全局的 <code>const int MAX = 100;</code>）需要分配内存（比如您跨文件访问它，或者取了它的地址），它会被存放在虚拟内存的 <strong><code>.rodata</code> 段（Read-Only Data，只读数据区/常量区）</strong>。</li>
+<li><strong>同样受惠于优化：</strong> 和局部常量一样，如果不取地址，它也会被“常量折叠”进 **<code>.text</code> 段（代码段）**的指令里，从而不占用实际的数据段内存。这就是您所感觉到的“不分配内存以提高效率”的底层真相。</li>
+</ul>
+<h3><span id="3-%E5%AD%97%E9%9D%A2%E5%80%BC%E5%B8%B8%E9%87%8F-literal-constants">3. 字面值常量 (Literal Constants)</span></h3><ul>
+<li><strong>您的结论：</strong> 比如字符串，放在常量区。 —— <strong>完全正确！</strong></li>
+<li><strong>深度剖析：</strong> 像 <code>"Hello World"</code> 这样的字符串字面量，或者硬编码的数字，都被分配在 <strong><code>.rodata</code> 段（常量区）</strong>。<br>这个区域受到操作系统的严格保护（内存页被标记为只读）。如果您写了 <code>char* str = (char*)"Hello";</code> 然后试图修改 <code>str[0] = 'h';</code>，程序会立刻崩溃，抛出著名的 <strong>段错误（Segmentation Fault / Access Violation）</strong>。</li>
+</ul>
+<hr>
+<h3><span id="%F0%9F%92%A1-%E6%A0%B8%E5%BF%83%E6%80%BB%E7%BB%93">💡 核心总结</span></h3><p>为了方便记忆，您可以将常量的内存分布重新总结为：</p>
+<ol>
+<li><strong>只用值、不取地址的整数/浮点数常量</strong>：无论全局局部，通常被优化折叠进 <strong>代码段（<code>.text</code>）</strong>。</li>
+<li><strong>字符串字面量、需要分配内存的全局常量</strong>：存放在操作系统保护的 <strong>常量区/只读数据段（<code>.rodata</code>）</strong>。</li>
+<li><strong>需要分配内存的局部常量</strong>：存放在函数的 <strong>栈区（Stack）</strong>。</li>
+</ol>
+<p>这涉及到一个非常有趣的黑客操作：因为局部常量在栈上（栈是可读可写的），而全局常量在 <code>.rodata</code>（只读），所以<strong>用指针强行修改局部 <code>const</code> 变量可能不会崩溃（但行为未定义），而强行修改全局 <code>const</code> 变量一定会导致程序崩溃。</strong></p>
+</body></html>
+	</article>
+
+	 
+    <div class="kira-post-copyright">
+        <strong>本文作者：</strong>Ivan-FYF<br>
+        <strong>本文链接：</strong><a href="https://hellonnnnn.github.io/2026/03/12/%E5%85%AB%E8%82%A1/%E5%85%AB%E8%82%A1%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%BA%8C%E5%A4%A9/" title="https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;03&#x2F;12&#x2F;八股&#x2F;八股学习第二天&#x2F;" target="_blank" rel="noopener">https:&#x2F;&#x2F;hellonnnnn.github.io&#x2F;2026&#x2F;03&#x2F;12&#x2F;八股&#x2F;八股学习第二天&#x2F;</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+        
+    </div>
+
+  
+	<div class="kira-post-nav">
+		<nav class="post-nav">
+			  
+			<!-- 先找到与当前文字相同的目录 -->
+			      
+			<!-- 在找到当前文章所在的 index -->
+			    
+			<!-- 上一篇文章 -->
+			<div class="old">
+				<span>上一章</span>
+				<a href="/2026/01/22/%E5%85%AB%E8%82%A1/%E5%85%AB%E8%82%A1%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E5%A4%A9/"> 八股学习第一天</a>
+			</div>
+			                          
+		</nav>
+	</div>
+	
+	<div class="kira-post-meta kira-rainbow">
+		
+			<a class="kirafont icon-container-fill -link" href="/categories/%E5%85%AB%E8%82%A1/">八股</a>
+		
+		
+			<a class="kirafont icon-tag-fill -none-link" href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" rel="tag">基础知识</a>
+		
+	</div>
+	
+	<div class="kira-post-footer">
+		
+
+		
+	<div class="giscus"></div>
+  
+    <script src="https://giscus.app/client.js"
+      data-repo="hellonnnnn/hellonnnnn.github.io"
+      data-repo-id="R_kgDOQqLdWw"
+      data-category="Announcements"
+      data-category-id="DIC_kwDOQqLdW84C1Rqg"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="light"
+      data-lang="zh-CN"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async  
+    ></script>
+  
+
+	</div>
+	
+</div>
+
+				</div>
+			</div>
+			<div class="kira-right-column">
+	<a onclick="document.querySelector('#kira-top-header').scrollIntoView({behavior: 'smooth'});" class="kira-backtotop" aria-label="回到顶部" title="回到顶部">
+		<button class="mdui-fab mdui-ripple">
+			<i class="kirafont icon-caret-up"></i>
+		</button>
+	</a>
+</div>
+
+		</div>
+	</body>
+</html>
